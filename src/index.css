@@ -1,0 +1,179 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 75 60% 28%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 75 30% 85%;
+    --secondary-foreground: 75 60% 15%;
+
+    --muted: 75 20% 96%;
+    --muted-foreground: 75 10% 45%;
+
+    --accent: 75 40% 90%;
+    --accent-foreground: 75 60% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 75 60% 28%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 75 60% 28%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 75 60% 28%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 355 100% 97%;
+    --warning: 43 89% 38%;
+    --warning-foreground: 355 100% 97%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 98%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 75 60% 28%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 75 20% 25%;
+    --secondary-foreground: 75 30% 85%;
+
+    --muted: 75 15% 20%;
+    --muted-foreground: 75 20% 65%;
+
+    --accent: 75 20% 25%;
+    --accent-foreground: 75 30% 85%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 75 60% 28%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 75 60% 28%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 355 100% 97%;
+    --warning: 43 96% 56%;
+    --warning-foreground: 355 100% 97%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-onest;
+  }
+
+  .font-onest {
+    font-family: 'Onest', sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    background: hsl(var(--primary));
+  }
+  
+  .gradient-secondary {
+    background: hsl(var(--secondary));
+  }
+  
+  .gradient-warning {
+    background: hsl(var(--warning));
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .stats-card {
+    @apply bg-card rounded-xl shadow-sm border card-hover;
+  }
+  
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-sidebar-accent;
+  }
+  
+  .sidebar-nav-item.active {
+    @apply bg-sidebar-primary text-sidebar-primary-foreground;
+  }
+
+  /* Responsive utilities */
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .responsive-flex {
+    @apply flex flex-col sm:flex-row;
+  }
+
+  .responsive-gap {
+    @apply gap-4 sm:gap-6;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
