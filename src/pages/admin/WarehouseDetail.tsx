@@ -57,7 +57,7 @@ const WarehouseDetail = () => {
   const getUtilizationColor = (pct: number) => {
     if (pct >= 90) return "text-red-500 bg-red-500/10";
     if (pct >= 70) return "text-amber-500 bg-amber-500/10";
-    return "text-emerald-500 bg-emerald-500/10";
+    return "text-primary bg-primary/10";
   };
   const utilColor = getUtilizationColor(utilization);
 
@@ -69,8 +69,8 @@ const WarehouseDetail = () => {
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Warehouses
           </Button>
           <div className="flex items-center gap-3">
-            <div className="h-14 w-14 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-              <Building2 className="h-7 w-7 text-emerald-500" />
+            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Building2 className="h-7 w-7 text-primary" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground">{warehouse.name}</h1>
@@ -79,7 +79,7 @@ const WarehouseDetail = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <Badge variant="outline" className={`px-3 py-1 ${warehouse.status === "Active" ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/5" : "border-amber-500/20 text-amber-500 bg-amber-500/5"}`}>
+          <Badge variant="outline" className={`px-3 py-1 ${warehouse.status === "Active" ? "border-primary/20 text-primary bg-primary/5" : "border-amber-500/20 text-amber-500 bg-amber-500/5"}`}>
             {warehouse.status}
           </Badge>
           <Button variant="outline" size="sm" onClick={() => navigate(`/warehouses/edit/${id}`)}>
@@ -92,7 +92,7 @@ const WarehouseDetail = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Capacity", value: `${capacity.toLocaleString()} MT`, icon: Building2, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Capacity", value: `${capacity.toLocaleString()} MT`, icon: Building2, color: "text-primary", bg: "bg-primary/10" },
           { title: "Current Stock", value: `${currentStock.toLocaleString()} MT`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Available Space", value: `${available.toLocaleString()} MT`, icon: Activity, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Utilization", value: `${utilization}%`, icon: PieChartIcon, color: utilColor.split(' ')[0], bg: utilColor.split(' ')[1] },
@@ -143,7 +143,7 @@ const WarehouseDetail = () => {
         {/* Facility Info */}
         <Card className="flex flex-col">
           <CardHeader>
-             <CardTitle className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-emerald-500" /> Administrative Identity</CardTitle>
+             <CardTitle className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-primary" /> Administrative Identity</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 flex-1">
             {[

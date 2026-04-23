@@ -12,8 +12,8 @@ const Index = () => {
   if (isUser) return <Navigate to="/user" replace />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0b0e11]">
-      <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
+    <div className="min-h-screen flex items-center justify-center bg-card">
+      <Loader2 className="w-10 h-10 animate-spin text-primary" />
     </div>
   );
 };

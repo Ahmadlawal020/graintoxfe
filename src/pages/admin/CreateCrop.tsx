@@ -63,7 +63,7 @@ const CreateCrop = () => {
           
           <div className="space-y-4 border rounded-lg p-5">
             <div className="flex items-center space-x-2 border-b pb-3">
-              <Wheat className="h-5 w-5 text-emerald-500" />
+              <Wheat className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-medium">Commodity Profile</h2>
             </div>
             <div className="space-y-4 pt-2">
@@ -105,7 +105,7 @@ const CreateCrop = () => {
 
           <div className="space-y-4 border rounded-lg p-5">
             <div className="flex items-center space-x-2 border-b pb-3">
-              <Coins className="h-5 w-5 text-emerald-500" />
+              <Coins className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-medium">Financial & Blockchain Metadata</h2>
             </div>
             <div className="space-y-4 pt-2">
@@ -123,7 +123,7 @@ const CreateCrop = () => {
         </div>
 
         <div className="flex justify-start gap-4 mt-6">
-          <Button type="submit" disabled={isLoading} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 px-8">
+          <Button type="submit" disabled={isLoading} className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20 px-8">
             <Save className="h-4 w-4 mr-2" />
             {isLoading ? "Saving..." : "Deploy Commodity"}
           </Button>

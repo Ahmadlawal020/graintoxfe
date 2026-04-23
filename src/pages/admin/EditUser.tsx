@@ -144,7 +144,7 @@ const EditUser = () => {
             {/* Personal Information */}
             <div className="space-y-4 border rounded-lg p-4 shadow-sm bg-card">
               <div className="flex items-center space-x-2">
-                <UserCheck className="h-5 w-5 text-emerald-500" />
+                <UserCheck className="h-5 w-5 text-primary" />
                 <h2 className="text-lg font-medium">Identity & Personal</h2>
               </div>
               <div className="space-y-3">
@@ -277,7 +277,7 @@ const EditUser = () => {
             </div>
             <div className="flex justify-end gap-3">
               <Button variant="outline" type="button" onClick={() => navigate(`/users/${id}`)}>Cancel</Button>
-              <Button type="submit" disabled={isUpdating} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 px-8">
+              <Button type="submit" disabled={isUpdating} className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20 px-8">
                 {isUpdating ? "Processing..." : "Authorized Update"}
               </Button>
             </div>

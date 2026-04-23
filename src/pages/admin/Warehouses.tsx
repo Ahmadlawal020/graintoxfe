@@ -54,7 +54,7 @@ const Warehouses = () => {
   const getUtilizationColor = (pct: number) => {
     if (pct >= 90) return "text-red-500 bg-red-500";
     if (pct >= 70) return "text-amber-500 bg-amber-500";
-    return "text-emerald-500 bg-emerald-500";
+    return "text-primary bg-primary";
   };
 
   if (isLoading) {
@@ -92,7 +92,7 @@ const Warehouses = () => {
           </p>
         </div>
         <Button
-          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
+          className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20"
           onClick={() => navigate("/warehouses/create")}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -103,7 +103,7 @@ const Warehouses = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Facilities", value: warehouses.length, icon: Building2, color: "text-emerald-500", bg: "bg-emerald-500/10", sub: `${warehouses.filter((w: any) => w.status === "Active").length} operational` },
+          { title: "Total Facilities", value: warehouses.length, icon: Building2, color: "text-primary", bg: "bg-primary/10", sub: `${warehouses.filter((w: any) => w.status === "Active").length} operational` },
           { title: "Total Capacity", value: `${(totalCapacity / 1000).toFixed(1)}K MT`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Metric tonnes overall" },
           { title: "Current Stock", value: `${(totalStock / 1000).toFixed(1)}K MT`, icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", sub: `${utilization}% overall utilization` },
           { title: "Avg Storage Fee", value: `₦${Math.round(warehouses.reduce((a: number, w: any) => a + (w.storageFeePerMT || 0), 0) / (warehouses.length || 1))}`, icon: Thermometer, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Per metric tonne" },
@@ -155,7 +155,7 @@ const Warehouses = () => {
                       {wh.location}
                     </CardDescription>
                   </div>
-                  <Badge variant={isOperational ? "default" : "secondary"} className={isOperational ? "bg-emerald-600" : ""}>
+                  <Badge variant={isOperational ? "default" : "secondary"} className={isOperational ? "bg-primary/90" : ""}>
                     {wh.status || "Unknown"}
                   </Badge>
                 </div>

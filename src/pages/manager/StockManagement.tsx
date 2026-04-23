@@ -74,7 +74,7 @@ const StockManagement = () => {
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => navigate("/manager/stock/withdraw")}><ArrowUpFromLine className="mr-2 h-4 w-4" /> Process Withdrawal</Button>
           <Button 
-            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20" 
+            className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" 
             size="sm"
             onClick={() => navigate("/manager/stock/record")}
           >
@@ -85,7 +85,7 @@ const StockManagement = () => {
 
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          { title: "Total Lots", value: stockItems.length, icon: Package, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Lots", value: stockItems.length, icon: Package, color: "text-primary", bg: "bg-primary/10" },
           { title: "Total Weight", value: `${stockItems.reduce((a, s) => a + s.weight, 0)} MT`, icon: Wheat, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Pending QC", value: stockItems.filter(s => s.quality === "Pending QC").length, icon: Eye, color: "text-amber-500", bg: "bg-amber-500/10" },
         ].map((stat, i) => (
@@ -128,23 +128,23 @@ const StockManagement = () => {
                 {filteredItems.map((item) => (
                   <TableRow key={item._id} className="hover:bg-muted/50 transition cursor-pointer">
                     <TableCell className="font-medium flex items-center gap-2">
-                      <Wheat className="h-4 w-4 text-emerald-500" />{item.commodity}
+                      <Wheat className="h-4 w-4 text-primary" />{item.commodity}
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-emerald-600">{item.lot}</TableCell>
+                    <TableCell className="font-mono text-xs text-primary/90">{item.lot}</TableCell>
                     <TableCell>{item.bags.toLocaleString()}</TableCell>
                     <TableCell className="font-semibold">{item.weight} MT</TableCell>
                     <TableCell><Badge variant="outline" className="text-[10px]">{item.section}</Badge></TableCell>
                     <TableCell className="text-sm">{item.depositor}</TableCell>
                     <TableCell>
                       <Badge className={
-                        item.quality === "Grade A" ? "bg-emerald-600 text-white" :
-                          item.quality === "Grade B" ? "bg-amber-500 text-white" :
-                            "bg-gray-500 text-white"
+                        item.quality === "Grade A" ? "bg-primary/90 text-foreground" :
+                          item.quality === "Grade B" ? "bg-amber-500 text-foreground" :
+                            "bg-gray-500 text-foreground"
                       }>{item.quality}</Badge>
                     </TableCell>
                     <TableCell>
                       {item.tokenized ? (
-                        <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/10">Yes</Badge>
+                        <Badge variant="outline" className="text-primary border-primary/20 bg-primary/10">Yes</Badge>
                       ) : (
                         <Badge variant="outline" className="text-muted-foreground">No</Badge>
                       )}

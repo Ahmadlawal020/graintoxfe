@@ -93,7 +93,7 @@ const EditCrop = () => {
       toast({ 
         title: "Market Price Updated", 
         description: `Changes to ${formData.name} are now live across the platform.`,
-        className: "bg-emerald-600 text-white border-none shadow-lg"
+        className: "bg-primary/90 text-foreground border-none shadow-lg"
       });
       navigate(`/crops/${id}`);
     } catch (error: any) {
@@ -140,8 +140,8 @@ const EditCrop = () => {
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Asset Summary
           </Button>
           <div className="flex items-center gap-4">
-             <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/10">
-                <Wheat className="h-8 w-8 text-emerald-600" />
+             <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/10">
+                <Wheat className="h-8 w-8 text-primary/90" />
              </div>
              <div>
                 <h1 className="text-3xl font-black text-foreground">Market Controller</h1>
@@ -160,10 +160,10 @@ const EditCrop = () => {
          <div className="lg:col-span-2 space-y-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <Card className="glass-card overflow-hidden shadow-xl border-none">
-                 <div className="h-1.5 bg-emerald-500" />
+                 <div className="h-1.5 bg-primary" />
                  <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                       <Activity className="h-5 w-5 text-emerald-500" />
+                       <Activity className="h-5 w-5 text-primary" />
                        Asset Specifications
                     </CardTitle>
                     <CardDescription>Fundamental characteristics of the listed commodity</CardDescription>
@@ -172,11 +172,11 @@ const EditCrop = () => {
                     <div className="grid md:grid-cols-2 gap-6">
                        <div className="space-y-2">
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Display Name</Label>
-                          <Input name="name" value={formData.name} onChange={handleChange} required className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20 font-semibold" />
+                          <Input name="name" value={formData.name} onChange={handleChange} required className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20 font-semibold" />
                        </div>
                        <div className="space-y-2">
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Asset Code</Label>
-                          <Input name="code" value={formData.code} onChange={handleChange} required className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20 font-mono" />
+                          <Input name="code" value={formData.code} onChange={handleChange} required className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20 font-mono" />
                        </div>
                     </div>
 
@@ -184,7 +184,7 @@ const EditCrop = () => {
                        <div className="space-y-2">
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Asset Category</Label>
                           <Select value={formData.category} onValueChange={(v) => handleSelectChange("category", v)}>
-                            <SelectTrigger className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20">
+                            <SelectTrigger className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20">
                                <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -197,7 +197,7 @@ const EditCrop = () => {
                        <div className="space-y-2">
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Quality Grade Tier</Label>
                           <Select value={formData.quality} onValueChange={(v) => handleSelectChange("quality", v)}>
-                            <SelectTrigger className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20">
+                            <SelectTrigger className="h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20">
                                <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -211,63 +211,63 @@ const EditCrop = () => {
                  </CardContent>
               </Card>
 
-              <Card className="glass-card shadow-xl border-none bg-slate-900 text-white overflow-hidden">
+              <Card className="glass-card shadow-xl border-none bg-slate-900 text-foreground overflow-hidden">
                  <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                       <Coins className="h-5 w-5 text-emerald-400" />
+                       <Coins className="h-5 w-5 text-primary/80" />
                        Market Price Control
                     </CardTitle>
-                    <CardDescription className="text-white/60">Manage live benchmark pricing and token indices</CardDescription>
+                    <CardDescription className="text-foreground/60">Manage live benchmark pricing and token indices</CardDescription>
                  </CardHeader>
                  <CardContent className="space-y-8">
                     <div className="grid md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-white/50">Current Market Price (₦ / MT)</Label>
+                          <Label className="text-xs font-bold uppercase tracking-wider text-foreground/50">Current Market Price (₦ / MT)</Label>
                           <div className="relative">
-                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">₦</span>
+                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/80 font-bold">₦</span>
                              <Input 
                                 name="pricePerUnit" 
                                 type="number" 
                                 value={formData.pricePerUnit} 
                                 onChange={handleChange} 
                                 required 
-                                className="h-14 pl-8 bg-white/5 border-white/10 text-2xl font-black focus:ring-emerald-400/50" 
+                                className="h-14 pl-8 bg-accent border-border text-2xl font-black focus:ring-primary/50" 
                              />
                           </div>
-                          <p className="text-[10px] text-white/40 italic flex items-center gap-1">
+                          <p className="text-[10px] text-foreground/40 italic flex items-center gap-1">
                              <Info className="h-3 w-3" />
                              Estimated Trade Value: {priceFormatted} per Metric Ton.
                           </p>
                        </div>
                        <div className="space-y-3">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-white/50">Token Symbol (GTX-SYNC)</Label>
+                          <Label className="text-xs font-bold uppercase tracking-wider text-foreground/50">Token Symbol (GTX-SYNC)</Label>
                           <Input 
                             name="tokenSymbol" 
                             value={formData.tokenSymbol} 
                             onChange={handleChange} 
                             required 
-                            className="h-14 uppercase bg-white/5 border-white/10 text-2xl font-mono font-bold focus:ring-emerald-400/50" 
+                            className="h-14 uppercase bg-accent border-border text-2xl font-mono font-bold focus:ring-primary/50" 
                           />
                        </div>
                     </div>
                     
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start gap-4">
+                    <div className="p-4 rounded-xl bg-accent border border-border flex items-start gap-4">
                        <div className="h-10 w-10 shrink-0 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/20">
                           <AlertTriangle className="h-5 w-5 text-amber-400" />
                        </div>
                        <div>
                           <p className="text-sm font-bold text-amber-400">Market Transparency Notice</p>
-                          <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
+                          <p className="text-xs text-foreground/60 mt-0.5 leading-relaxed">
                              Altering the price will trigger an immediate recalculation of all User portfolio values and Tokenized Asset balances based on the new index.
                           </p>
                        </div>
                     </div>
 
-                    <div className="flex gap-4 pt-4 border-t border-white/10">
+                    <div className="flex gap-4 pt-4 border-t border-border">
                        <Button 
                          type="submit" 
                          disabled={isLoading} 
-                         className="flex-1 h-14 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-lg shadow-2xl shadow-emerald-500/30 group"
+                         className="flex-1 h-14 bg-primary hover:bg-primary/90 text-foreground font-black text-lg shadow-2xl shadow-primary/30 group"
                        >
                          {isLoading ? "Synchronizing..." : "Update Live Global Price"}
                          <TrendingUp className="ml-2 h-5 w-5 group-hover:translate-y-[-2px] transition-transform" />
@@ -276,7 +276,7 @@ const EditCrop = () => {
                          variant="ghost" 
                          type="button" 
                          onClick={() => navigate(`/crops/${id}`)}
-                         className="h-14 px-8 border border-white/10 text-white/80 hover:bg-white/5"
+                         className="h-14 px-8 border border-border text-foreground/80 hover:bg-accent"
                        >
                          Cancel
                        </Button>
@@ -291,14 +291,14 @@ const EditCrop = () => {
             <Card className="glass-card shadow-sm border-none bg-muted/20">
                <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
-                     <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                     <ShieldCheck className="h-4 w-4 text-primary" />
                      Market Visibility
                   </CardTitle>
                </CardHeader>
                <CardContent className="space-y-4">
                   <div className="flex items-center justify-between p-3 rounded-xl bg-background border shadow-sm">
                      <span className="text-sm font-medium">Trading Status</span>
-                     <Badge className="bg-emerald-500">LIVE</Badge>
+                     <Badge className="bg-primary">LIVE</Badge>
                   </div>
                   <div className="p-3 rounded-xl bg-background border shadow-sm space-y-2">
                      <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Pricing Model</p>

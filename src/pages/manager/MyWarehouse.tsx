@@ -73,7 +73,7 @@ const MyWarehouse = () => {
       {/* Info Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Capacity", value: `${warehouse.capacity.toLocaleString()} MT`, icon: Building2, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Capacity", value: `${warehouse.capacity.toLocaleString()} MT`, icon: Building2, color: "text-primary", bg: "bg-primary/10" },
           { title: "Current Stock", value: `${warehouse.currentStock.toLocaleString()} MT`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Last Inspection", value: warehouse.lastInspection, icon: ShieldCheck, color: "text-purple-500", bg: "bg-purple-500/10" },
           { title: "Cert. Expiry", value: warehouse.certExpiry, icon: CheckCircle2, color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -92,7 +92,7 @@ const MyWarehouse = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-emerald-500" />
+            <Activity className="w-5 h-5 text-primary" />
             Storage Sections
           </CardTitle>
           <CardDescription>Real-time monitoring of each storage section</CardDescription>
@@ -107,7 +107,7 @@ const MyWarehouse = () => {
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-base">{section.name}</CardTitle>
-                      <Badge className={isWarning ? "bg-amber-500 text-white" : "bg-emerald-600 text-white"}>
+                      <Badge className={isWarning ? "bg-amber-500 text-foreground" : "bg-primary/90 text-foreground"}>
                         {section.status}
                       </Badge>
                     </div>
@@ -120,7 +120,7 @@ const MyWarehouse = () => {
                         <span className="font-semibold">{pct}%</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
-                        <div className={`h-2 rounded-full ${pct >= 90 ? "bg-red-500" : pct >= 70 ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${pct}%` }} />
+                        <div className={`h-2 rounded-full ${pct >= 90 ? "bg-red-500" : pct >= 70 ? "bg-amber-500" : "bg-primary"}`} style={{ width: `${pct}%` }} />
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">{section.stock} / {section.capacity} MT</p>
                     </div>

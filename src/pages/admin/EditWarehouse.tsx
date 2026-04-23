@@ -231,16 +231,16 @@ const EditWarehouse = () => {
             </div>
 
             {/* Manager Assignment */}
-            <div className="space-y-4 border rounded-lg p-4 bg-emerald-500/5 border-emerald-500/30">
+            <div className="space-y-4 border rounded-lg p-4 bg-primary/5 border-primary/30">
               <div className="flex items-center space-x-2">
-                <User className="h-5 w-5 text-emerald-600" />
-                <h2 className="text-lg font-medium text-emerald-800 dark:text-emerald-400">Warehouse Manager Assignment</h2>
+                <User className="h-5 w-5 text-primary/90" />
+                <h2 className="text-lg font-medium text-primary/90 dark:text-primary/80">Warehouse Manager Assignment</h2>
               </div>
               <div className="space-y-3">
                 <div>
-                  <Label htmlFor="managerId" className="text-emerald-700 dark:text-emerald-300">Select Operating Manager</Label>
+                  <Label htmlFor="managerId" className="text-primary/90 dark:text-primary/50">Select Operating Manager</Label>
                   <Select value={formData.managerId} onValueChange={(v) => handleSelectChange("managerId", v)}>
-                    <SelectTrigger className="border-emerald-500/30">
+                    <SelectTrigger className="border-primary/30">
                       <SelectValue placeholder="-- Select Manager --" />
                     </SelectTrigger>
                     <SelectContent>
@@ -263,7 +263,7 @@ const EditWarehouse = () => {
 
         <div className="flex justify-end gap-4 mt-6">
           <Button variant="outline" type="button" onClick={() => navigate(`/warehouses/${id}`)}>Cancel</Button>
-          <Button type="submit" disabled={isUpdating} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 px-8">
+          <Button type="submit" disabled={isUpdating} className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20 px-8">
             <Save className="h-4 w-4 mr-2" />
             {isUpdating ? "Saving..." : "Save Changes"}
           </Button>

@@ -92,7 +92,7 @@ const KYCDetails = () => {
     const config: Record<string, string> = {
       PENDING: "bg-amber-500/10 text-amber-500 border-amber-500/20",
       UNDER_REVIEW: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      VERIFIED: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+      VERIFIED: "bg-primary/10 text-primary border-primary/20",
       REJECTED: "bg-red-500/10 text-red-500 border-red-500/20",
     };
     return (
@@ -124,8 +124,8 @@ const KYCDetails = () => {
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Queue
           </Button>
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-inner">
-               <User className="h-6 w-6 text-emerald-600" />
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shadow-inner">
+               <User className="h-6 w-6 text-primary/90" />
             </div>
             <div>
                <h1 className="text-3xl font-bold flex items-center gap-3">
@@ -146,10 +146,10 @@ const KYCDetails = () => {
         {/* Profile and Risk Sidebar */}
         <div className="lg:col-span-4 space-y-6">
           <Card className="glass-card overflow-hidden">
-            <div className="bg-emerald-500 h-1" />
+            <div className="bg-primary h-1" />
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <Info className="h-4 w-4 text-emerald-500" />
+                <Info className="h-4 w-4 text-primary" />
                 Applicant Profile
               </CardTitle>
             </CardHeader>
@@ -202,7 +202,7 @@ const KYCDetails = () => {
                   />
                   <div className="absolute inset-0 bg-blue-500/10 pointer-events-none" />
                   <div className="absolute bottom-2 left-2 right-2 flex justify-center">
-                     <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm text-blue-600 border-none text-[10px]">
+                     <Badge variant="secondary" className="bg-accent backdrop-blur-sm text-blue-600 border-none text-[10px]">
                         LIVE CAPTURE: 0.98 Match
                      </Badge>
                   </div>
@@ -211,15 +211,15 @@ const KYCDetails = () => {
                  <p className="text-[10px] font-bold text-blue-700 uppercase mb-2">Automated Analysis</p>
                  <ul className="text-xs space-y-1.5 text-blue-800">
                     <li className="flex items-center gap-2">
-                       <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                       <CheckCircle2 className="h-3 w-3 text-primary" />
                        No mask or obstruction detected
                     </li>
                     <li className="flex items-center gap-2">
-                       <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                       <CheckCircle2 className="h-3 w-3 text-primary" />
                        Lighting levels sufficient
                     </li>
                     <li className="flex items-center gap-2">
-                       <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                       <CheckCircle2 className="h-3 w-3 text-primary" />
                        Face-to-Document matching: 92%
                     </li>
                  </ul>
@@ -237,15 +237,15 @@ const KYCDetails = () => {
             <CardContent className="space-y-3 pt-2">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">Global Watchlist</span>
-                <span className="text-emerald-600 font-bold">CLEARED</span>
+                <span className="text-primary/90 font-bold">CLEARED</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">IP Location Match</span>
-                <span className="text-emerald-600 font-bold">MATCHED</span>
+                <span className="text-primary/90 font-bold">MATCHED</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">Sanction Search</span>
-                <span className="text-emerald-600 font-bold">NO HIT</span>
+                <span className="text-primary/90 font-bold">NO HIT</span>
               </div>
             </CardContent>
           </Card>
@@ -326,7 +326,7 @@ const KYCDetails = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   variant="outline"
-                  className="flex-1 h-12 border-red-500/50 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                  className="flex-1 h-12 border-red-500/50 text-red-600 hover:bg-red-600 hover:text-foreground transition-all shadow-sm"
                   onClick={() => handleKycAction("REJECTED")}
                   disabled={isUpdating}
                 >
@@ -334,7 +334,7 @@ const KYCDetails = () => {
                   Reject Application
                 </Button>
                 <Button
-                  className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/30 transition-all font-bold"
+                  className="flex-1 h-12 bg-primary/90 hover:bg-primary/90 text-foreground shadow-xl shadow-primary/30 transition-all font-bold"
                   onClick={() => handleKycAction("VERIFIED")}
                   disabled={isUpdating}
                 >

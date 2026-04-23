@@ -110,15 +110,15 @@ const CropDetails = () => {
             <ArrowLeft className="h-4 w-4 mr-2" /> Return to Market Exchange
           </Button>
           <div className="flex items-center gap-6">
-            <div className="h-20 w-20 rounded-[2rem] bg-emerald-500/10 flex items-center justify-center border-2 border-emerald-500/10 shadow-xl shadow-emerald-500/5 rotate-3 hover:rotate-0 transition-transform duration-500">
-              <Wheat className="h-10 w-10 text-emerald-600" />
+            <div className="h-20 w-20 rounded-[2rem] bg-primary/10 flex items-center justify-center border-2 border-primary/10 shadow-xl shadow-primary/5 rotate-3 hover:rotate-0 transition-transform duration-500">
+              <Wheat className="h-10 w-10 text-primary/90" />
             </div>
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-4xl font-black tracking-tighter text-foreground">
                   {crop.name}
                 </h1>
-                <Badge className="bg-emerald-500 text-white border-none font-black text-[10px] tracking-widest px-3">
+                <Badge className="bg-primary text-foreground border-none font-black text-[10px] tracking-widest px-3">
                   {crop.tokenSymbol}
                 </Badge>
               </div>
@@ -127,7 +127,7 @@ const CropDetails = () => {
                 <Separator orientation="vertical" className="h-3 mx-1" />
                 <span className="flex items-center gap-1.5"><Globe className="h-3 w-3" /> {crop.category} Index</span>
                 <Separator orientation="vertical" className="h-3 mx-1" />
-                <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 font-bold bg-emerald-50/50">
+                <Badge variant="outline" className="border-primary/30 text-primary/90 font-bold bg-primary/10/50">
                   {crop.quality} Grade
                 </Badge>
               </div>
@@ -136,7 +136,7 @@ const CropDetails = () => {
         </div>
         <div className="flex items-center gap-3">
           <Button 
-            className="bg-slate-900 text-white hover:bg-slate-800 shadow-xl shadow-slate-900/10 px-8 h-12 font-bold group"
+            className="bg-slate-900 text-foreground hover:bg-slate-800 shadow-xl shadow-slate-900/10 px-8 h-12 font-bold group"
             onClick={() => navigate(`/crops/edit/${id}`)}
           >
             <Edit className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" /> 
@@ -157,7 +157,7 @@ const CropDetails = () => {
       {/* Key Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Live Market Benchmark", value: `₦${(crop.pricePerUnit || 0).toLocaleString()}`, sub: "Per Metric Ton", icon: Coins, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Live Market Benchmark", value: `₦${(crop.pricePerUnit || 0).toLocaleString()}`, sub: "Per Metric Ton", icon: Coins, color: "text-primary", bg: "bg-primary/10" },
           { title: "Active Vaulted Inventory", value: `${(crop.totalStock || 0).toLocaleString()}`, sub: "Metric Tons", icon: Layers, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Net Equity Valuation", value: `₦${(totalValue / 1e6).toFixed(1)}M`, sub: "Market Capitalization", icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Tokenized Supply", value: `${Math.round(((crop.totalTokenized || 0) / (crop.totalStock || 1)) * 100)}%`, sub: "Liquidity Ratio", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10" },
@@ -177,17 +177,17 @@ const CropDetails = () => {
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Market Visualizer */}
-        <Card className="lg:col-span-8 glass-card border-none shadow-xl overflow-hidden bg-white/40">
+        <Card className="lg:col-span-8 glass-card border-none shadow-xl overflow-hidden bg-accent">
            <CardHeader className="flex flex-row items-center justify-between border-b bg-muted/20">
               <div>
                  <CardTitle className="text-lg font-bold flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-emerald-500" />
+                    <BarChart3 className="h-5 w-5 text-primary" />
                     Intraday Benchmark Performance
                  </CardTitle>
                  <CardDescription>Visualizing market price fluctuations for {crop.code}</CardDescription>
               </div>
               <div className="flex gap-2">
-                 <Badge className="bg-emerald-500/20 text-emerald-600 border-none">1D</Badge>
+                 <Badge className="bg-primary/20 text-primary/90 border-none">1D</Badge>
                  <Badge variant="ghost" className="opacity-40">1W</Badge>
                  <Badge variant="ghost" className="opacity-40">1M</Badge>
               </div>
@@ -237,9 +237,9 @@ const CropDetails = () => {
         {/* System & Trust Panel */}
         <div className="lg:col-span-4 space-y-6">
            <Card className="glass-card border-none shadow-lg overflow-hidden">
-              <div className="bg-slate-900 p-4 flex items-center justify-between text-white">
+              <div className="bg-slate-900 p-4 flex items-center justify-between text-foreground">
                  <h3 className="font-bold text-sm tracking-wide">SYSTEM OVERWATCH</h3>
-                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                 <ShieldCheck className="h-4 w-4 text-primary/80" />
               </div>
               <CardContent className="space-y-5 pt-6">
                  <div className="space-y-4">
@@ -270,7 +270,7 @@ const CropDetails = () => {
               </CardContent>
            </Card>
 
-           <Card className="border-none shadow-sm bg-emerald-500 text-white">
+           <Card className="border-none shadow-sm bg-primary text-foreground">
               <CardHeader className="pb-2">
                  <CardTitle className="text-base font-bold flex items-center gap-2">
                     <Coins className="h-4 w-4" />
@@ -278,10 +278,10 @@ const CropDetails = () => {
                  </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                 <p className="text-xs text-white/80 leading-relaxed font-medium">
+                 <p className="text-xs text-foreground/80 leading-relaxed font-medium">
                     This asset is currently tradable on the GrainTox Marketplace. High liquidity detected.
                  </p>
-                 <Button className="w-full bg-white text-emerald-600 hover:bg-emerald-50 font-black text-xs h-10">
+                 <Button className="w-full bg-white text-primary/90 hover:bg-primary/10 font-black text-xs h-10">
                     OPEN TRADING TERMINAL
                  </Button>
               </CardContent>

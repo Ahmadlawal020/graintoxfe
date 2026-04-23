@@ -139,7 +139,7 @@ const UserSettings = () => {
               <Button 
                 key={tab.id}
                 variant={activeTab === tab.id ? "default" : "outline"}
-                className={`flex-1 gap-2 ${activeTab === tab.id ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+                className={`flex-1 gap-2 ${activeTab === tab.id ? "bg-primary/90 hover:bg-primary/90" : ""}`}
                 onClick={() => setActiveTab(tab.id)}
                 size="sm"
               >
@@ -153,7 +153,7 @@ const UserSettings = () => {
               <Button 
                 key={tab.id}
                 variant={activeTab === tab.id ? "default" : "ghost"} 
-                className={`w-full justify-start gap-2 ${activeTab === tab.id ? "bg-emerald-600" : ""}`}
+                className={`w-full justify-start gap-2 ${activeTab === tab.id ? "bg-primary/90" : ""}`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 <tab.icon className="w-4 h-4" /> {tab.label === "Profile" ? "Personal Profile" : "KYC Verification"}
@@ -168,20 +168,20 @@ const UserSettings = () => {
             <div className="space-y-4 sm:space-y-6">
               <Card className="border-none shadow-md overflow-hidden">
                 {/* Profile header */}
-                <CardHeader className="bg-emerald-600 text-white pb-6 sm:pb-10">
+                <CardHeader className="bg-primary/90 text-foreground pb-6 sm:pb-10">
                   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                     <div className="relative">
-                      <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-2xl sm:text-3xl font-black">
+                      <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-full bg-accent backdrop-blur-md border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-black">
                         {firstName?.charAt(0)}{lastName?.charAt(0)}
                       </div>
-                      <button className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-white rounded-full text-emerald-600 shadow-lg">
+                      <button className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-white rounded-full text-primary/90 shadow-lg">
                         <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                     </div>
                     <div className="text-center sm:text-left">
                       <h2 className="text-xl sm:text-2xl font-bold">{firstName} {lastName}</h2>
-                      <div className="text-emerald-100 flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
-                        <Badge variant="outline" className="text-white border-white/50 text-[10px]">{roleStatus}</Badge>
+                      <div className="text-primary/20 flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
+                        <Badge variant="outline" className="text-foreground border-border text-[10px]">{roleStatus}</Badge>
                         <span className="text-[10px] sm:text-xs opacity-80">User ID: GRN-U-4022</span>
                       </div>
                     </div>
@@ -214,7 +214,7 @@ const UserSettings = () => {
                         </div>
                       </div>
                       <div className="pt-2 sm:pt-6">
-                        <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-10 sm:h-auto">Save Changes</Button>
+                        <Button className="w-full bg-primary/90 hover:bg-primary/90 text-foreground h-10 sm:h-auto">Save Changes</Button>
                       </div>
                     </div>
                   </div>
@@ -231,7 +231,7 @@ const UserSettings = () => {
                       <CardDescription className="text-xs sm:text-sm">Government regulations require verification to enable withdrawals.</CardDescription>
                     </div>
                     <Badge className={`${
-                      kycStatus === "VERIFIED" ? "bg-emerald-500" : 
+                      kycStatus === "VERIFIED" ? "bg-primary" : 
                       kycStatus === "UNDER_REVIEW" ? "bg-amber-500" : 
                       kycStatus === "REJECTED" ? "bg-red-500" : "bg-red-500"
                     } shrink-0 text-[10px]`}>
@@ -244,16 +244,16 @@ const UserSettings = () => {
                 <CardContent className="p-3 sm:p-6 pt-0">
                   {userLoading ? (
                     <div className="p-12 flex flex-col items-center justify-center gap-4">
-                      <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+                      <Loader2 className="w-8 h-8 animate-spin text-primary/90" />
                       <p className="text-sm text-muted-foreground">Checking verification status...</p>
                     </div>
                   ) : kycStatus === "VERIFIED" ? (
-                    <div className="p-6 sm:p-8 text-center bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col items-center">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-500 flex items-center justify-center text-white mb-3 sm:mb-4 shadow-lg shadow-emerald-200">
+                    <div className="p-6 sm:p-8 text-center bg-primary/10 rounded-2xl border border-primary/20 flex flex-col items-center">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-primary flex items-center justify-center text-foreground mb-3 sm:mb-4 shadow-lg shadow-primary/30">
                          <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10" />
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-emerald-900">Account Verified</h3>
-                      <p className="text-xs sm:text-sm text-emerald-700 mt-2 max-w-sm">
+                      <h3 className="text-lg sm:text-xl font-bold text-primary/90">Account Verified</h3>
+                      <p className="text-xs sm:text-sm text-primary/90 mt-2 max-w-sm">
                         Congratulations! Your identity has been verified. You now have full access to all platform features.
                       </p>
                     </div>
@@ -322,8 +322,8 @@ const UserSettings = () => {
 
                             {isCameraOpen && (cameraType === "front" || cameraType === "back") ? (
                               <div className="space-y-4 flex flex-col items-center p-4 bg-black rounded-2xl">
-                                <p className="text-white text-xs font-bold uppercase tracking-wider mb-2">Align {cameraType} of card</p>
-                                <div className="relative w-full aspect-[1.6/1] max-w-sm rounded-xl overflow-hidden border-2 border-emerald-500/50">
+                                <p className="text-foreground text-xs font-bold uppercase tracking-wider mb-2">Align {cameraType} of card</p>
+                                <div className="relative w-full aspect-[1.6/1] max-w-sm rounded-xl overflow-hidden border-2 border-primary/50">
                                   <Webcam 
                                     audio={false} 
                                     ref={webcamRef} 
@@ -331,11 +331,11 @@ const UserSettings = () => {
                                     className="w-full h-full object-cover"
                                     videoConstraints={{ facingMode: "environment" }}
                                   />
-                                  <div className="absolute inset-0 border-2 border-white/20 rounded-lg pointer-events-none m-4"></div>
+                                  <div className="absolute inset-0 border-2 border-border rounded-lg pointer-events-none m-4"></div>
                                 </div>
                                 <div className="flex gap-4">
-                                  <Button variant="outline" className="text-white border-white/20 hover:bg-white/10" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
-                                  <Button onClick={capture} className="rounded-full w-12 h-12 bg-emerald-500 hover:bg-emerald-600 shadow-lg" size="icon">
+                                  <Button variant="outline" className="text-foreground border-border hover:bg-accent" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
+                                  <Button onClick={capture} className="rounded-full w-12 h-12 bg-primary hover:bg-primary/90 shadow-lg" size="icon">
                                     <Camera className="w-6 h-6" />
                                   </Button>
                                 </div>
@@ -348,7 +348,7 @@ const UserSettings = () => {
                                     {docType === "International Passport" ? "Passport Bio Data Page" : "Front Side"}
                                   </Label>
                                   <div 
-                                    className="border-2 border-dashed rounded-xl aspect-[1.6/1] flex flex-col items-center justify-center relative group hover:border-emerald-500/50 transition-all bg-muted/10 overflow-hidden"
+                                    className="border-2 border-dashed rounded-xl aspect-[1.6/1] flex flex-col items-center justify-center relative group hover:border-primary/50 transition-all bg-muted/10 overflow-hidden"
                                   >
                                     {documentPreview ? (
                                       <>
@@ -384,7 +384,7 @@ const UserSettings = () => {
                                   <div className="space-y-2 animate-in fade-in slide-in-from-right-4">
                                     <Label className="text-[10px] uppercase text-muted-foreground font-bold">Back Side</Label>
                                     <div 
-                                      className="border-2 border-dashed rounded-xl aspect-[1.6/1] flex flex-col items-center justify-center relative group hover:border-emerald-500/50 transition-all bg-muted/10 overflow-hidden"
+                                      className="border-2 border-dashed rounded-xl aspect-[1.6/1] flex flex-col items-center justify-center relative group hover:border-primary/50 transition-all bg-muted/10 overflow-hidden"
                                     >
                                       {documentBackPreview ? (
                                         <>
@@ -425,7 +425,7 @@ const UserSettings = () => {
                               setKycStep(2);
                               setCameraType("selfie");
                             }} 
-                            className="w-full bg-emerald-600 hover:bg-emerald-700 h-11"
+                            className="w-full bg-primary/90 hover:bg-primary/90 h-11"
                           >
                             Next: Live Photo
                           </Button>
@@ -447,7 +447,7 @@ const UserSettings = () => {
                           <div className="flex flex-col items-center justify-center p-2">
                             {livePhoto ? (
                               <div className="relative">
-                                <img src={livePhoto} alt="Live" className="w-64 h-64 rounded-full object-cover border-4 border-emerald-500/20 shadow-xl" />
+                                <img src={livePhoto} alt="Live" className="w-64 h-64 rounded-full object-cover border-4 border-primary/20 shadow-xl" />
                                 <Button 
                                   variant="secondary" 
                                   size="sm" 
@@ -459,7 +459,7 @@ const UserSettings = () => {
                               </div>
                             ) : isCameraOpen ? (
                               <div className="flex flex-col items-center gap-4">
-                                <div className="w-64 h-64 rounded-full overflow-hidden border-4 border-emerald-500/50 bg-black">
+                                <div className="w-64 h-64 rounded-full overflow-hidden border-4 border-primary/50 bg-black">
                                   <Webcam 
                                     audio={false} 
                                     ref={webcamRef} 
@@ -468,7 +468,7 @@ const UserSettings = () => {
                                     videoConstraints={{ facingMode: "user" }}
                                   />
                                 </div>
-                                <Button onClick={capture} className="rounded-full w-12 h-12 bg-emerald-500 hover:bg-emerald-600 shadow-lg" size="icon">
+                                <Button onClick={capture} className="rounded-full w-12 h-12 bg-primary hover:bg-primary/90 shadow-lg" size="icon">
                                   <Camera className="w-6 h-6" />
                                 </Button>
                               </div>
@@ -482,7 +482,7 @@ const UserSettings = () => {
 
                           <div className="flex gap-3">
                             <Button variant="ghost" onClick={() => setKycStep(1)} className="flex-1">Back</Button>
-                            <Button disabled={!livePhoto} onClick={() => setKycStep(3)} className="flex-1 bg-emerald-600 hover:bg-emerald-700">Next: Review</Button>
+                            <Button disabled={!livePhoto} onClick={() => setKycStep(3)} className="flex-1 bg-primary/90 hover:bg-primary/90">Next: Review</Button>
                           </div>
                         </div>
                       )}
@@ -517,7 +517,7 @@ const UserSettings = () => {
                             <Button variant="ghost" onClick={() => setKycStep(2)} className="flex-1" disabled={isSubmitting}>Back</Button>
                             <Button 
                               onClick={handleSubmitKyc} 
-                              className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                              className="flex-1 bg-primary/90 hover:bg-primary/90"
                               disabled={isSubmitting}
                             >
                               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit for Verification"}

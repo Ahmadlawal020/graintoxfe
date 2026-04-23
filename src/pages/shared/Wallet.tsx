@@ -101,16 +101,23 @@ const Wallet = () => {
     setLoading(true);
     try {
       // 1. Initialize on the backend with this reference
-      await initializeDeposit({
+      const response = await initializeDeposit({
         amount: parseFloat(amount),
         reference: newRef
       }).unwrap();
 
+      console.log("[Wallet] Backend initialized:", response);
+
       // 2. Open Paystack popup using the hook
-      initializePayment({
+      // Pass the config directly to initializePayment to ensure it uses the fresh reference
+      const paymentConfig = {
+        ...config,
+        reference: newRef,
         onSuccess: (response: any) => onSuccess(response),
         onClose: () => onClose(),
-      });
+      };
+
+      initializePayment(paymentConfig);
 
     } catch (error: any) {
       console.error("Deposit error:", error);

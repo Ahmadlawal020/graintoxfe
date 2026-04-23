@@ -63,13 +63,13 @@ const Storage = () => {
             Storage Management {firstName && `- ${firstName}`}
           </h1>
           <p className="text-muted-foreground text-xs sm:text-sm flex items-center gap-1.5 mt-0.5">
-            <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+            <Building2 className="w-3.5 h-3.5 text-primary/90" />
             Manage your grain deposits and warehouse requests
           </p>
         </div>
         <Button 
           onClick={() => setIsRequesting(true)} 
-          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 w-full sm:w-auto"
+          className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20 w-full sm:w-auto"
           size="sm"
         >
           <Plus className="w-3.5 h-3.5 mr-1.5" /> New Deposit
@@ -125,7 +125,7 @@ const Storage = () => {
                 </div>
                 <div className="flex gap-2 pt-2">
                   <Button type="button" variant="outline" onClick={() => setIsRequesting(false)} className="flex-1 h-11">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="flex-1 h-11 bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button type="submit" disabled={isSubmitting} className="flex-1 h-11 bg-primary/90 hover:bg-primary/90 text-foreground">
                     {isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
                 </div>
@@ -134,8 +134,8 @@ const Storage = () => {
           </div>
 
           {/* Desktop: inline card */}
-          <Card className="hidden sm:block max-w-2xl border-emerald-500/20 shadow-xl animate-in zoom-in-95">
-            <CardHeader className="bg-emerald-500/5">
+          <Card className="hidden sm:block max-w-2xl border-primary/20 shadow-xl animate-in zoom-in-95">
+            <CardHeader className="bg-primary/5">
               <CardTitle>Request Storage Space</CardTitle>
               <CardDescription>Fill in the details of the commodities you wish to deposit.</CardDescription>
             </CardHeader>
@@ -175,7 +175,7 @@ const Storage = () => {
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
                   <Button type="button" variant="outline" onClick={() => setIsRequesting(false)}>Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button type="submit" disabled={isSubmitting} className="bg-primary/90 hover:bg-primary/90 text-foreground">
                     {isSubmitting ? "Submitting..." : "Submit Request"}
                   </Button>
                 </div>
@@ -189,7 +189,7 @@ const Storage = () => {
         <div className="space-y-4 sm:space-y-6">
           {/* Active Holdings */}
           <Card className="border-none shadow-md overflow-hidden">
-            <CardHeader className="bg-emerald-600 text-white p-3 sm:p-4">
+            <CardHeader className="bg-primary/90 text-foreground p-3 sm:p-4">
               <CardTitle className="text-sm sm:text-lg flex items-center gap-2">
                 <Wheat className="w-4 h-4 sm:w-5 sm:h-5" /> Current Stored Assets
               </CardTitle>
@@ -201,22 +201,22 @@ const Storage = () => {
                     <div key={op._id} className="p-3 space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                            <Package className="w-4 h-4 text-emerald-600" />
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Package className="w-4 h-4 text-primary/90" />
                           </div>
                           <div>
                             <p className="text-sm font-semibold">{op.commodity?.name}</p>
                             <p className="text-[10px] text-muted-foreground">{op.warehouse?.name}</p>
                           </div>
                         </div>
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">
+                        <Badge variant="outline" className="bg-primary/10 text-primary/90 border-primary/30 text-[10px]">
                           Active
                         </Badge>
                       </div>
                       <div className="flex justify-between text-[11px] text-muted-foreground">
                         <span><strong className="text-foreground">{op.quantity} MT</strong> stored</span>
                         <span className="flex items-center gap-1">
-                          {op.qcStatus === 'PASSED' ? <ShieldCheck className="w-3 h-3 text-emerald-500" /> : <Clock className="w-3 h-3 text-amber-500" />}
+                          {op.qcStatus === 'PASSED' ? <ShieldCheck className="w-3 h-3 text-primary" /> : <Clock className="w-3 h-3 text-amber-500" />}
                           QC: {op.qcStatus || 'Pending'}
                         </span>
                       </div>
@@ -248,11 +248,11 @@ const Storage = () => {
                           <td className="px-4 lg:px-6 py-3">{op.warehouse?.name}</td>
                           <td className="px-4 lg:px-6 py-3">{op.quantity} MT</td>
                           <td className="px-4 lg:px-6 py-3">
-                            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Active</Badge>
+                            <Badge variant="outline" className="bg-primary/10 text-primary/90 border-primary/30">Active</Badge>
                           </td>
                           <td className="px-4 lg:px-6 py-3">
                             <div className="flex items-center gap-1.5 text-xs">
-                              {op.qcStatus === 'PASSED' ? <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> : <Clock className="w-3.5 h-3.5 text-amber-500" />}
+                              {op.qcStatus === 'PASSED' ? <ShieldCheck className="w-3.5 h-3.5 text-primary" /> : <Clock className="w-3.5 h-3.5 text-amber-500" />}
                               {op.qcStatus || 'Pending'}
                             </div>
                           </td>
@@ -275,7 +275,7 @@ const Storage = () => {
           <Card className="border-none shadow-md">
             <CardHeader className="p-3 sm:p-4 lg:p-6">
               <CardTitle className="text-sm sm:text-lg flex items-center gap-2">
-                <History className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" /> Request Timeline
+                <History className="w-4 h-4 sm:w-5 sm:h-5 text-primary/90" /> Request Timeline
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">Track the status of your recent deposits and requests.</CardDescription>
             </CardHeader>
@@ -284,7 +284,7 @@ const Storage = () => {
                 {operations.map((op: any) => (
                   <div key={op._id} className="flex items-center justify-between p-3 sm:p-4 rounded-xl border border-muted hover:bg-muted/10 transition-all gap-3">
                     <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
-                      <div className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${op.type === 'DEPOSIT' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>
+                      <div className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${op.type === 'DEPOSIT' ? 'bg-primary/20 text-primary/90' : 'bg-blue-100 text-blue-700'}`}>
                         {op.type === 'DEPOSIT' ? <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                       </div>
                       <div className="min-w-0">
@@ -301,7 +301,7 @@ const Storage = () => {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-[9px] sm:text-[10px] ${op.qcStatus === 'PASSED' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-100/10 text-amber-600'}`}
+                        className={`text-[9px] sm:text-[10px] ${op.qcStatus === 'PASSED' ? 'bg-primary/10 text-primary/90' : 'bg-amber-100/10 text-amber-600'}`}
                       >
                         {op.qcStatus || 'PROCESSING'}
                       </Badge>

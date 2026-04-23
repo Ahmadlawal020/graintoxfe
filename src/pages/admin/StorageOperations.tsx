@@ -74,7 +74,7 @@ const StorageOperations = () => {
 
   const typeBadge = (type: string) => {
     const config: Record<string, { icon: React.ReactNode; class: string }> = {
-      DEPOSIT: { icon: <ArrowDownToLine className="w-3 h-3 mr-1" />, class: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
+      DEPOSIT: { icon: <ArrowDownToLine className="w-3 h-3 mr-1" />, class: "bg-primary/10 text-primary border-primary/20" },
       WITHDRAWAL: { icon: <ArrowUpFromLine className="w-3 h-3 mr-1" />, class: "bg-blue-500/10 text-blue-500 border-blue-500/20" },
       TRANSFER: { icon: <Building2 className="w-3 h-3 mr-1" />, class: "bg-purple-500/10 text-purple-500 border-purple-500/20" },
     };
@@ -88,7 +88,7 @@ const StorageOperations = () => {
 
   const qcBadge = (status: string) => {
     const config: Record<string, { icon: React.ReactNode; class: string }> = {
-      PASSED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "text-emerald-500" },
+      PASSED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "text-primary" },
       PENDING: { icon: <Clock className="w-3 h-3 mr-1" />, class: "text-amber-500" },
       FAILED: { icon: <AlertTriangle className="w-3 h-3 mr-1" />, class: "text-red-500" },
     };
@@ -128,7 +128,7 @@ const StorageOperations = () => {
             Track grain deposits, withdrawals, and inter-warehouse transfers
           </p>
         </div>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20">
+        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20">
           <Plus className="mr-2 h-4 w-4" />
           Log Operation
         </Button>
@@ -137,7 +137,7 @@ const StorageOperations = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Operations", value: stats.total, icon: ClipboardList, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Operations", value: stats.total, icon: ClipboardList, color: "text-primary", bg: "bg-primary/10" },
           { title: "Deposits", value: stats.deposits, icon: ArrowDownToLine, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Withdrawals", value: stats.withdrawals, icon: ArrowUpFromLine, color: "text-purple-500", bg: "bg-purple-500/10" },
           { title: "Pending QC", value: stats.pending, icon: Scale, color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -162,7 +162,7 @@ const StorageOperations = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <ClipboardList className="w-5 h-5 text-emerald-500" />
+                <ClipboardList className="w-5 h-5 text-primary" />
                 Operations Log
               </CardTitle>
               <CardDescription>All warehouse operations with quality control status</CardDescription>
@@ -210,11 +210,11 @@ const StorageOperations = () => {
               <TableBody>
                 {filteredOps.map((op: any) => (
                   <TableRow key={op._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/storage/${op._id}`)}>
-                    <TableCell className="font-mono text-xs font-medium text-emerald-600">{op.receiptNo}</TableCell>
+                    <TableCell className="font-mono text-xs font-medium text-primary/90">{op.receiptNo}</TableCell>
                     <TableCell>{typeBadge(op.type)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Wheat className="h-4 w-4 text-emerald-500" />
+                        <Wheat className="h-4 w-4 text-primary" />
                         <span className="font-medium">{op.commodity?.name || "Unknown"}</span>
                       </div>
                     </TableCell>

@@ -122,7 +122,7 @@ const ProcessWithdrawal = () => {
       toast({
         title: "Withdrawal Processed",
         description: `Successfully reduced inventory by ${formData.weight} MT. Dispatch Receipt: ${receiptNo}`,
-        className: "bg-blue-600 text-white border-none shadow-lg shadow-blue-500/20"
+        className: "bg-blue-600 text-foreground border-none shadow-lg shadow-blue-500/20"
       });
       navigate("/manager/stock");
     } catch (error: any) {
@@ -181,10 +181,10 @@ const ProcessWithdrawal = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="glass-card overflow-hidden border-none shadow-xl">
-              <div className="h-1.5 bg-emerald-500" />
+              <div className="h-1.5 bg-primary" />
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Wheat className="h-5 w-5 text-emerald-500" /> Commodity
+                  <Wheat className="h-5 w-5 text-primary" /> Commodity
                 </CardTitle>
                 <div className="relative mt-4">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -203,11 +203,11 @@ const ProcessWithdrawal = () => {
                         <div 
                           key={crop._id} onClick={() => setSelectedCrop(crop)}
                           className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer ${
-                            selectedCrop?._id === crop._id ? "bg-emerald-500/10 border-emerald-500" : "bg-background hover:bg-muted"
+                            selectedCrop?._id === crop._id ? "bg-primary/10 border-primary" : "bg-background hover:bg-muted"
                           }`}
                         >
                           <div className="font-bold text-sm">{crop.name}</div>
-                          {selectedCrop?._id === crop._id && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+                          {selectedCrop?._id === crop._id && <CheckCircle2 className="h-4 w-4 text-primary" />}
                         </div>
                       ))
                     }
@@ -293,7 +293,7 @@ const ProcessWithdrawal = () => {
                           <div className="flex justify-between text-xs pt-2 border-t"><span>Deduction Volume</span><span className="font-black">{formData.weight || 0} MT</span></div>
                        </div>
                        
-                       <Button type="submit" disabled={isSubmitting} className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-black text-lg">
+                       <Button type="submit" disabled={isSubmitting} className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-foreground font-black text-lg">
                           {isSubmitting ? "Processing..." : "Authorize Dispatch"}
                        </Button>
                     </div>

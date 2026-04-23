@@ -107,7 +107,7 @@ const StaffDetails = () => {
       Agent: "bg-amber-600",
     };
     return (
-      <Badge className={`${colors[role] || "bg-gray-600"} text-white`}>
+      <Badge className={`${colors[role] || "bg-gray-600"} text-foreground`}>
         {role.replace("_", " ")}
       </Badge>
     );
@@ -134,7 +134,7 @@ const StaffDetails = () => {
             <img 
               src={`https://api.dicebear.com/7.x/notionists/svg?seed=${staff.email}`} 
               alt="avatar" 
-              className="h-20 w-20 rounded-full bg-emerald-500/10 border-4 border-emerald-500/20 shadow-lg object-cover"
+              className="h-20 w-20 rounded-full bg-primary/10 border-4 border-primary/20 shadow-lg object-cover"
             />
             <div>
               <h1 className="text-3xl font-bold text-foreground">
@@ -145,7 +145,7 @@ const StaffDetails = () => {
                 <Badge variant={staff.status === "Active" ? "default" : "secondary"}>
                   {staff.status}
                 </Badge>
-                <Badge variant="outline" className="font-mono text-[10px] uppercase text-emerald-600 bg-emerald-500/10 border-emerald-500/20">
+                <Badge variant="outline" className="font-mono text-[10px] uppercase text-primary/90 bg-primary/10 border-primary/20">
                   ID: {staff.userId}
                 </Badge>
               </div>
@@ -186,7 +186,7 @@ const StaffDetails = () => {
         <Card className="glass-card">
           <CardHeader>
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <User className="h-4 w-4 text-emerald-500" />
+              <User className="h-4 w-4 text-primary" />
               Personnel Information
             </CardTitle>
           </CardHeader>
@@ -257,7 +257,7 @@ const StaffDetails = () => {
             </div>
             <div>
               <p className="text-xs text-muted-foreground uppercase tracking-wider">Employee ID / Staff ID</p>
-              <p className="font-mono text-sm font-bold text-emerald-600">{staff.userId}</p>
+              <p className="font-mono text-sm font-bold text-primary/90">{staff.userId}</p>
             </div>
             {role === "Warehouse_Manager" && (
               <div>
@@ -295,7 +295,7 @@ const StaffDetails = () => {
         <Card className="glass-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-emerald-500" />
+              <Clock className="w-5 h-5 text-primary" />
               System Activity
             </CardTitle>
           </CardHeader>
@@ -315,7 +315,7 @@ const StaffDetails = () => {
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/50">
                 <span className="text-sm text-muted-foreground">KYC Verification</span>
-                <Badge variant="outline" className={staff.kycStatus === "VERIFIED" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
+                <Badge variant="outline" className={staff.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
                   <CheckCircle2 className="w-3 h-3 mr-1" /> {staff.kycStatus || "PENDING"}
                 </Badge>
               </div>
@@ -326,7 +326,7 @@ const StaffDetails = () => {
         <Card className="glass-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-emerald-500" />
+              <Shield className="w-5 h-5 text-primary" />
               Access Permissions
             </CardTitle>
           </CardHeader>

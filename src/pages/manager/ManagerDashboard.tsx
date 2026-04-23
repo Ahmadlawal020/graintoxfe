@@ -140,15 +140,15 @@ const ManagerDashboard = () => {
   return (
     <div className="space-y-6 animate-fade-in p-2 pb-20">
       {/* Smart Header with Site Selection */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900 text-white p-6 rounded-3xl shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900 text-foreground p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
         <div className="relative z-10">
           <h1 className="text-4xl font-black tracking-tighter uppercase italic flex items-center gap-4">
-             <Layers className="h-10 w-10 text-emerald-400" />
+             <Layers className="h-10 w-10 text-primary/80" />
              Infrastructure Control
           </h1>
           <div className="flex flex-wrap items-center gap-2 mt-2 opacity-80">
-            <Badge variant="outline" className="text-emerald-400 border-emerald-400/30 uppercase text-[10px] font-bold">
+            <Badge variant="outline" className="text-primary/80 border-primary/30 uppercase text-[10px] font-bold">
                {myWarehouses.length} Allocated Sites
             </Badge>
             <span className="text-xs font-medium uppercase tracking-widest flex items-center gap-1">
@@ -158,18 +158,18 @@ const ManagerDashboard = () => {
         </div>
 
         <div className="w-full lg:w-72 relative z-10">
-           <Label className="text-[10px] font-black uppercase text-white/50 mb-1.5 block tracking-widest ml-1">Focus Facility</Label>
+           <Label className="text-[10px] font-black uppercase text-foreground/50 mb-1.5 block tracking-widest ml-1">Focus Facility</Label>
            <Select value={selectedFacilityId} onValueChange={setSelectedFacilityId}>
-              <SelectTrigger className="bg-white/10 border-white/20 text-white h-12 rounded-xl focus:ring-emerald-500/50">
+              <SelectTrigger className="bg-accent border-border text-foreground h-12 rounded-xl focus:ring-primary/50">
                  <div className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-emerald-400" />
+                    <Building2 className="h-4 w-4 text-primary/80" />
                     <SelectValue placeholder="All Sites" />
                  </div>
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 text-white border-white/10">
-                 <SelectItem value="all" className="focus:bg-emerald-500 focus:text-white">Aggregated View (Global)</SelectItem>
+              <SelectContent className="bg-slate-900 text-foreground border-border">
+                 <SelectItem value="all" className="focus:bg-primary focus:text-foreground">Aggregated View (Global)</SelectItem>
                  {myWarehouses.map((wh: any) => (
-                    <SelectItem key={wh._id} value={wh._id} className="focus:bg-emerald-500 focus:text-white">
+                    <SelectItem key={wh._id} value={wh._id} className="focus:bg-primary focus:text-foreground">
                        {wh.name}
                     </SelectItem>
                  ))}
@@ -181,7 +181,7 @@ const ManagerDashboard = () => {
       {/* Grid Metrics */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Aggregated Stock", value: `${currentStock.toLocaleString()}`, unit: "MT", icon: Package, color: "text-emerald-500", bg: "bg-emerald-500/10", sub: `${utilization}% Total Capacity` },
+          { title: "Aggregated Stock", value: `${currentStock.toLocaleString()}`, unit: "MT", icon: Package, color: "text-primary", bg: "bg-primary/10", sub: `${utilization}% Total Capacity` },
           { title: "Net Availability", value: `${totalAvailable.toLocaleString()}`, unit: "MT", icon: Building2, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Ready for Deposits" },
           { title: "Network Status", value: "ACTIVE", unit: "", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", sub: "All Sensors Online" },
           { title: "Site Alerts", value: "00", unit: "NEW", icon: AlertTriangle, color: "text-amber-500", bg: "bg-amber-500/10", sub: "No critical failures" },
@@ -245,7 +245,7 @@ const ManagerDashboard = () => {
            <Card className="glass-card border-none shadow-xl">
               <CardHeader>
                  <CardTitle className="text-lg font-black uppercase flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-emerald-500" />
+                    <Activity className="h-5 w-5 text-primary" />
                     Transaction Pulse
                  </CardTitle>
                  <CardDescription>Real-time flow of assets through your managed network</CardDescription>
@@ -253,9 +253,9 @@ const ManagerDashboard = () => {
               <CardContent>
                  <div className="space-y-3">
                     {filteredOps.slice(0, 6).map((op: any) => (
-                       <div key={op._id} className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-emerald-500/20 transition-all group">
+                       <div key={op._id} className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-primary/20 transition-all group">
                           <div className="flex items-center gap-4">
-                             <div className={`h-11 w-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${op.type === 'DEPOSIT' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-blue-500/10 text-blue-600'}`}>
+                             <div className={`h-11 w-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${op.type === 'DEPOSIT' ? 'bg-primary/10 text-primary/90' : 'bg-blue-500/10 text-blue-600'}`}>
                                 {op.type === 'DEPOSIT' ? <ArrowDownRight className="h-6 w-6" /> : <ArrowUpRight className="h-6 w-6" />}
                              </div>
                              <div>
@@ -265,7 +265,7 @@ const ManagerDashboard = () => {
                           </div>
                           <div className="text-right">
                              <p className="text-xs font-black italic tracking-widest">{new Date(op.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                             <Badge className={op.qcStatus === 'PASSED' ? 'bg-emerald-500 text-[9px] h-4 uppercase font-black px-1.5' : 'bg-amber-500 text-[9px] h-4 uppercase font-black px-1.5'}>
+                             <Badge className={op.qcStatus === 'PASSED' ? 'bg-primary text-[9px] h-4 uppercase font-black px-1.5' : 'bg-amber-500 text-[9px] h-4 uppercase font-black px-1.5'}>
                                 {op.qcStatus}
                              </Badge>
                           </div>
@@ -278,7 +278,7 @@ const ManagerDashboard = () => {
 
         {/* Action Sidebar */}
         <div className="lg:col-span-4 space-y-6">
-           <Card className="bg-emerald-600 text-white border-none shadow-2xl p-2 rounded-3xl">
+           <Card className="bg-primary/90 text-foreground border-none shadow-2xl p-2 rounded-3xl">
               <CardHeader className="pb-2">
                  <CardTitle className="text-base font-black flex items-center gap-2 uppercase tracking-wide">
                     <ClipboardList className="h-5 w-5" />
@@ -291,22 +291,22 @@ const ManagerDashboard = () => {
                    { task: "Temp Spike Check", site: "Vault Alpha", time: "Now" },
                    { task: "Inventory Sync", site: "All Nodes", time: "EOD" },
                  ].map((t, i) => (
-                    <div key={i} className="bg-white/10 p-3 rounded-2xl flex items-center justify-between border border-white/5 hover:bg-white/20 transition-colors pointer-events-auto cursor-pointer">
+                    <div key={i} className="bg-accent p-3 rounded-2xl flex items-center justify-between border border-border hover:bg-accent transition-colors pointer-events-auto cursor-pointer">
                        <div>
                           <p className="text-xs font-black uppercase tracking-tight">{t.task}</p>
-                          <p className="text-[10px] font-bold text-white/60 tracking-widest">{t.site}</p>
+                          <p className="text-[10px] font-bold text-foreground/60 tracking-widest">{t.site}</p>
                        </div>
-                       <span className="text-[10px] font-black bg-white text-emerald-600 px-2 py-1 rounded-lg">{t.time}</span>
+                       <span className="text-[10px] font-black bg-white text-primary/90 px-2 py-1 rounded-lg">{t.time}</span>
                     </div>
                  ))}
-                 <Button onClick={() => navigate("/manager/stock")} className="w-full mt-4 bg-white text-emerald-600 hover:bg-emerald-50 font-black h-12 rounded-2xl shadow-lg uppercase tracking-widest text-xs">
+                 <Button onClick={() => navigate("/manager/stock")} className="w-full mt-4 bg-white text-primary/90 hover:bg-primary/10 font-black h-12 rounded-2xl shadow-lg uppercase tracking-widest text-xs">
                     Access Ops Terminal
                  </Button>
               </CardContent>
            </Card>
 
            <Card className="glass-card border-none shadow-xl overflow-hidden rounded-3xl">
-              <div className="h-2 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500"></div>
+              <div className="h-2 bg-gradient-to-r from-primary via-blue-500 to-purple-500"></div>
               <CardHeader>
                  <CardTitle className="text-sm font-black uppercase tracking-widest">Network Topology</CardTitle>
                  <CardDescription>Status of assigned facilities</CardDescription>
@@ -315,7 +315,7 @@ const ManagerDashboard = () => {
                  {myWarehouses.map((wh: any) => (
                     <div key={wh._id} className="flex items-center justify-between pb-3 border-b border-muted last:border-0 last:pb-0">
                        <div className="flex items-center gap-3">
-                          <div className={`h-2 w-2 rounded-full ${wh.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse`}></div>
+                          <div className={`h-2 w-2 rounded-full ${wh.status === 'Active' ? 'bg-primary' : 'bg-amber-500'} animate-pulse`}></div>
                           <div>
                              <p className="text-xs font-black uppercase tracking-tight">{wh.name}</p>
                              <p className="text-[9px] text-muted-foreground font-bold uppercase">{wh.state}</p>
@@ -325,7 +325,7 @@ const ManagerDashboard = () => {
                           <p className="text-[10px] font-black">{Math.round((wh.capacity - (wh.availableCapacity || 0)) / wh.capacity * 100)}% Full</p>
                           <div className="w-16 h-1 bg-muted rounded-full overflow-hidden mt-1">
                              <div 
-                               className="h-full bg-emerald-500" 
+                               className="h-full bg-primary" 
                                style={{ width: `${Math.round((wh.capacity - (wh.availableCapacity || 0)) / wh.capacity * 100)}%` }}
                              ></div>
                           </div>

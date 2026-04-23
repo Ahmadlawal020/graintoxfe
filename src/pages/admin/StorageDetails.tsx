@@ -67,7 +67,7 @@ const StorageDetails = () => {
   }
 
   const typeConfig: Record<string, { label: string; icon: any; color: string; bg: string }> = {
-    DEPOSIT: { label: "Grain Deposit", icon: ArrowDownToLine, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    DEPOSIT: { label: "Grain Deposit", icon: ArrowDownToLine, color: "text-primary", bg: "bg-primary/10" },
     WITHDRAWAL: { label: "Stock Withdrawal", icon: ArrowUpFromLine, color: "text-blue-500", bg: "bg-blue-500/10" },
     TRANSFER: { label: "Inter-Vault Transfer", icon: Building2, color: "text-purple-500", bg: "bg-purple-500/10" },
   };
@@ -79,19 +79,19 @@ const StorageDetails = () => {
     toast({
       title: "Link Copied",
       description: "Receipt link has been copied to your clipboard.",
-      className: "bg-blue-600 text-white shadow-lg border-none",
+      className: "bg-blue-600 text-foreground shadow-lg border-none",
     });
   };
 
   return (
-    <div className="space-y-6 animate-fade-in p-2 pb-20 max-w-6xl mx-auto print:bg-white print:text-black">
+    <div className="space-y-6 animate-fade-in p-2 pb-20 max-w-6xl mx-auto print:bg-white print:text-primary-foreground">
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <Button variant="ghost" size="sm" onClick={() => navigate("/storage")} className="mb-2 -ml-2 print:hidden">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Log
           </Button>
           <div className="flex items-center gap-4">
-            <div className={`h-14 w-14 rounded-2xl ${type.bg} flex items-center justify-center border-2 border-white/10 shadow-lg`}>
+            <div className={`h-14 w-14 rounded-2xl ${type.bg} flex items-center justify-center border-2 border-border shadow-lg`}>
                <type.icon className={`h-8 w-8 ${type.color}`} />
             </div>
             <div>
@@ -123,7 +123,7 @@ const StorageDetails = () => {
           <Card className="glass-card overflow-hidden border-none shadow-xl">
              <CardHeader className="bg-muted/30 pb-6">
                 <CardTitle className="text-lg flex items-center gap-2">
-                   <BadgeCheck className="h-5 w-5 text-emerald-500" />
+                   <BadgeCheck className="h-5 w-5 text-primary" />
                    Transaction Particulars
                 </CardTitle>
                 <CardDescription>Verified cryptographic record of storage movement</CardDescription>
@@ -134,8 +134,8 @@ const StorageDetails = () => {
                       <div className="space-y-1">
                          <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Commodity Asset</p>
                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                               <Wheat className="h-6 w-6 text-emerald-600" />
+                            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                               <Wheat className="h-6 w-6 text-primary/90" />
                             </div>
                             <div>
                                <p className="font-bold text-lg">{operation.commodity?.name}</p>
@@ -189,7 +189,7 @@ const StorageDetails = () => {
 
                 <div className="space-y-4">
                    <h3 className="font-bold flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                      <ShieldCheck className="h-4 w-4 text-primary" />
                       Quality Control (QC) Report
                    </h3>
                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -197,7 +197,7 @@ const StorageDetails = () => {
                         { label: "Moisture", value: "12.4%", icon: Droplets, color: "text-blue-500" },
                         { label: "Temperature", value: "24.5°C", icon: Thermometer, color: "text-amber-500" },
                         { label: "Foreign Matter", value: "0.2%", icon: Scale, color: "text-slate-500" },
-                        { label: "Final Grade", value: "A (Premium)", icon: BadgeCheck, color: "text-emerald-500" },
+                        { label: "Final Grade", value: "A (Premium)", icon: BadgeCheck, color: "text-primary" },
                       ].map((item, i) => (
                         <div key={i} className="p-3 rounded-xl bg-muted/40 border border-border/50">
                            <div className="flex items-center gap-2 mb-1">
@@ -216,7 +216,7 @@ const StorageDetails = () => {
         {/* Status and Action Sidebar */}
         <div className="lg:col-span-4 space-y-6">
           <Card className="glass-card border-none shadow-lg overflow-hidden">
-             <div className="bg-slate-900 p-4 text-white">
+             <div className="bg-slate-900 p-4 text-foreground">
                 <h3 className="font-black text-sm tracking-widest">PROCESS TIMELINE</h3>
              </div>
              <CardContent className="pt-6">
@@ -228,8 +228,8 @@ const StorageDetails = () => {
                      { status: "Blockchain Minting", time: "10:35 AM", desc: "Tokens assigned to user wallet.", icon: BadgeCheck, done: true },
                    ].map((step, i) => (
                      <div key={i} className="flex gap-4 relative">
-                        <div className={`h-6 w-6 rounded-full shrink-0 flex items-center justify-center z-10 ${step.done ? "bg-emerald-500 shadow-lg shadow-emerald-500/20" : "bg-muted"}`}>
-                           {step.done ? <CheckCircle2 className="h-3 w-3 text-white" /> : <Clock className="h-3 w-3 text-muted-foreground" />}
+                        <div className={`h-6 w-6 rounded-full shrink-0 flex items-center justify-center z-10 ${step.done ? "bg-primary shadow-lg shadow-primary/20" : "bg-muted"}`}>
+                           {step.done ? <CheckCircle2 className="h-3 w-3 text-foreground" /> : <Clock className="h-3 w-3 text-muted-foreground" />}
                         </div>
                         <div>
                            <p className="text-sm font-bold leading-none">{step.status}</p>
@@ -242,7 +242,7 @@ const StorageDetails = () => {
              </CardContent>
           </Card>
 
-          <Card className="border-none shadow-md bg-blue-600 text-white">
+          <Card className="border-none shadow-md bg-blue-600 text-foreground">
              <CardHeader className="pb-2">
                 <CardTitle className="text-base font-bold flex items-center gap-2">
                    <ShieldCheck className="h-4 w-4" />
@@ -250,11 +250,11 @@ const StorageDetails = () => {
                 </CardTitle>
              </CardHeader>
              <CardContent className="space-y-4">
-                <p className="text-xs text-white/80 leading-relaxed font-medium">
+                <p className="text-xs text-foreground/80 leading-relaxed font-medium">
                    This transaction is immutable and has been witnessed by the Warehouse Manager and verified by the QC Department.
                 </p>
-                <div className="pt-2 border-t border-white/20">
-                   <p className="text-[10px] font-mono text-white/60">HASH: {id?.repeat(2).substring(0, 32)}</p>
+                <div className="pt-2 border-t border-border">
+                   <p className="text-[10px] font-mono text-foreground/60">HASH: {id?.repeat(2).substring(0, 32)}</p>
                 </div>
              </CardContent>
           </Card>

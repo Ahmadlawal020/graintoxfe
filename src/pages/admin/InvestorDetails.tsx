@@ -50,14 +50,14 @@ const InvestorDetails = () => {
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Investors
           </Button>
           <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-full bg-emerald-500/10 flex items-center justify-center text-xl font-bold text-emerald-600">
+            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-xl font-bold text-primary/90">
               {investor.name.split(" ").map(n => n[0]).join("")}
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground">{investor.name}</h1>
               <div className="flex items-center gap-2 mt-1">
-                <Badge className={`${tierColors[investor.tier]} text-white`}>{investor.tier}</Badge>
-                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">KYC: {investor.kycStatus}</Badge>
+                <Badge className={`${tierColors[investor.tier]} text-foreground`}>{investor.tier}</Badge>
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">KYC: {investor.kycStatus}</Badge>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ const InvestorDetails = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Portfolio Value", value: `₦${(investor.portfolioValue / 1e6).toFixed(1)}M`, icon: PieIcon, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Portfolio Value", value: `₦${(investor.portfolioValue / 1e6).toFixed(1)}M`, icon: PieIcon, color: "text-primary", bg: "bg-primary/10" },
           { title: "Wallet Balance", value: `₦${(investor.walletBalance / 1e6).toFixed(1)}M`, icon: Wallet, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Tokens Held", value: investor.totalTokens, icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10" },
           { title: "ROI", value: `+${investor.roi}%`, icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -130,7 +130,7 @@ const InvestorDetails = () => {
                       <TableCell className="font-mono text-sm font-medium">{h.symbol} <span className="text-muted-foreground text-xs ml-1">{h.name}</span></TableCell>
                       <TableCell>{h.tokens}</TableCell>
                       <TableCell className="font-semibold">₦{(h.value / 1e6).toFixed(1)}M</TableCell>
-                      <TableCell><span className={`flex items-center text-sm font-medium ${h.change >= 0 ? "text-emerald-500" : "text-red-500"}`}><ArrowUpRight className="w-3 h-3 mr-0.5" />{Math.abs(h.change)}%</span></TableCell>
+                      <TableCell><span className={`flex items-center text-sm font-medium ${h.change >= 0 ? "text-primary" : "text-red-500"}`}><ArrowUpRight className="w-3 h-3 mr-0.5" />{Math.abs(h.change)}%</span></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -143,7 +143,7 @@ const InvestorDetails = () => {
       {/* Contact + Recent Trades */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-emerald-500" /> Contact Info</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-primary" /> Contact Info</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {[
               { label: "Email", value: investor.email, icon: <Mail className="h-4 w-4" /> },
@@ -177,7 +177,7 @@ const InvestorDetails = () => {
                   {investor.recentTrades.map((t, i) => (
                     <TableRow key={i}>
                       <TableCell className="text-sm text-muted-foreground">{t.date}</TableCell>
-                      <TableCell><Badge variant="outline" className={t.type === "BUY" ? "text-emerald-500 border-emerald-500/20" : "text-red-500 border-red-500/20"}>{t.type}</Badge></TableCell>
+                      <TableCell><Badge variant="outline" className={t.type === "BUY" ? "text-primary border-primary/20" : "text-red-500 border-red-500/20"}>{t.type}</Badge></TableCell>
                       <TableCell className="font-mono text-xs font-medium">{t.token}</TableCell>
                       <TableCell>{t.qty}</TableCell>
                       <TableCell className="font-semibold">₦{(t.total / 1e6).toFixed(2)}M</TableCell>

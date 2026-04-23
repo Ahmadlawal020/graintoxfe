@@ -162,7 +162,7 @@ const EditStaff = () => {
   if (loadingUser) {
     return (
       <div className="flex flex-col items-center justify-center h-96 animate-fade-in">
-        <Loader2 className="h-12 w-12 animate-spin text-emerald-500 mb-4" />
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
         <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Retrieving Secured Data...</p>
       </div>
     );
@@ -195,10 +195,10 @@ const EditStaff = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           
           {/* Identity Section */}
-          <Card className="glass-card border-emerald-500/10 h-full">
+          <Card className="glass-card border-primary/10 h-full">
             <CardHeader>
               <CardTitle className="text-sm font-black flex items-center gap-2 uppercase tracking-wide">
-                <UserCheck className="h-4 w-4 text-emerald-500" />
+                <UserCheck className="h-4 w-4 text-primary" />
                 Personal Identity
               </CardTitle>
             </CardHeader>
@@ -235,7 +235,7 @@ const EditStaff = () => {
                   name="firstName" 
                   value={formData.firstName} 
                   onChange={handleChange}
-                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20 font-bold ${errors.firstName ? "border-destructive ring-1 ring-destructive" : ""}`}
+                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20 font-bold ${errors.firstName ? "border-destructive ring-1 ring-destructive" : ""}`}
                 />
                 {errors.firstName && <p className="text-[10px] text-destructive">{errors.firstName}</p>}
               </div>
@@ -247,7 +247,7 @@ const EditStaff = () => {
                   name="lastName" 
                   value={formData.lastName} 
                   onChange={handleChange}
-                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20 font-bold ${errors.lastName ? "border-destructive ring-1 ring-destructive" : ""}`}
+                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20 font-bold ${errors.lastName ? "border-destructive ring-1 ring-destructive" : ""}`}
                 />
                  {errors.lastName && <p className="text-[10px] text-destructive">{errors.lastName}</p>}
               </div>
@@ -259,7 +259,7 @@ const EditStaff = () => {
                   name="userId" 
                   value={formData.userId} 
                   onChange={handleChange}
-                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-emerald-500/20 font-mono font-bold ${errors.userId ? "border-destructive ring-1 ring-destructive" : ""}`}
+                  className={`h-11 bg-muted/30 border-none focus:ring-2 focus:ring-primary/20 font-mono font-bold ${errors.userId ? "border-destructive ring-1 ring-destructive" : ""}`}
                 />
                  {errors.userId && <p className="text-[10px] text-destructive">{errors.userId}</p>}
               </div>
@@ -337,7 +337,7 @@ const EditStaff = () => {
               <div className="space-y-3">
                  <Label className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Active Facilities</span>
-                    <Badge className="bg-emerald-500 text-white font-black text-[9px] h-4 py-0 border-none">
+                    <Badge className="bg-primary text-foreground font-black text-[9px] h-4 py-0 border-none">
                        {formData.assignedWarehouse.length} ASSIGNED
                     </Badge>
                  </Label>
@@ -346,18 +346,18 @@ const EditStaff = () => {
                     {warehouses.map((w: any) => (
                        <div 
                          key={w._id} 
-                         className={`flex items-center space-x-3 p-3 rounded-xl border-2 transition-all cursor-pointer ${formData.assignedWarehouse.includes(w.name) ? "bg-emerald-50/50 border-emerald-500/30 shadow-sm" : "border-transparent bg-muted/30 opacity-60 hover:opacity-100 hover:bg-muted"}`}
+                         className={`flex items-center space-x-3 p-3 rounded-xl border-2 transition-all cursor-pointer ${formData.assignedWarehouse.includes(w.name) ? "bg-primary/10/50 border-primary/30 shadow-sm" : "border-transparent bg-muted/30 opacity-60 hover:opacity-100 hover:bg-muted"}`}
                          onClick={() => handleWarehouseToggle(w.name, !formData.assignedWarehouse.includes(w.name))}
                        >
-                          <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-all ${formData.assignedWarehouse.includes(w.name) ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30" : "bg-muted text-muted-foreground"}`}>
+                          <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-all ${formData.assignedWarehouse.includes(w.name) ? "bg-primary text-foreground shadow-lg shadow-primary/30" : "bg-muted text-muted-foreground"}`}>
                              <Building className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                             <p className={`text-sm tracking-tight font-black uppercase transition-colors ${formData.assignedWarehouse.includes(w.name) ? "text-emerald-900" : "text-muted-foreground"}`}>{w.name}</p>
+                             <p className={`text-sm tracking-tight font-black uppercase transition-colors ${formData.assignedWarehouse.includes(w.name) ? "text-primary/90" : "text-muted-foreground"}`}>{w.name}</p>
                              <p className="text-[9px] text-muted-foreground truncate font-bold uppercase opacity-60">{w.location}</p>
                           </div>
                           {formData.assignedWarehouse.includes(w.name) && (
-                             <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                             <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                           )}
                        </div>
                     ))}
@@ -372,7 +372,7 @@ const EditStaff = () => {
                           {r}
                        </Badge>
                     ))}
-                    <Badge className={formData.status === "Active" ? "bg-emerald-500" : "bg-amber-500"}>
+                    <Badge className={formData.status === "Active" ? "bg-primary" : "bg-amber-500"}>
                        {formData.status}
                     </Badge>
                  </div>
@@ -393,7 +393,7 @@ const EditStaff = () => {
           <Button 
             type="submit" 
             disabled={isUpdating}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-10 shadow-2xl shadow-blue-600/30 font-black h-12 text-sm tracking-widest uppercase"
+            className="bg-blue-600 hover:bg-blue-700 text-foreground px-10 shadow-2xl shadow-blue-600/30 font-black h-12 text-sm tracking-widest uppercase"
           >
             {isUpdating ? (
               <>

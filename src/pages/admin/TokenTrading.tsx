@@ -81,7 +81,7 @@ const TokenTrading = () => {
   if (tradesLoading || cropsLoading) {
     return (
       <div className="flex h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -129,7 +129,7 @@ const TokenTrading = () => {
               variant={selectedPeriod === period ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedPeriod(period)}
-              className={selectedPeriod === period ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+              className={selectedPeriod === period ? "bg-primary/90 hover:bg-primary/90" : ""}
             >
               {period}
             </Button>
@@ -140,7 +140,7 @@ const TokenTrading = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Active Tokens", value: tokens.length, icon: Coins, color: "text-emerald-500", bg: "bg-emerald-500/10", sub: "Grain-backed assets" },
+          { title: "Active Tokens", value: tokens.length, icon: Coins, color: "text-primary", bg: "bg-primary/10", sub: "Grain-backed assets" },
           { title: "24h Volume", value: `₦${(totalVolume24h / 1e6).toFixed(1)}M`, icon: Activity, color: "text-blue-500", bg: "bg-blue-500/10", sub: `${recentTrades.length} recent trades` },
           { title: "Total Market Cap", value: `₦${(totalMarketCap / 1e9).toFixed(2)}B`, icon: BarChart3, color: "text-purple-500", bg: "bg-purple-500/10", sub: "All token value" },
           { title: "Avg Price Change", value: `+${(tokens.reduce((a, t) => a + t.change24h, 0) / tokens.length).toFixed(1)}%`, icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Across all tokens" },
@@ -215,8 +215,8 @@ const TokenTrading = () => {
                     <TableRow key={token.symbol} className="hover:bg-muted/50 transition cursor-pointer">
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                            <Coins className="h-4 w-4 text-emerald-500" />
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Coins className="h-4 w-4 text-primary" />
                           </div>
                           <div>
                             <div className="font-semibold">{token.symbol}</div>
@@ -226,7 +226,7 @@ const TokenTrading = () => {
                       </TableCell>
                       <TableCell className="font-semibold">₦{token.price.toLocaleString()}</TableCell>
                       <TableCell>
-                        <span className={`flex items-center text-sm font-medium ${token.change24h >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                        <span className={`flex items-center text-sm font-medium ${token.change24h >= 0 ? "text-primary" : "text-red-500"}`}>
                           {token.change24h >= 0 ? <ArrowUpRight className="h-3 w-3 mr-0.5" /> : <ArrowDownRight className="h-3 w-3 mr-0.5" />}
                           {Math.abs(token.change24h)}%
                         </span>
@@ -245,16 +245,16 @@ const TokenTrading = () => {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-emerald-500" />
+              <Activity className="w-5 h-5 text-primary" />
               Recent Trades
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {recentTrades.map((trade) => (
-                <div key={trade.id} className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-transparent hover:border-emerald-500/20 transition-all">
+                <div key={trade.id} className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className={`p-1.5 rounded-full ${trade.type === "BUY" ? "bg-emerald-500/20 text-emerald-500" : "bg-red-500/20 text-red-500"}`}>
+                    <div className={`p-1.5 rounded-full ${trade.type === "BUY" ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-500"}`}>
                       {trade.type === "BUY" ? <ArrowDownRight className="w-3.5 h-3.5" /> : <ArrowUpRight className="w-3.5 h-3.5" />}
                     </div>
                     <div>

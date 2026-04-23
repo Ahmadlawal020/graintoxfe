@@ -79,7 +79,7 @@ const QualityControl = () => {
   const statusBadge = (status: string) => {
     const config: Record<string, { icon: React.ReactNode; class: string; label: string }> = {
       PENDING: { icon: <Clock className="w-3 h-3 mr-1" />, class: "bg-amber-500/10 text-amber-500 border-amber-500/20", label: "Pending" },
-      PASSED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", label: "Passed" },
+      PASSED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-primary/10 text-primary border-primary/20", label: "Passed" },
       FAILED: { icon: <XCircle className="w-3 h-3 mr-1" />, class: "bg-red-500/10 text-red-500 border-red-500/20", label: "Failed" },
     };
     const c = config[status] || config.PENDING;
@@ -89,7 +89,7 @@ const QualityControl = () => {
   const moistureIndicator = (val: number) => {
     if (val > 14) return <span className="text-red-500 font-semibold">{val}%</span>;
     if (val > 12.5) return <span className="text-amber-500 font-semibold">{val}%</span>;
-    return <span className="text-emerald-500 font-semibold">{val}%</span>;
+    return <span className="text-primary font-semibold">{val}%</span>;
   };
 
   return (
@@ -99,14 +99,14 @@ const QualityControl = () => {
           <h1 className="text-3xl font-bold text-foreground">Quality Control</h1>
           <p className="text-muted-foreground">Inspect and grade incoming grain deposits</p>
         </div>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20" size="sm">
+        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" size="sm">
           <Microscope className="mr-2 h-4 w-4" /> Start Inspection
         </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Inspections", value: stats.total, icon: ShieldCheck, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Inspections", value: stats.total, icon: ShieldCheck, color: "text-primary", bg: "bg-primary/10" },
           { title: "Pending", value: stats.pending, icon: Clock, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Passed", value: stats.passed, icon: CheckCircle2, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Failed", value: stats.failed, icon: XCircle, color: "text-red-500", bg: "bg-red-500/10" },
@@ -125,7 +125,7 @@ const QualityControl = () => {
         <CardHeader>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <CardTitle className="flex items-center gap-2"><Scale className="w-5 h-5 text-emerald-500" /> Inspection Log</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Scale className="w-5 h-5 text-primary" /> Inspection Log</CardTitle>
               <CardDescription>Grain quality assessments with moisture, foreign matter, and pest damage readings</CardDescription>
             </div>
             <div className="relative w-full md:w-64">
@@ -154,8 +154,8 @@ const QualityControl = () => {
               <TableBody>
                 {filteredInspections.map((insp) => (
                   <TableRow key={insp._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/manager/qc/${insp._id}`)}>
-                    <TableCell className="font-mono text-xs text-emerald-600">{insp.lot}</TableCell>
-                    <TableCell className="font-medium flex items-center gap-1.5"><Wheat className="h-4 w-4 text-emerald-500" />{insp.commodity}</TableCell>
+                    <TableCell className="font-mono text-xs text-primary/90">{insp.lot}</TableCell>
+                    <TableCell className="font-medium flex items-center gap-1.5"><Wheat className="h-4 w-4 text-primary" />{insp.commodity}</TableCell>
                     <TableCell className="text-sm">{insp.investor}</TableCell>
                     <TableCell className="text-sm font-semibold">{insp.quantity}</TableCell>
                     <TableCell>{insp.moisture ? moistureIndicator(insp.moisture) : "—"}</TableCell>
@@ -163,7 +163,7 @@ const QualityControl = () => {
                     <TableCell className={insp.pestDamage > 2 ? "text-red-500 font-semibold" : "text-muted-foreground"}>{insp.pestDamage ? `${insp.pestDamage}%` : "—"}</TableCell>
                     <TableCell>
                       {insp.grade !== "Pending" ? (
-                        <Badge className={insp.grade === "Grade A" ? "bg-emerald-600 text-white" : insp.grade === "Rejected" ? "bg-red-500 text-white" : "bg-amber-500 text-white"}>{insp.grade}</Badge>
+                        <Badge className={insp.grade === "Grade A" ? "bg-primary/90 text-foreground" : insp.grade === "Rejected" ? "bg-red-500 text-foreground" : "bg-amber-500 text-foreground"}>{insp.grade}</Badge>
                       ) : <span className="text-muted-foreground text-sm">—</span>}
                     </TableCell>
                     <TableCell>{statusBadge(insp.status)}</TableCell>

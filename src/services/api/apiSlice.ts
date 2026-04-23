@@ -31,8 +31,7 @@ interface CustomQueryResult {
 }
 
 const baseQuery = fetchBaseQuery({
-
-  baseUrl: import.meta.env.VITE_API_URL || "http://localhost:5002",
+  baseUrl: import.meta.env.VITE_API_URL,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as { auth: { accessToken: string } }).auth
@@ -69,7 +68,7 @@ const baseQueryWithReauth: BaseQueryFn<
     const refreshResult = (await baseQuery(
       "/api/auth/refresh",
       api,
-      extraOptions
+      extraOptions,
     )) as CustomQueryResult;
 
     if (refreshResult?.data) {

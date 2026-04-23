@@ -77,7 +77,7 @@ const KYCManagement = () => {
     const config: Record<string, { icon: React.ReactNode; class: string; label: string }> = {
       PENDING: { icon: <Clock className="w-3 h-3 mr-1" />, class: "bg-amber-500/10 text-amber-500 border-amber-500/20", label: "Pending" },
       UNDER_REVIEW: { icon: <Eye className="w-3 h-3 mr-1" />, class: "bg-blue-500/10 text-blue-500 border-blue-500/20", label: "Under Review" },
-      VERIFIED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20", label: "Verified" },
+      VERIFIED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-primary/10 text-primary border-primary/20", label: "Verified" },
       REJECTED: { icon: <XCircle className="w-3 h-3 mr-1" />, class: "bg-red-500/10 text-red-500 border-red-500/20", label: "Rejected" },
     };
     const c = config[status] || config.PENDING;
@@ -90,11 +90,11 @@ const KYCManagement = () => {
 
   const riskBadge = (level: string) => {
     const colors: Record<string, string> = {
-      Low: "bg-emerald-600",
+      Low: "bg-primary/90",
       Medium: "bg-amber-500",
       High: "bg-red-500",
     };
-    return <Badge className={`${colors[level]} text-white text-[10px]`}>{level} Risk</Badge>;
+    return <Badge className={`${colors[level]} text-foreground text-[10px]`}>{level} Risk</Badge>;
   };
 
   return (
@@ -109,7 +109,7 @@ const KYCManagement = () => {
       {/* Stats Row */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Applications", value: stats.total, icon: FileText, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Total Applications", value: stats.total, icon: FileText, color: "text-primary", bg: "bg-primary/10" },
           { title: "Pending Review", value: stats.pending + stats.underReview, icon: Clock, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Verified", value: stats.verified, icon: CheckCircle2, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Rejected", value: stats.rejected, icon: XCircle, color: "text-red-500", bg: "bg-red-500/10" },
@@ -134,7 +134,7 @@ const KYCManagement = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                <ShieldCheck className="w-5 h-5 text-primary" />
                 KYC Applications
               </CardTitle>
               <CardDescription>
@@ -203,7 +203,7 @@ const KYCManagement = () => {
                           <img 
                             src={`https://api.dicebear.com/7.x/notionists/svg?seed=${app.email}`} 
                             alt="avatar" 
-                            className="h-10 w-10 rounded-full border border-emerald-500/20 bg-emerald-500/10" 
+                            className="h-10 w-10 rounded-full border border-primary/20 bg-primary/10" 
                           />
                           <div>
                             <div className="font-medium text-foreground">{app.title} {app.firstName} {app.lastName}</div>

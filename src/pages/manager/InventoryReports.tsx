@@ -82,7 +82,7 @@ const InventoryReports = () => {
           <h1 className="text-3xl font-bold text-foreground">Inventory Reports</h1>
           <p className="text-muted-foreground">Generate and download warehouse operational reports</p>
         </div>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20" size="sm">
+        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" size="sm">
           <FileText className="mr-2 h-4 w-4" /> Generate Custom Report
         </Button>
       </div>
@@ -90,7 +90,7 @@ const InventoryReports = () => {
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          { title: `Net Inflow (${currentMonthName})`, value: `${netInflow} MT`, icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: `Net Inflow (${currentMonthName})`, value: `${netInflow} MT`, icon: TrendingUp, color: "text-primary", bg: "bg-primary/10" },
           { title: "Reports Generated", value: "12", icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Last Export", value: `${currentMonthName} 20`, icon: Calendar, color: "text-purple-500", bg: "bg-purple-500/10" },
         ].map((stat, i) => (
@@ -134,10 +134,10 @@ const InventoryReports = () => {
         <CardContent>
           <div className="space-y-3">
             {reports.map((report) => (
-              <div key={report.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-transparent hover:border-emerald-500/20 transition-all">
+              <div key={report.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-emerald-500/10">
-                    <FileText className="h-5 w-5 text-emerald-500" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <FileText className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="font-medium text-sm">{report.title}</p>

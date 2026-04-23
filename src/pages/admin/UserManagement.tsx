@@ -61,7 +61,7 @@ const UserManagement = () => {
       toast({
         title: "KYC Approved",
         description: `User ${user.firstName} ${user.lastName} is now verified.`,
-        className: "bg-emerald-600 text-white border-none shadow-lg shadow-emerald-500/20"
+        className: "bg-primary/90 text-foreground border-none shadow-lg shadow-primary/20"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not approve KYC", variant: "destructive" });
@@ -76,7 +76,7 @@ const UserManagement = () => {
       toast({
         title: `User ${newStatus}`,
         description: `User account is now ${newStatus.toLowerCase()}.`,
-        className: newStatus === "Active" ? "bg-emerald-600 text-white" : "bg-red-600 text-white"
+        className: newStatus === "Active" ? "bg-primary/90 text-foreground" : "bg-red-600 text-foreground"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not update status", variant: "destructive" });
@@ -109,7 +109,7 @@ const UserManagement = () => {
 
   const kycBadge = (status: string) => {
     const styles: Record<string, string> = {
-      VERIFIED: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+      VERIFIED: "bg-primary/10 text-primary border-primary/20",
       PENDING: "bg-amber-500/10 text-amber-500 border-amber-500/20",
       UNDER_REVIEW: "bg-blue-500/10 text-blue-500 border-blue-500/20",
       REJECTED: "bg-red-500/10 text-red-500 border-red-500/20",
@@ -123,12 +123,12 @@ const UserManagement = () => {
 
   const roleBadge = (role: string) => {
     const colors: Record<string, string> = {
-      User: "bg-emerald-600",
+      User: "bg-primary/90",
       Warehouse_Manager: "bg-blue-600",
       Admin: "bg-red-600",
     };
     return (
-      <Badge className={`${colors[role] || "bg-gray-600"} text-white text-[10px]`}>
+      <Badge className={`${colors[role] || "bg-gray-600"} text-foreground text-[10px]`}>
         {role?.replace("_", " ") || "Unknown"}
       </Badge>
     );
@@ -146,7 +146,7 @@ const UserManagement = () => {
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Users", value: stats.total, icon: Users, color: "text-emerald-500", bg: "bg-emerald-500/10", change: "+12% this month" },
+          { title: "Total Users", value: stats.total, icon: Users, color: "text-primary", bg: "bg-primary/10", change: "+12% this month" },
           { title: "Active Users", value: stats.active, icon: UserCheck, color: "text-blue-500", bg: "bg-blue-500/10", change: `${Math.round((stats.active / (stats.total || 1)) * 100)}% of total` },
           { title: "Suspended", value: stats.suspended, icon: UserX, color: "text-red-500", bg: "bg-red-500/10", change: "Requires review" },
           { title: "Pending KYC", value: stats.pendingKyc, icon: Shield, color: "text-amber-500", bg: "bg-amber-500/10", change: "Awaiting verification" },
@@ -231,14 +231,14 @@ const UserManagement = () => {
                         <img 
                           src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
                           alt="avatar" 
-                          className="h-10 w-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-sm"
+                          className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm"
                         />
                         <div>
                           <div className="font-medium text-foreground">{user.title} {user.firstName} {user.lastName}</div>
                           <div className="flex items-center text-xs text-muted-foreground mt-0.5 space-x-2">
                             <span>{user.email}</span>
                             <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                            <span className="font-mono text-[10px] uppercase text-emerald-600 bg-emerald-500/10 px-1 py-0.5 rounded">{user.userId}</span>
+                            <span className="font-mono text-[10px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
                           </div>
                         </div>
                       </div>
@@ -248,7 +248,7 @@ const UserManagement = () => {
                       <div className="space-y-1 text-sm">
                         <div className="text-muted-foreground">{platformDetail}</div>
                         {(user.walletBalance !== undefined && user.walletBalance !== null) && (
-                           <div className="font-semibold text-emerald-600 text-xs">
+                           <div className="font-semibold text-primary/90 text-xs">
                              Wallet: ₦{(user.walletBalance / 1e3).toFixed(1)}K
                            </div>
                         )}
@@ -289,7 +289,7 @@ const UserManagement = () => {
                               <Shield className="mr-2 h-4 w-4 text-blue-500" /> Verify Documents
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem className={user.status === "Active" ? "text-destructive" : "text-emerald-500"} onClick={(e) => handleToggleStatus(e, user)}>
+                          <DropdownMenuItem className={user.status === "Active" ? "text-destructive" : "text-primary"} onClick={(e) => handleToggleStatus(e, user)}>
                             {user.status === "Active" ? <Ban className="mr-2 h-4 w-4" /> : <UserCheck className="mr-2 h-4 w-4" />} 
                             {user.status === "Active" ? "Suspend" : "Activate"}
                           </DropdownMenuItem>

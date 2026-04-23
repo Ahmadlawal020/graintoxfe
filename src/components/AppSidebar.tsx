@@ -124,16 +124,16 @@ export function AppSidebar() {
       <SidebarContent className="bg-sidebar-background text-sidebar-foreground h-full">
         <div className="p-3 sm:p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden bg-white/10 backdrop-blur-md border border-emerald-500/20">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden bg-accent backdrop-blur-md border border-primary/20">
               <img
-                src="/lovable-uploads/ec9c41dd-d512-4021-b2c9-dd08e25f5a63.png"
+                src="/favicon.png"
                 alt="GrainTox Logo"
                 className="w-full h-full object-cover rounded-lg"
               />
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <h2 className="text-sm font-bold text-emerald-500 truncate">
+                <h2 className="text-sm font-bold text-primary truncate">
                   GrainTox
                 </h2>
                 <p className="text-xs text-sidebar-foreground/70 truncate">
@@ -163,12 +163,12 @@ export function AppSidebar() {
                         }
                         className={({ isActive: navIsActive }) =>
                           `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm w-full ${navIsActive || isActive(item.url)
-                            ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+                            ? "bg-primary/90 text-foreground shadow-lg shadow-primary/90/20"
                             : "hover:bg-sidebar-accent text-sidebar-foreground hover:shadow-sm"
                           }`
                         }
                       >
-                        <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive(item.url) ? "text-white" : "text-emerald-500"}`} />
+                        <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive(item.url) ? "text-foreground" : "text-primary"}`} />
                         {!collapsed && (
                           <span className="font-medium truncate">
                             {item.title}

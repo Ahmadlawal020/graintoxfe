@@ -95,7 +95,7 @@ const CreateUser = () => {
           {/* Personal Information */}
           <div className="space-y-4 border rounded-lg p-4">
             <div className="flex items-center space-x-2">
-              <UserCheck className="h-5 w-5 text-emerald-500" />
+              <UserCheck className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-medium">Personal Information</h2>
             </div>
             <div className="space-y-3">
@@ -142,7 +142,7 @@ const CreateUser = () => {
           {/* Contact & Role */}
           <div className="space-y-4 border rounded-lg p-4">
             <div className="flex items-center space-x-2">
-              <Mail className="h-5 w-5 text-emerald-500" />
+              <Mail className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-medium">Contact & Role</h2>
             </div>
             <div className="space-y-3">
@@ -182,7 +182,7 @@ const CreateUser = () => {
           {/* Security */}
           <div className="space-y-4 border rounded-lg p-4">
             <div className="flex items-center space-x-2">
-              <Key className="h-5 w-5 text-emerald-500" />
+              <Key className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-medium">Security</h2>
             </div>
             <div className="space-y-3">
@@ -209,7 +209,7 @@ const CreateUser = () => {
 
         <div className="flex justify-end gap-4">
           <Button variant="outline" type="button" onClick={() => navigate("/users")}>Cancel</Button>
-          <Button type="submit" disabled={isLoading} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Button type="submit" disabled={isLoading} className="bg-primary/90 hover:bg-primary/90 text-foreground">
             <Save className="h-4 w-4 mr-2" />
             {isLoading ? "Saving..." : "Create User"}
           </Button>

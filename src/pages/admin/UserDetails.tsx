@@ -14,10 +14,10 @@ const UserDetails = () => {
 
   const roleBadge = (role: string) => {
     const colors: Record<string, string> = {
-      User: "bg-emerald-600", Warehouse_Manager: "bg-blue-600",
+      User: "bg-primary/90", Warehouse_Manager: "bg-blue-600",
       Admin: "bg-red-600",
     };
-    return <Badge className={`${colors[role] || "bg-gray-600"} text-white`}>{role.replace("_", " ")}</Badge>;
+    return <Badge className={`${colors[role] || "bg-gray-600"} text-foreground`}>{role.replace("_", " ")}</Badge>;
   };
 
   if (isError) {
@@ -60,14 +60,14 @@ const UserDetails = () => {
             <img 
               src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
               alt="avatar" 
-              className="h-20 w-20 rounded-full bg-emerald-500/10 border-4 border-emerald-500/20 shadow-lg object-cover"
+              className="h-20 w-20 rounded-full bg-primary/10 border-4 border-primary/20 shadow-lg object-cover"
             />
             <div>
               <h1 className="text-3xl font-bold text-foreground">{user.title} {user.firstName} {user.lastName}</h1>
               <div className="flex items-center gap-2 mt-1">
                 {roleBadge(displayRole)}
                 <Badge variant={user.status === "Active" ? "default" : "secondary"}>{user.status}</Badge>
-                <Badge variant="outline" className={user.kycStatus === "VERIFIED" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
+                <Badge variant="outline" className={user.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
                   KYC: {user.kycStatus || "PENDING"}
                 </Badge>
               </div>
@@ -86,7 +86,7 @@ const UserDetails = () => {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Wallet Balance", value: `₦${((user.walletBalance || 0) / 1e3).toFixed(0)}K`, icon: Wallet, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Wallet Balance", value: `₦${((user.walletBalance || 0) / 1e3).toFixed(0)}K`, icon: Wallet, color: "text-primary", bg: "bg-primary/10" },
           { title: "Portfolio Value", value: `₦${((user.portfolioValue || 0) / 1e6).toFixed(1)}M`, icon: Wallet, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Tokens Held", value: user.tokensHeld || 0, icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10" },
           { title: "Role", value: displayRole.replace("_", " "), icon: Shield, color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -105,7 +105,7 @@ const UserDetails = () => {
         {/* Contact Info */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-emerald-500" /> Personal Information</CardTitle>
+            <CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-primary" /> Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {[
@@ -126,7 +126,7 @@ const UserDetails = () => {
         {/* Platform Activity */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Shield className="w-5 h-5 text-emerald-500" /> Platform Activity</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Shield className="w-5 h-5 text-primary" /> Platform Activity</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
           </CardContent>
@@ -135,7 +135,7 @@ const UserDetails = () => {
         {/* Role-Specific details */}
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-emerald-500" /> Advanced Role Data</CardTitle>
+            <CardTitle className="flex items-center gap-2"><User className="w-5 h-5 text-primary" /> Advanced Role Data</CardTitle>
           </CardHeader>
           <CardContent>
             {displayRole === "User" && (
@@ -165,7 +165,7 @@ const UserDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Wallet Balance</p>
-                    <p className="font-medium mt-1 text-emerald-600">₦{((user.walletBalance || 0) / 1000).toLocaleString()}K</p>
+                    <p className="font-medium mt-1 text-primary/90">₦{((user.walletBalance || 0) / 1000).toLocaleString()}K</p>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ const UserDetails = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Assigned Facility</p>
                   <div className="font-medium mt-1 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span> 
+                    <span className="w-2 h-2 rounded-full bg-primary"></span> 
                     {user.assignedWarehouse || "Unassigned"}
                   </div>
                 </div>
@@ -206,7 +206,7 @@ const UserDetails = () => {
 
             <div className="p-3 rounded-lg bg-muted/20 flex justify-between">
               <span className="text-sm text-muted-foreground">KYC Status</span>
-              <Badge variant="outline" className={user.kycStatus === "VERIFIED" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
+              <Badge variant="outline" className={user.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
                 <CheckCircle2 className="w-3 h-3 mr-1" /> {user.kycStatus || "PENDING"}
               </Badge>
             </div>

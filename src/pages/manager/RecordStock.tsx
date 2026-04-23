@@ -131,7 +131,7 @@ const RecordStock = () => {
       toast({
         title: "Deposit Recorded Successfully",
         description: `Recorded ${formData.weight} MT of ${selectedCrop.name}. Receipt: ${receiptNo}`,
-        className: "bg-emerald-600 text-white border-none shadow-lg shadow-emerald-500/20"
+        className: "bg-primary/90 text-foreground border-none shadow-lg shadow-primary/20"
       });
       navigate("/manager/stock");
     } catch (error: any) {
@@ -158,9 +158,9 @@ const RecordStock = () => {
           <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Record New Stock</h1>
           <p className="text-muted-foreground font-medium">Log a new commodity deposit into the warehouse facility</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
-          <Badge className="bg-emerald-500 hover:bg-emerald-600">Active Session</Badge>
-          <span className="text-xs font-mono text-emerald-600 font-bold uppercase tracking-widest">WH-DEPOSIT-2026</span>
+        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-2xl">
+          <Badge className="bg-primary hover:bg-primary/90">Active Session</Badge>
+          <span className="text-xs font-mono text-primary/90 font-bold uppercase tracking-widest">WH-DEPOSIT-2026</span>
         </div>
       </header>
 
@@ -193,11 +193,11 @@ const RecordStock = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Crop Selection */}
             <Card className="glass-card overflow-hidden border-none shadow-xl">
-              <div className="h-1.5 bg-emerald-500" />
+              <div className="h-1.5 bg-primary" />
 
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Wheat className="h-5 w-5 text-emerald-500" />
+                  <Wheat className="h-5 w-5 text-primary" />
                   Select Commodity
                 </CardTitle>
                 <CardDescription>Choose the crop type for this deposit</CardDescription>
@@ -228,12 +228,12 @@ const RecordStock = () => {
                           onClick={() => setSelectedCrop(crop)}
                           className={`group flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
                             selectedCrop?._id === crop._id 
-                              ? "bg-emerald-500/10 border-emerald-500 shadow-sm" 
-                              : "bg-background border-transparent hover:border-emerald-500/30 hover:bg-muted/30"
+                              ? "bg-primary/10 border-primary shadow-sm" 
+                              : "bg-background border-transparent hover:border-primary/30 hover:bg-muted/30"
                           }`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${selectedCrop?._id === crop._id ? 'bg-emerald-500 text-white' : 'bg-muted/50 group-hover:bg-emerald-500/20'}`}>
+                            <div className={`p-2 rounded-lg ${selectedCrop?._id === crop._id ? 'bg-primary text-foreground' : 'bg-muted/50 group-hover:bg-primary/20'}`}>
                               <Wheat className="h-4 w-4" />
                             </div>
                             <div>
@@ -241,7 +241,7 @@ const RecordStock = () => {
                               <p className="text-[10px] font-mono text-muted-foreground uppercase">{crop.code}</p>
                             </div>
                           </div>
-                          {selectedCrop?._id === crop._id && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+                          {selectedCrop?._id === crop._id && <CheckCircle2 className="h-4 w-4 text-primary" />}
                         </div>
                       ))
                     )}
@@ -389,7 +389,7 @@ const RecordStock = () => {
                    <textarea 
                      name="notes"
                      rows={3}
-                     className="w-full bg-muted/30 border-none rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-emerald-500/20"
+                     className="w-full bg-muted/30 border-none rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-primary/20"
                      placeholder="Additional information about this deposit..."
                      value={formData.notes}
                      onChange={handleInputChange}
@@ -402,7 +402,7 @@ const RecordStock = () => {
         {/* Summary & Submit Column */}
         <div className="space-y-8">
            <Card className="glass-card border-none shadow-2xl overflow-hidden sticky top-24">
-              <div className="h-1 bg-gradient-to-r from-emerald-500 to-blue-500" />
+              <div className="h-1 bg-gradient-to-r from-primary to-blue-500" />
               <CardHeader>
                  <CardTitle className="text-lg">Operation Summary</CardTitle>
                  <CardDescription>Real-time calculation of deposit data</CardDescription>
@@ -417,7 +417,7 @@ const RecordStock = () => {
                           </div>
                           <div className="flex justify-between items-center text-xs">
                              <span className="text-muted-foreground italic">Commodity</span>
-                             <span className="font-bold text-emerald-600">{selectedCrop.name}</span>
+                             <span className="font-bold text-primary/90">{selectedCrop.name}</span>
                           </div>
                           <div className="flex justify-between items-center text-xs">
                              <span className="text-muted-foreground italic">Quantity</span>
@@ -439,7 +439,7 @@ const RecordStock = () => {
                        <Button 
                         type="submit" 
                         disabled={isSubmitting} 
-                        className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg shadow-xl shadow-emerald-500/20 group"
+                        className="w-full h-14 bg-primary/90 hover:bg-primary/90 text-foreground font-black text-lg shadow-xl shadow-primary/20 group"
                        >
                           {isSubmitting ? (
                             <>
@@ -468,7 +468,7 @@ const RecordStock = () => {
            </Card>
 
            <div className="p-4 rounded-2xl border-2 border-dashed border-muted flex items-start gap-4">
-              <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-1" />
+              <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-1" />
               <div>
                  <p className="text-xs font-bold text-foreground">Digital Trust Protocol</p>
                  <p className="text-[10px] text-muted-foreground leading-relaxed mt-1">

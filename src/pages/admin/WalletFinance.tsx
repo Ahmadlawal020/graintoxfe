@@ -62,8 +62,8 @@ const WalletFinance = () => {
         <Card className="glass-card overflow-hidden group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Deposits</CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-500/10">
-              <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <div className="p-2 rounded-lg bg-primary/10">
+              <TrendingUp className="h-4 w-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -171,9 +171,9 @@ const WalletFinance = () => {
                       <TableCell>
                         <Badge 
                           className={
-                            tx.status === "Completed" ? "bg-emerald-600 text-white" :
-                            tx.status === "Pending" ? "bg-amber-500 text-white" :
-                            "bg-red-600 text-white"
+                            tx.status === "Completed" ? "bg-primary/90 text-foreground" :
+                            tx.status === "Pending" ? "bg-amber-500 text-foreground" :
+                            "bg-red-600 text-foreground"
                           }
                         >
                           {tx.status}

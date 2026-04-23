@@ -90,10 +90,10 @@ const Dashboard = () => {
           <p className="text-muted-foreground">GrainTox Platform Overview & Real-time Operations</p>
         </div>
         <div className="flex gap-2">
-          <Badge variant="outline" className="px-3 py-1 border-emerald-500/20 text-emerald-500 bg-emerald-500/5">
+          <Badge variant="outline" className="px-3 py-1 border-primary/20 text-primary bg-primary/5">
             System Live
           </Badge>
-          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-lg shadow-emerald-600/20">
+          <Button size="sm" className="bg-primary/90 hover:bg-primary/90 text-foreground border-0 shadow-lg shadow-primary/90/20">
             <Plus className="w-4 h-4 mr-2" />
             Quick Actions
           </Button>
@@ -105,19 +105,19 @@ const Dashboard = () => {
         <Card className="glass-card overflow-hidden group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Registered Users</CardTitle>
-            <Users className="h-4 w-4 text-emerald-500" />
+            <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24,502</div>
             <div className="flex items-center mt-1">
-              <span className="text-xs text-emerald-500 flex items-center bg-emerald-500/10 px-1.5 py-0.5 rounded">
+              <span className="text-xs text-primary flex items-center bg-primary/10 px-1.5 py-0.5 rounded">
                 <ArrowUpRight className="w-3 h-3 mr-1" />
                 +12%
               </span>
               <span className="text-xs text-muted-foreground ml-2">from last month</span>
             </div>
           </CardContent>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-emerald-500/20 group-hover:bg-emerald-500 transition-all" />
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-primary/20 group-hover:bg-primary transition-all" />
         </Card>
 
         <Card className="glass-card overflow-hidden group">
@@ -145,7 +145,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">₦2.4B</div>
             <div className="flex items-center mt-1">
-              <span className="text-xs text-emerald-500 flex items-center bg-emerald-500/10 px-1.5 py-0.5 rounded">
+              <span className="text-xs text-primary flex items-center bg-primary/10 px-1.5 py-0.5 rounded">
                 <ArrowUpRight className="w-3 h-3 mr-1" />
                 +₦140M
               </span>
@@ -257,16 +257,16 @@ const Dashboard = () => {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-emerald-500" />
+              <Activity className="w-5 h-5 text-primary" />
               Live Operations Feed
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentTransactions.map((op) => (
-                <div key={op.id} className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 border border-transparent hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all">
+                <div key={op.id} className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all">
                   <div className={`mt-1.5 p-1.5 rounded-full ${
-                    op.status === 'success' ? 'bg-emerald-500/20 text-emerald-500' :
+                    op.status === 'success' ? 'bg-primary/20 text-primary' :
                     op.status === 'warning' ? 'bg-amber-500/20 text-amber-500' :
                     'bg-blue-500/20 text-blue-500'
                   }`}>
@@ -279,7 +279,7 @@ const Dashboard = () => {
                     <p className="text-xs text-muted-foreground">{op.time}</p>
                   </div>
                   <Badge variant="outline" className={`text-[10px] uppercase.tracking-wider ${
-                    op.status === 'success' ? 'border-emerald-500/20 text-emerald-500' :
+                    op.status === 'success' ? 'border-primary/20 text-primary' :
                     'border-muted text-muted-foreground'
                   }`}>
                     {op.status}
@@ -287,7 +287,7 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" className="w-full mt-4 border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-500">
+            <Button variant="outline" className="w-full mt-4 border-primary/20 hover:bg-primary/5 hover:text-primary">
               <Eye className="w-4 h-4 mr-2" />
               View All Logs
             </Button>
@@ -295,17 +295,17 @@ const Dashboard = () => {
         </Card>
 
         {/* Priority Actions */}
-        <Card className="card-hover border-emerald-500/10">
+        <Card className="card-hover border-primary/10">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-500" />
+              <ShieldCheck className="w-5 h-5 text-primary" />
               Critical Tasks Queue
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {pendingTasks.map((task) => (
-                <div key={task.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-l-4 border-l-emerald-500">
+                <div key={task.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-l-4 border-l-primary">
                   <div>
                     <p className="font-semibold text-sm">{task.title}</p>
                     <p className="text-xs text-muted-foreground">{task.desc}</p>
@@ -314,13 +314,13 @@ const Dashboard = () => {
                     task.priority === 'High' ? 'bg-red-500' :
                     task.priority === 'Medium' ? 'bg-amber-500' :
                     'bg-blue-500'
-                  } text-white`}>
+                  } text-foreground`}>
                     {task.priority}
                   </Badge>
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
+            <Button className="w-full mt-4 bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20">
               <ClipboardList className="w-4 h-4 mr-2" />
               Enter Task Manager
             </Button>
@@ -335,20 +335,20 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button variant="outline" onClick={() => navigate("/users")} className="h-24 flex flex-col gap-2 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all">
-              <Users className="w-6 h-6 text-emerald-500" />
+            <Button variant="outline" onClick={() => navigate("/users")} className="h-24 flex flex-col gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all">
+              <Users className="w-6 h-6 text-primary" />
               <span className="text-sm font-semibold">User Center</span>
             </Button>
-            <Button variant="outline" onClick={() => navigate("/warehouses")} className="h-24 flex flex-col gap-2 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all">
-              <Building2 className="w-6 h-6 text-emerald-500" />
+            <Button variant="outline" onClick={() => navigate("/warehouses")} className="h-24 flex flex-col gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all">
+              <Building2 className="w-6 h-6 text-primary" />
               <span className="text-sm font-semibold">Warehouses</span>
             </Button>
-            <Button variant="outline" onClick={() => navigate("/kyc")} className="h-24 flex flex-col gap-2 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all">
-              <ShieldCheck className="w-6 h-6 text-emerald-500" />
+            <Button variant="outline" onClick={() => navigate("/kyc")} className="h-24 flex flex-col gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all">
+              <ShieldCheck className="w-6 h-6 text-primary" />
               <span className="text-sm font-semibold">KYC Verification</span>
             </Button>
-            <Button variant="outline" onClick={() => navigate("/settings")} className="h-24 flex flex-col gap-2 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all">
-              <Wallet className="h-6 w-6 text-emerald-500" />
+            <Button variant="outline" onClick={() => navigate("/settings")} className="h-24 flex flex-col gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all">
+              <Wallet className="h-6 w-6 text-primary" />
               <span className="text-sm font-semibold">Platform Financials</span>
             </Button>
           </div>

@@ -41,7 +41,7 @@ const Portfolio = () => {
   if (userLoading || cropsLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -63,8 +63,8 @@ const Portfolio = () => {
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {[
-          { title: "Total Value", value: `₦${(totalValue / 1e6).toFixed(1)}M`, icon: PieIcon, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-          { title: "Total P&L", value: `₦${(totalPnL / 1e6).toFixed(2)}M`, icon: TrendingUp, color: "text-blue-500", bg: "bg-blue-500/10", sub: <span className="text-emerald-500 flex items-center text-[10px] sm:text-xs"><ArrowUpRight className="w-3 h-3" /> +{totalPnLPct}%</span> },
+          { title: "Total Value", value: `₦${(totalValue / 1e6).toFixed(1)}M`, icon: PieIcon, color: "text-primary", bg: "bg-primary/10" },
+          { title: "Total P&L", value: `₦${(totalPnL / 1e6).toFixed(2)}M`, icon: TrendingUp, color: "text-blue-500", bg: "bg-blue-500/10", sub: <span className="text-primary flex items-center text-[10px] sm:text-xs"><ArrowUpRight className="w-3 h-3" /> +{totalPnLPct}%</span> },
           { title: "Tokens Held", value: holdings.reduce((a, h) => a + h.tokens, 0), icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10" },
         ].map((stat, i) => (
           <Card key={i} className="glass-card">
@@ -122,14 +122,14 @@ const Portfolio = () => {
               {holdings.map((h) => {
                 const pnl = (h.currentPrice - h.avgBuy) * h.tokens;
                 return (
-                  <div key={h.symbol} className="p-3 rounded-xl bg-muted/20 border border-transparent hover:border-emerald-500/20 transition-all">
+                  <div key={h.symbol} className="p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: h.color }} />
                         <span className="font-mono text-xs font-bold">{h.symbol}</span>
                         <span className="text-muted-foreground text-[10px]">{h.name}</span>
                       </div>
-                      <span className={`flex items-center text-xs font-bold ${pnl >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                      <span className={`flex items-center text-xs font-bold ${pnl >= 0 ? "text-primary" : "text-red-500"}`}>
                         {pnl >= 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                         {h.change}%
                       </span>
@@ -183,7 +183,7 @@ const Portfolio = () => {
                         <td className="p-3 font-semibold">₦{h.currentPrice.toLocaleString()}</td>
                         <td className="p-3 font-semibold">₦{(h.value / 1e6).toFixed(1)}M</td>
                         <td className="p-3">
-                          <span className={`flex items-center text-sm font-medium ${pnl >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+                          <span className={`flex items-center text-sm font-medium ${pnl >= 0 ? "text-primary" : "text-red-500"}`}>
                             {pnl >= 0 ? <ArrowUpRight className="w-3 h-3 mr-0.5" /> : <ArrowDownRight className="w-3 h-3 mr-0.5" />}
                             {h.change}%
                           </span>

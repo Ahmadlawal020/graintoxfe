@@ -110,18 +110,18 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
   const isPositive = priceChange >= 0;
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0b0e11]">
+    <div className="w-full h-full flex flex-col bg-card">
       <div className="flex items-center justify-between px-3 md:px-4 py-2 shrink-0 border-b border-gray-800/40">
         <div className="flex items-center gap-3 md:gap-5">
           <div className="flex flex-col">
-            <span className="text-gray-500 text-[8px] md:text-[10px] uppercase font-bold tracking-wider">Price</span>
-            <span className="text-white font-bold text-xs md:text-base font-mono tracking-tight">
+            <span className="text-muted-foreground text-[8px] md:text-[10px] uppercase font-bold tracking-wider">Price</span>
+            <span className="text-foreground font-bold text-xs md:text-base font-mono tracking-tight">
               ₦{lastPoint?.close.toLocaleString()}
             </span>
           </div>
           <div className="flex flex-col">
-            <span className="text-gray-500 text-[8px] md:text-[10px] uppercase font-bold tracking-wider">24h Change</span>
-            <span className={`font-bold text-[10px] md:text-xs font-mono ${isPositive ? 'text-emerald-500' : 'text-red-500'}`}>
+            <span className="text-muted-foreground text-[8px] md:text-[10px] uppercase font-bold tracking-wider">24h Change</span>
+            <span className={`font-bold text-[10px] md:text-xs font-mono ${isPositive ? 'text-primary' : 'text-red-500'}`}>
               {isPositive ? '+' : ''}{priceChangePct}%
             </span>
           </div>
@@ -132,7 +132,7 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
             <button
               onClick={() => setChartType('candle')}
               className={`h-5 md:h-6 px-2 rounded text-[9px] md:text-[10px] font-bold transition-all ${
-                chartType === 'candle' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-600'
+                chartType === 'candle' ? 'bg-gray-800 text-foreground shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Candle
@@ -140,7 +140,7 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
             <button
               onClick={() => setChartType('line')}
               className={`h-5 md:h-6 px-2 rounded text-[9px] md:text-[10px] font-bold transition-all ${
-                chartType === 'line' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-600'
+                chartType === 'line' ? 'bg-gray-800 text-foreground shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Line

@@ -80,23 +80,23 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0e11] text-white flex flex-col font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-card text-foreground flex flex-col font-sans selection:bg-primary/30">
       {/* Visual background decor */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-primary/90/5 rounded-full blur-[100px]" />
       </div>
 
       <header className="p-6 flex items-center justify-between z-10 relative">
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
-          <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <Wheat className="text-white w-6 h-6" />
+          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden backdrop-blur-md">
+            <img src="/favicon.png" alt="GrainTox Logo" className="w-full h-full object-cover" />
           </div>
-          <span className="text-2xl font-extrabold tracking-tight">Grain<span className="text-emerald-500">toX</span></span>
+          <span className="text-2xl font-extrabold tracking-tight">Grain<span className="text-primary">toX</span></span>
         </div>
         <button 
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-all text-sm font-medium px-4 py-2 rounded-full hover:bg-white/5"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all text-sm font-medium px-4 py-2 rounded-full hover:bg-accent"
         >
           <ArrowLeft className="w-4 h-4" /> Back Home
         </button>
@@ -106,21 +106,21 @@ const Login = () => {
         <div className="w-full max-w-[450px]">
           <div className="text-center mb-10">
             <h1 className="text-4xl font-bold mb-3 tracking-tight">Welcome back</h1>
-            <p className="text-gray-400">Enter your details to access your account</p>
+            <p className="text-muted-foreground">Enter your details to access your account</p>
           </div>
 
-          <div className="bg-[#1e2329]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
+          <div className="bg-[#1e2329]/40 backdrop-blur-xl border border-border rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
             {/* Top decorative line */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-50" />
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-gray-400 font-medium ml-1">Email address</Label>
+                <Label className="text-muted-foreground font-medium ml-1">Email address</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="your@email.com"
-                  className="bg-[#0b0e11]/60 border-gray-800 h-14 focus:ring-emerald-500 rounded-2xl text-lg transition-all focus:border-emerald-500/50"
+                  className="bg-card/60 border-gray-800 h-14 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -129,22 +129,22 @@ const Login = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
-                  <Label className="text-gray-400 font-medium">Password</Label>
-                  <button type="button" className="text-emerald-500 text-sm font-semibold hover:text-emerald-400 transition-colors">Forgot password?</button>
+                  <Label className="text-muted-foreground font-medium">Password</Label>
+                  <button type="button" className="text-primary text-sm font-semibold hover:text-primary/80 transition-colors">Forgot password?</button>
                 </div>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="bg-[#0b0e11]/60 border-gray-800 h-14 focus:ring-emerald-500 rounded-2xl text-lg pr-12 transition-all focus:border-emerald-500/50"
+                    className="bg-card/60 border-gray-800 h-14 focus:ring-primary rounded-2xl text-lg pr-12 transition-all focus:border-primary/50"
                     value={formData.password}
                     onChange={handleInputChange}
                     required
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -153,14 +153,14 @@ const Login = () => {
               </div>
 
               <div className="flex items-center space-x-2 px-1">
-                <Checkbox id="remember" className="border-gray-700 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500" />
-                <label htmlFor="remember" className="text-sm text-gray-400 font-medium cursor-pointer">Remember me for 30 days</label>
+                <Checkbox id="remember" className="border-gray-700 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+                <label htmlFor="remember" className="text-sm text-muted-foreground font-medium cursor-pointer">Remember me for 30 days</label>
               </div>
 
-              <Button className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg rounded-2xl shadow-xl shadow-emerald-500/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
+              <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
                 {isLoading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin" />
                     Signing in...
                   </div>
                 ) : (
@@ -169,16 +169,16 @@ const Login = () => {
               </Button>
             </form>
 
-            <div className="mt-8 pt-8 border-t border-white/5 text-center">
-              <p className="text-gray-400 font-medium">
-                New to GraintoX? <button type="button" onClick={() => navigate("/signup")} className="text-emerald-500 font-bold hover:text-emerald-400 transition-colors ml-1">Create an account</button>
+            <div className="mt-8 pt-8 border-t border-border text-center">
+              <p className="text-muted-foreground font-medium">
+                New to GraintoX? <button type="button" onClick={() => navigate("/signup")} className="text-primary font-bold hover:text-primary/80 transition-colors ml-1">Create an account</button>
               </p>
             </div>
           </div>
         </div>
       </main>
 
-      <footer className="p-8 text-center text-gray-600 text-xs z-10">
+      <footer className="p-8 text-center text-muted-foreground text-xs z-10">
         <p>© 2024 GraintoX Limited. Empowering the future of African agriculture.</p>
       </footer>
     </div>

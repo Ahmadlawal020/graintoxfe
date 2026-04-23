@@ -100,7 +100,7 @@ const CropManagement = () => {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-extrabold text-foreground tracking-tight flex items-center gap-3">
-            <Wheat className="h-10 w-10 text-emerald-500" />
+            <Wheat className="h-10 w-10 text-primary" />
             Commodity Market
           </h1>
           <p className="text-muted-foreground mt-1 text-lg">
@@ -112,7 +112,7 @@ const CropManagement = () => {
              <RefreshCw className="h-4 w-4" />
           </Button>
           <Button 
-            className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/20 px-6"
+            className="flex-1 md:flex-none bg-primary/90 hover:bg-primary/90 text-foreground shadow-xl shadow-primary/20 px-6"
             onClick={() => navigate("/crops/create")}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -124,7 +124,7 @@ const CropManagement = () => {
       {/* Market Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Market Depth", value: crops.length, sub: "Listed Commodities", icon: Target, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+          { title: "Market Depth", value: crops.length, sub: "Listed Commodities", icon: Target, color: "text-primary", bg: "bg-primary/10" },
           { title: "Aggregated Stock", value: `${(totalStock / 1000).toFixed(1)}K`, sub: "Metric Tons", icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Market Cap", value: `₦${(totalValue / 1e9).toFixed(2)}B`, sub: "Gross Liquidity", icon: Coins, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Global Volume", value: "+12.4%", sub: "Last 24h Trend", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10" },
@@ -150,7 +150,7 @@ const CropManagement = () => {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-xl font-bold flex items-center gap-2">
-                   <BarChart3 className="h-5 w-5 text-emerald-500" />
+                   <BarChart3 className="h-5 w-5 text-primary" />
                    Marketplace Assets
                 </CardTitle>
                 <CardDescription>Live trading pairs and administrative pricing controls</CardDescription>
@@ -161,7 +161,7 @@ const CropManagement = () => {
                   placeholder="Filter commodities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 h-9 border-none bg-muted/40 focus:ring-1 focus:ring-emerald-500/20"
+                  className="pl-9 h-9 border-none bg-muted/40 focus:ring-1 focus:ring-primary/20"
                 />
               </div>
             </div>
@@ -183,18 +183,18 @@ const CropManagement = () => {
                   {filteredCrops.length > 0 ? filteredCrops.map((crop: any) => (
                     <TableRow 
                       key={crop._id} 
-                      className="group cursor-pointer hover:bg-emerald-500/5 transition-colors border-b border-border/40"
+                      className="group cursor-pointer hover:bg-primary/5 transition-colors border-b border-border/40"
                       onClick={() => navigate(`/crops/${crop._id}`)}
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/10 shadow-inner group-hover:bg-emerald-500/20 transition-colors">
-                             <Wheat className="h-5 w-5 text-emerald-600" />
+                          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10 shadow-inner group-hover:bg-primary/20 transition-colors">
+                             <Wheat className="h-5 w-5 text-primary/90" />
                           </div>
                           <div>
                             <div className="font-bold text-base">{crop.name}</div>
                             <div className="flex items-center gap-2">
-                               <Badge className="h-4 py-0 text-[9px] bg-emerald-500 text-white border-none">{crop.tokenSymbol}</Badge>
+                               <Badge className="h-4 py-0 text-[9px] bg-primary text-foreground border-none">{crop.tokenSymbol}</Badge>
                                <span className="text-[10px] font-mono text-muted-foreground">{crop.code}</span>
                             </div>
                           </div>
@@ -205,7 +205,7 @@ const CropManagement = () => {
                       </TableCell>
                       <TableCell>
                          <div className="font-black text-lg">₦{((crop.pricePerUnit || 0) / 1000).toFixed(0)}K</div>
-                         <div className="flex items-center gap-1 text-[10px] text-emerald-500 font-bold">
+                         <div className="flex items-center gap-1 text-[10px] text-primary font-bold">
                             <TrendingUp className="h-3 w-3" />
                             +2.4%
                          </div>
@@ -221,7 +221,7 @@ const CropManagement = () => {
                          </div>
                       </TableCell>
                       <TableCell>
-                         <Badge className={crop.quality === "Grade A" ? "bg-emerald-500" : "bg-amber-500"}>
+                         <Badge className={crop.quality === "Grade A" ? "bg-primary" : "bg-amber-500"}>
                             {crop.quality?.split(' ')?.[1] || "A"}
                          </Badge>
                       </TableCell>
@@ -247,10 +247,10 @@ const CropManagement = () => {
 
         {/* Market Insights Sidebar */}
         <div className="lg:col-span-4 space-y-6">
-          <Card className="glass-card border-none shadow-xl bg-slate-900 text-white overflow-hidden">
+          <Card className="glass-card border-none shadow-xl bg-slate-900 text-foreground overflow-hidden">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
-                 <Activity className="h-5 w-5 text-emerald-400" />
+                 <Activity className="h-5 w-5 text-primary/80" />
                  Market Heatmap
               </CardTitle>
             </CardHeader>
@@ -276,12 +276,12 @@ const CropManagement = () => {
                 </ResponsiveContainer>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
-                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-[10px] uppercase font-bold text-white/50">Top Gainer</p>
-                    <p className="font-bold text-emerald-400">Maize +5.2%</p>
+                 <div className="p-3 rounded-xl bg-accent border border-border">
+                    <p className="text-[10px] uppercase font-bold text-foreground/50">Top Gainer</p>
+                    <p className="font-bold text-primary/80">Maize +5.2%</p>
                  </div>
-                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-[10px] uppercase font-bold text-white/50">Trading Vol</p>
+                 <div className="p-3 rounded-xl bg-accent border border-border">
+                    <p className="text-[10px] uppercase font-bold text-foreground/50">Trading Vol</p>
                     <p className="font-bold text-blue-400">142.1M</p>
                  </div>
               </div>
@@ -291,7 +291,7 @@ const CropManagement = () => {
           <Card className="glass-card border-none shadow-sm">
              <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                   <Target className="h-4 w-4 text-emerald-500" />
+                   <Target className="h-4 w-4 text-primary" />
                    Price Controller Notes
                 </CardTitle>
              </CardHeader>

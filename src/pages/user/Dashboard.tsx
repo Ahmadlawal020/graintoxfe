@@ -71,7 +71,7 @@ const UserDashboard = () => {
   if (userLoading || cropsLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ const UserDashboard = () => {
   };
 
   const stats = [
-    { title: "Portfolio Value", value: formatValue(portfolioValue), icon: PieIcon, color: "text-emerald-500", bg: "bg-emerald-500/10", sub: <span className="text-emerald-500 flex items-center"><ArrowUpRight className="w-3 h-3 mr-0.5" /> +{roi}% ROI</span> },
+    { title: "Portfolio Value", value: formatValue(portfolioValue), icon: PieIcon, color: "text-primary", bg: "bg-primary/10", sub: <span className="text-primary flex items-center"><ArrowUpRight className="w-3 h-3 mr-0.5" /> +{roi}% ROI</span> },
     { title: "Wallet Balance", value: formatValue(walletBalance), icon: Wallet, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Available to invest" },
     { title: "Tokens Held", value: showBalance ? totalTokens.toLocaleString() : "****", icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10", sub: `${holdingsCount} commodities` },
     { title: "Daily Return", value: showBalance ? "₦0" : "****", icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Calculated daily" },
@@ -115,7 +115,7 @@ const UserDashboard = () => {
           </Button>
           <Button
             size="sm"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
+            className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20"
             onClick={() => navigate("/user/market")}
           >
             <TrendingUp className="w-4 h-4 mr-1.5" /> Trade Now
@@ -205,7 +205,7 @@ const UserDashboard = () => {
       <div className="grid grid-cols-2 sm:hidden gap-3">
         <Button
           variant="outline"
-          className="h-14 flex-col gap-1 border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-500"
+          className="h-14 flex-col gap-1 border-primary/20 hover:bg-primary/5 hover:text-primary"
           onClick={() => navigate("/user/market")}
         >
           <ShoppingCart className="w-4 h-4" />
@@ -225,16 +225,16 @@ const UserDashboard = () => {
       <Card className="card-hover">
         <CardHeader className="p-3 sm:p-4 lg:p-6">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" /> Recent Activity
+            <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> Recent Activity
           </CardTitle>
         </CardHeader>
         <CardContent className="p-2 sm:p-4 lg:p-6 pt-0">
           <div className="space-y-2 sm:space-y-3">
             {recentActivity.map((act) => (
-              <div key={act.id} className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-muted/20 border border-transparent hover:border-emerald-500/20 transition-all">
+              <div key={act.id} className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                   <div className={`p-1 sm:p-1.5 rounded-full shrink-0 ${
-                    act.type === "BUY" ? "bg-emerald-500/20 text-emerald-500" :
+                    act.type === "BUY" ? "bg-primary/20 text-primary" :
                     act.type === "SELL" ? "bg-red-500/20 text-red-500" :
                     "bg-blue-500/20 text-blue-500"
                   }`}>
@@ -251,7 +251,7 @@ const UserDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <span className={`font-semibold text-xs sm:text-sm shrink-0 ml-2 ${act.type === "SELL" ? "text-red-500" : "text-emerald-500"}`}>
+                <span className={`font-semibold text-xs sm:text-sm shrink-0 ml-2 ${act.type === "SELL" ? "text-red-500" : "text-primary"}`}>
                   {act.type === "SELL" ? "-" : "+"}₦{(act.total / 1e3).toFixed(0)}K
                 </span>
               </div>
@@ -259,7 +259,7 @@ const UserDashboard = () => {
           </div>
           <Button
             variant="outline"
-            className="w-full mt-3 sm:mt-4 border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-500 text-xs sm:text-sm"
+            className="w-full mt-3 sm:mt-4 border-primary/20 hover:bg-primary/5 hover:text-primary text-xs sm:text-sm"
           >
             View Full History <ChevronRight className="w-3.5 h-3.5 ml-1" />
           </Button>

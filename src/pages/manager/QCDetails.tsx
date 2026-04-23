@@ -110,7 +110,7 @@ const QCDetails = () => {
             <p className="text-muted-foreground mt-1">Review metrics and certify deposit compliance</p>
           </div>
           {operation.qcStatus !== "PENDING" && (
-            <Badge className={operation.qcStatus === "PASSED" ? "bg-emerald-500 text-white font-black px-3 py-1" : "bg-red-500 text-white font-black px-3 py-1"}>
+            <Badge className={operation.qcStatus === "PASSED" ? "bg-primary text-foreground font-black px-3 py-1" : "bg-red-500 text-foreground font-black px-3 py-1"}>
               Status: {operation.qcStatus}
             </Badge>
           )}
@@ -122,7 +122,7 @@ const QCDetails = () => {
         <Card className="glass-card border-none shadow-xl">
           <CardHeader className="bg-muted/30 pb-6">
              <CardTitle className="text-lg flex items-center gap-2">
-                <FileText className="h-5 w-5 text-emerald-500" />
+                <FileText className="h-5 w-5 text-primary" />
                 Deposit Particulars
              </CardTitle>
              <CardDescription>Cargo data registered at intake</CardDescription>
@@ -140,7 +140,7 @@ const QCDetails = () => {
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Intake Quantity</p>
-                 <p className="font-black text-2xl text-emerald-600">{operation.quantity} <span className="text-sm font-normal text-muted-foreground">{operation.unit}</span></p>
+                 <p className="font-black text-2xl text-primary/90">{operation.quantity} <span className="text-sm font-normal text-muted-foreground">{operation.unit}</span></p>
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Timestamp</p>
@@ -151,7 +151,7 @@ const QCDetails = () => {
         </Card>
 
         {/* Quality Input Form */}
-        <Card className={`glass-card shadow-xl transition-all ${isPending ? "border-emerald-500/30" : "border-none opacity-80"}`}>
+        <Card className={`glass-card shadow-xl transition-all ${isPending ? "border-primary/30" : "border-none opacity-80"}`}>
           <CardHeader>
              <CardTitle className="text-lg flex items-center gap-2">
                 <Microscope className="h-5 w-5 text-blue-500" />
@@ -222,7 +222,7 @@ const QCDetails = () => {
                 </Button>
                 <Button 
                   type="button"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 font-bold"
+                  className="w-full bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20 font-bold"
                   onClick={() => handleAction("PASSED")}
                   disabled={isUpdating}
                 >

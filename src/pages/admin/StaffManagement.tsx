@@ -60,7 +60,7 @@ const StaffManagement = () => {
       toast({
         title: `Staff ${newStatus}`,
         description: `Staff account is now ${newStatus.toLowerCase()}.`,
-        className: newStatus === "Active" ? "bg-emerald-600 text-white" : "bg-red-600 text-white"
+        className: newStatus === "Active" ? "bg-primary/90 text-foreground" : "bg-red-600 text-foreground"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not update status", variant: "destructive" });
@@ -93,14 +93,14 @@ const StaffManagement = () => {
 
   const roleBadge = (role: string) => {
     const colors: Record<string, string> = {
-      User: "bg-emerald-600",
+      User: "bg-primary/90",
       Warehouse_Manager: "bg-blue-600",
       Investor: "bg-purple-600",
       Agent: "bg-amber-600",
       Admin: "bg-red-600",
     };
     return (
-      <Badge className={`${colors[role] || "bg-gray-600"} text-white text-[10px]`}>
+      <Badge className={`${colors[role] || "bg-gray-600"} text-foreground text-[10px]`}>
         {role?.replace("_", " ") || "Unknown"}
       </Badge>
     );
@@ -119,7 +119,7 @@ const StaffManagement = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
           { title: "Total Staff", value: stats.total, icon: Users, color: "text-blue-500", bg: "bg-blue-500/10", change: "Internal workforce" },
-          { title: "Active Staff", value: stats.active, icon: UserCheck, color: "text-emerald-500", bg: "bg-emerald-500/10", change: `${Math.round((stats.active / (stats.total || 1)) * 100)}% active` },
+          { title: "Active Staff", value: stats.active, icon: UserCheck, color: "text-primary", bg: "bg-primary/10", change: `${Math.round((stats.active / (stats.total || 1)) * 100)}% active` },
           { title: "Admins", value: stats.admins, icon: Shield, color: "text-red-500", bg: "bg-red-500/10", change: "System administrators" },
           { title: "Suspended", value: stats.suspended, icon: UserX, color: "text-amber-500", bg: "bg-amber-500/10", change: "Action required" },
         ].map((stat, i) => (
@@ -148,7 +148,7 @@ const StaffManagement = () => {
                 View and manage all internal staff accounts
               </CardDescription>
             </div>
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20" onClick={() => navigate("/staff/create")}>
+            <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" onClick={() => navigate("/staff/create")}>
               <Plus className="mr-2 h-4 w-4" />
               Add Staff
             </Button>
@@ -202,11 +202,11 @@ const StaffManagement = () => {
                     if (assignedWarehouses.length === 0) {
                       assignment = <span className="text-muted-foreground italic">Unassigned</span>;
                     } else if (assignedWarehouses.length === 1) {
-                      assignment = <Badge variant="outline" className="text-[10px] border-emerald-500/20 bg-emerald-50/50 text-emerald-700">{assignedWarehouses[0]}</Badge>;
+                      assignment = <Badge variant="outline" className="text-[10px] border-primary/20 bg-primary/10/50 text-primary/90">{assignedWarehouses[0]}</Badge>;
                     } else {
                       assignment = (
                         <div className="flex items-center gap-1">
-                          <Badge variant="outline" className="text-[10px] border-emerald-500/40 bg-emerald-50 text-emerald-800 font-bold">{assignedWarehouses[0]}</Badge>
+                          <Badge variant="outline" className="text-[10px] border-primary/40 bg-primary/10 text-primary/90 font-bold">{assignedWarehouses[0]}</Badge>
                           <Badge variant="secondary" className="text-[9px] h-4 py-0">+{assignedWarehouses.length - 1}</Badge>
                         </div>
                       );
@@ -222,14 +222,14 @@ const StaffManagement = () => {
                         <img 
                           src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
                           alt="avatar" 
-                          className="h-10 w-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-sm"
+                          className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm"
                         />
                         <div>
                           <div className="font-medium text-foreground">{user.title} {user.firstName} {user.lastName}</div>
                           <div className="flex items-center text-xs text-muted-foreground mt-0.5 space-x-2">
                             <span>{user.email}</span>
                             <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                            <span className="font-mono text-[10px] uppercase text-emerald-600 bg-emerald-500/10 px-1 py-0.5 rounded">{user.userId}</span>
+                            <span className="font-mono text-[10px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
                           </div>
                         </div>
                       </div>
@@ -265,7 +265,7 @@ const StaffManagement = () => {
                           <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/staff/${user._id}`); }}>
                             <Edit className="mr-2 h-4 w-4" /> View / Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem className={user.status === "Active" ? "text-destructive" : "text-emerald-500"} onClick={(e) => handleToggleStatus(e, user)}>
+                          <DropdownMenuItem className={user.status === "Active" ? "text-destructive" : "text-primary"} onClick={(e) => handleToggleStatus(e, user)}>
                             {user.status === "Active" ? <Ban className="mr-2 h-4 w-4" /> : <UserCheck className="mr-2 h-4 w-4" />} 
                             {user.status === "Active" ? "Suspend" : "Activate"}
                           </DropdownMenuItem>

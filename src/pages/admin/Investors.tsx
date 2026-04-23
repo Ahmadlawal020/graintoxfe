@@ -81,9 +81,9 @@ const Investors = () => {
 
   const tierBadge = (tier: string) => {
     const colors: Record<string, string> = {
-      Bronze: "bg-amber-700 text-white",
-      Gold: "bg-amber-500 text-white",
-      Platinum: "bg-gradient-to-r from-gray-300 to-gray-500 text-white",
+      Bronze: "bg-amber-700 text-foreground",
+      Gold: "bg-amber-500 text-foreground",
+      Platinum: "bg-gradient-to-r from-gray-300 to-gray-500 text-foreground",
     };
     return <Badge className={colors[tier] || ""}>{tier}</Badge>;
   };
@@ -100,7 +100,7 @@ const Investors = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Investors", value: investors.length, icon: Users, color: "text-emerald-500", bg: "bg-emerald-500/10", sub: `${investors.filter(i => i.kycStatus === "VERIFIED").length} verified` },
+          { title: "Total Investors", value: investors.length, icon: Users, color: "text-primary", bg: "bg-primary/10", sub: `${investors.filter(i => i.kycStatus === "VERIFIED").length} verified` },
           { title: "Assets Under Mgmt", value: `₦${(totalAUM / 1e6).toFixed(0)}M`, icon: Wallet, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Total portfolio value" },
           { title: "Tokens Held", value: totalTokens.toLocaleString(), icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10", sub: "Across all investors" },
           { title: "Avg ROI", value: `${avgROI.toFixed(1)}%`, icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Platform average return" },
@@ -176,7 +176,7 @@ const Investors = () => {
                   <TableRow key={inv._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/investors/${inv._id}`)}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <div className="h-9 w-9 rounded-full bg-emerald-500/10 flex items-center justify-center text-sm font-semibold text-emerald-600">
+                        <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary/90">
                           {inv.name.split(" ").map(n => n[0]).join("")}
                         </div>
                         <div>
@@ -189,16 +189,16 @@ const Investors = () => {
                     <TableCell className="font-semibold">₦{(inv.portfolioValue / 1e6).toFixed(1)}M</TableCell>
                     <TableCell>{inv.tokens.toLocaleString()}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-mono text-[10px] border-emerald-500/20 text-emerald-600">{inv.primaryToken}</Badge>
+                      <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary/90">{inv.primaryToken}</Badge>
                     </TableCell>
                     <TableCell>
-                      <span className="flex items-center text-emerald-500 font-medium text-sm">
+                      <span className="flex items-center text-primary font-medium text-sm">
                         <ArrowUpRight className="w-3 h-3 mr-0.5" />
                         {inv.roi}%
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={inv.kycStatus === "VERIFIED" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
+                      <Badge variant="outline" className={inv.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
                         {inv.kycStatus}
                       </Badge>
                     </TableCell>

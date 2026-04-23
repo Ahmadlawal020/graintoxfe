@@ -150,7 +150,7 @@ const CreateStaff = () => {
             Back to Staff Management
           </Button>
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-             <UserPlus className="h-8 w-8 text-emerald-500" />
+             <UserPlus className="h-8 w-8 text-primary" />
              Add New Staff Member
           </h1>
           <p className="text-muted-foreground">
@@ -163,10 +163,10 @@ const CreateStaff = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           
           {/* Identity Section */}
-          <Card className="glass-card border-emerald-500/10 h-full">
+          <Card className="glass-card border-primary/10 h-full">
             <CardHeader>
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <UserCheck className="h-4 w-4 text-emerald-500" />
+                <UserCheck className="h-4 w-4 text-primary" />
                 Personal Identity
               </CardTitle>
               <CardDescription>Legal name and basic identification</CardDescription>
@@ -355,7 +355,7 @@ const CreateStaff = () => {
               <div className="space-y-4 pt-4 border-t">
                 <Label className="flex items-center justify-between">
                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Assigned Facilities</span>
-                   <Badge variant="outline" className="h-5 py-0 px-2 text-[10px] bg-emerald-50 text-emerald-600 border-emerald-200">
+                   <Badge variant="outline" className="h-5 py-0 px-2 text-[10px] bg-primary/10 text-primary/90 border-primary/30">
                       {formData.assignedWarehouse.length} Selected
                    </Badge>
                 </Label>
@@ -365,10 +365,10 @@ const CreateStaff = () => {
                     warehouses.map((w: any) => (
                       <div 
                         key={w._id} 
-                        className={`flex items-center space-x-3 p-2.5 rounded-xl border transition-all cursor-pointer ${formData.assignedWarehouse.includes(w.name) ? "bg-emerald-50 border-emerald-500/30 text-emerald-700 shadow-sm" : "hover:bg-muted/50 border-border/40"}`}
+                        className={`flex items-center space-x-3 p-2.5 rounded-xl border transition-all cursor-pointer ${formData.assignedWarehouse.includes(w.name) ? "bg-primary/10 border-primary/30 text-primary/90 shadow-sm" : "hover:bg-muted/50 border-border/40"}`}
                         onClick={() => handleWarehouseToggle(w.name, !formData.assignedWarehouse.includes(w.name))}
                       >
-                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${formData.assignedWarehouse.includes(w.name) ? "bg-emerald-500 text-white" : "bg-muted text-muted-foreground"}`}>
+                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${formData.assignedWarehouse.includes(w.name) ? "bg-primary text-foreground" : "bg-muted text-muted-foreground"}`}>
                             <MapPin className="h-4 w-4" />
                          </div>
                          <div className="flex-1 min-w-0">
@@ -376,7 +376,7 @@ const CreateStaff = () => {
                             <p className="text-[10px] text-muted-foreground truncate opacity-70">{w.location}</p>
                          </div>
                          {formData.assignedWarehouse.includes(w.name) && (
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                            <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
                          )}
                       </div>
                     ))
@@ -407,7 +407,7 @@ const CreateStaff = () => {
           <Button 
             type="submit" 
             disabled={isLoading}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 shadow-xl shadow-emerald-500/20 font-black tracking-tight"
+            className="bg-primary/90 hover:bg-primary/90 text-foreground px-10 shadow-xl shadow-primary/20 font-black tracking-tight"
           >
             {isLoading ? (
               <>

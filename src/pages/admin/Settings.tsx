@@ -57,7 +57,7 @@ const AdminSettings = () => {
       toast({
         title: "Platform Settings Updated",
         description: "Global configurations have been saved successfully.",
-        className: "bg-emerald-600 text-white border-emerald-700",
+        className: "bg-primary/90 text-foreground border-primary/90",
       });
       setIsEditing(false);
     } catch (err: any) {
@@ -77,7 +77,7 @@ const AdminSettings = () => {
       <div className="flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
-            <SettingsIcon className="w-8 h-8 text-emerald-500" /> Platform Configuration
+            <SettingsIcon className="w-8 h-8 text-primary" /> Platform Configuration
           </h1>
           <p className="text-muted-foreground mt-1">Manage global parameters, fees, and operational status.</p>
         </div>
@@ -91,7 +91,7 @@ const AdminSettings = () => {
               <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isUpdating}>
                 Cancel
               </Button>
-              <Button onClick={saveSettings} disabled={isUpdating} className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20">
+              <Button onClick={saveSettings} disabled={isUpdating} className="w-full md:w-auto bg-primary/90 hover:bg-primary/90 shadow-lg shadow-primary/20">
                 <Save className="w-4 h-4 mr-2" />
                 {isUpdating ? "Applying..." : "Save Configuration"}
               </Button>
@@ -103,9 +103,9 @@ const AdminSettings = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Financial Settings */}
         <Card className="glass-card shadow-xl border-none">
-          <CardHeader className="bg-emerald-500/5 pb-4">
+          <CardHeader className="bg-primary/5 pb-4">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Coins className="w-5 h-5 text-emerald-500" /> Economic Parameters
+              <Coins className="w-5 h-5 text-primary" /> Economic Parameters
             </CardTitle>
             <CardDescription>Configure global transaction and trading fees</CardDescription>
           </CardHeader>
