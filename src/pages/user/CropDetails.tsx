@@ -8,30 +8,33 @@ import {
   Receipt, 
   Calendar, 
   Coins, 
-  BarChart3,
   Search,
-  Filter
+  Filter,
+  Wheat
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAuth from "@/hooks/useAuth";
-import { useGetUserTradesQuery } from "@/services/api/financeApiSlice";
 import { useGetUserByIdQuery } from "@/services/api/userApiSlice";
+import { useGetUserTradesQuery } from "@/services/api/financeApiSlice";
+import { useGetCropsQuery } from "@/services/api/cropApiSlice";
 import { format } from 'date-fns';
 
 const CropDetails = () => {
   const { symbol } = useParams();
   const navigate = useNavigate();
   const { id } = useAuth();
-  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "");
+  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "", { pollingInterval: 10000 });
   const { data: trades, isLoading: tradesLoading } = useGetUserTradesQuery(undefined, { pollingInterval: 10000 });
+  const { data: crops = [], isLoading: cropsLoading } = useGetCropsQuery(undefined, { pollingInterval: 30000 });
 
+  const crop = crops.find((c: any) => c.tokenSymbol === symbol);
   const holding = userData?.holdings?.find((h: any) => h.tokenSymbol === symbol);
   const cropTrades = trades?.filter((t: any) => t.symbol === symbol) || [];
 
-  if (userLoading || tradesLoading) {
+  if (userLoading || tradesLoading || cropsLoading) {
     return (
       <div className="p-4 sm:p-8 space-y-8 animate-in fade-in duration-500">
         <Skeleton className="h-10 w-64" />
@@ -67,18 +70,43 @@ const CropDetails = () => {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Badge className="bg-primary/10 text-primary border-none font-black uppercase tracking-widest text-[10px]">
-                Active Asset
+                Market Status: ACTIVE
               </Badge>
               <span className="text-muted-foreground font-mono text-xs font-bold">{symbol}/NGN</span>
             </div>
-            <h1 className="text-4xl font-black tracking-tighter text-foreground">{symbol} <span className="text-primary">Ledger</span></h1>
+            <h1 className="text-4xl font-black tracking-tighter text-foreground">{crop?.name || symbol} <span className="text-primary">Ledger</span></h1>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Current Balance</p>
-            <p className="text-3xl font-black font-mono">{(holding?.amount || 0).toLocaleString()} <span className="text-sm text-muted-foreground">kg</span></p>
+          <div className="text-right flex flex-col items-end">
+            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Market Benchmark</p>
+            <p className="text-3xl font-black font-mono text-primary">₦{(crop?.pricePerUnit || 0).toLocaleString()}<span className="text-sm font-bold text-muted-foreground ml-1">/kg</span></p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase">Current Inventory: {(crop?.totalStock || 0).toLocaleString()} kg</p>
           </div>
         </div>
       </div>
+
+      {/* Holding Highlight */}
+      <Card className="bg-primary text-primary-foreground border-none shadow-2xl overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+        <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+          <div className="flex items-center gap-4">
+            <div className="h-16 w-16 rounded-2xl bg-white/20 flex items-center justify-center shadow-inner">
+               <Wheat className="h-8 w-8" />
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80">Your Personal Holdings</p>
+              <h2 className="text-4xl font-black tracking-tighter">{(holding?.amount || 0).toLocaleString()} <span className="text-sm font-bold opacity-60">kg</span></h2>
+            </div>
+          </div>
+          <div className="flex gap-4 w-full sm:w-auto">
+            <Button className="flex-1 sm:flex-none !bg-white !text-primary hover:!bg-white/90 font-black px-8 h-12 rounded-xl shadow-xl uppercase text-xs tracking-widest" onClick={() => navigate('/user/market')}>
+              Trade Asset
+            </Button>
+            <Button variant="outline" className="flex-1 sm:flex-none border-white/30 hover:bg-white/10 font-bold px-8 h-12 rounded-xl uppercase text-xs tracking-widest" onClick={() => navigate('/user/storage')}>
+              Request Deposit
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -86,7 +114,7 @@ const CropDetails = () => {
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Total Purchased</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Total Volume Purchased</p>
                 <p className="text-2xl font-black font-mono">{totalBought.toLocaleString()} kg</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -100,7 +128,7 @@ const CropDetails = () => {
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Total Sold</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Total Volume Liquidated</p>
                 <p className="text-2xl font-black font-mono">{totalSold.toLocaleString()} kg</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
@@ -114,8 +142,9 @@ const CropDetails = () => {
           <CardContent className="pt-6">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Avg Purchase Price</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Cost Basis (Avg Price)</p>
                 <p className="text-2xl font-black font-mono">₦{(holding?.averagePrice || 0).toLocaleString()}</p>
+                <p className="text-[9px] font-bold text-muted-foreground uppercase">Current PnL: <span className={((crop?.pricePerUnit || 0) - (holding?.averagePrice || 0)) >= 0 ? 'text-primary' : 'text-red-500'}>₦{(((crop?.pricePerUnit || 0) - (holding?.averagePrice || 0)) * (holding?.amount || 0)).toLocaleString()}</span></p>
               </div>
               <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center text-foreground group-hover:scale-110 transition-transform">
                 <Coins className="h-5 w-5" />

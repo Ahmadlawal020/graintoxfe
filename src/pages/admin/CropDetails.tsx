@@ -237,7 +237,7 @@ const CropDetails = () => {
         {/* System & Trust Panel */}
         <div className="lg:col-span-4 space-y-6">
            <Card className="glass-card border-none shadow-lg overflow-hidden">
-              <div className="bg-slate-900 p-4 flex items-center justify-between text-foreground">
+              <div className="bg-slate-900 p-4 flex items-center justify-between text-white">
                  <h3 className="font-bold text-sm tracking-wide">SYSTEM OVERWATCH</h3>
                  <ShieldCheck className="h-4 w-4 text-primary/80" />
               </div>
@@ -270,7 +270,7 @@ const CropDetails = () => {
               </CardContent>
            </Card>
 
-           <Card className="border-none shadow-sm bg-primary text-foreground">
+           <Card className="border-none shadow-sm bg-primary text-primary-foreground">
               <CardHeader className="pb-2">
                  <CardTitle className="text-base font-bold flex items-center gap-2">
                     <Coins className="h-4 w-4" />
@@ -278,7 +278,7 @@ const CropDetails = () => {
                  </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                 <p className="text-xs text-foreground/80 leading-relaxed font-medium">
+                 <p className="text-xs text-white/80 leading-relaxed font-medium">
                     This asset is currently tradable on the GrainTox Marketplace. High liquidity detected.
                  </p>
                  <Button className="w-full !bg-white !text-primary hover:!bg-white/90 font-black text-xs h-10 shadow-lg">

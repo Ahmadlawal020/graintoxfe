@@ -247,7 +247,7 @@ const CropManagement = () => {
 
         {/* Market Insights Sidebar */}
         <div className="lg:col-span-4 space-y-6">
-          <Card className="glass-card border-none shadow-xl bg-slate-900 text-foreground overflow-hidden">
+          <Card className="glass-card border-none shadow-xl bg-slate-900 text-white overflow-hidden">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center gap-2">
                  <Activity className="h-5 w-5 text-primary/80" />
@@ -271,17 +271,17 @@ const CropManagement = () => {
                       contentStyle={{ backgroundColor: "#0f172a", border: "none", borderRadius: "8px" }}
                       itemStyle={{ color: "#10b981" }}
                     />
-                    <Area type="monotone" dataKey="value" stroke="#10B981" fillOpacity={1} fill="url(#colorValue)" />
+                    <Area type="monotone" dataKey="value" stroke="#10B981" fillOpacity={1} fill="url(#chartGradient)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
-                 <div className="p-3 rounded-xl bg-accent border border-border">
-                    <p className="text-[10px] uppercase font-bold text-foreground/50">Top Gainer</p>
+                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-[10px] uppercase font-bold text-white/50">Top Gainer</p>
                     <p className="font-bold text-primary/80">Maize +5.2%</p>
                  </div>
-                 <div className="p-3 rounded-xl bg-accent border border-border">
-                    <p className="text-[10px] uppercase font-bold text-foreground/50">Trading Vol</p>
+                 <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-[10px] uppercase font-bold text-white/50">Trading Vol</p>
                     <p className="font-bold text-blue-400">142.1M</p>
                  </div>
               </div>

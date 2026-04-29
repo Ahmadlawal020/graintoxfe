@@ -40,13 +40,13 @@ const UserDashboard = () => {
 
   const holdings = useMemo(() => {
     if (!userData?.holdings || !crops) return [];
-    const colors = ["#10B981", "#3B82F6", "#F59E0B", "#8B5CF6", "#EC4899"];
-    
+    const colors = ["#2E7D32", "#A5D6A7", "#1B5E20", "#4CAF50", "#81C784"];
+
     return userData.holdings.map((h: any, i: number) => {
       const crop = crops.find((c: any) => c.tokenSymbol === h.tokenSymbol);
       const price = crop ? crop.pricePerUnit : h.averagePrice;
       const value = h.amount * price;
-      
+
       return {
         name: h.tokenSymbol,
         tokens: h.amount,
@@ -91,10 +91,19 @@ const UserDashboard = () => {
   };
 
   const stats = [
-    { title: "Portfolio Value", value: formatValue(portfolioValue), icon: PieIcon, color: "text-primary", bg: "bg-primary/10", sub: <span className="text-primary flex items-center"><ArrowUpRight className="w-3 h-3 mr-0.5" /> +{roi}% ROI</span> },
-    { title: "Wallet Balance", value: formatValue(walletBalance), icon: Wallet, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Available to invest" },
-    { title: "Tokens Held", value: showBalance ? totalTokens.toLocaleString() : "****", icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10", sub: `${holdingsCount} commodities` },
-    { title: "Daily Return", value: showBalance ? "₦0" : "****", icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Calculated daily" },
+    {
+      title: "Portfolio Value",
+      value: formatValue(portfolioValue),
+      icon: PieIcon,
+      color: "text-primary",
+      bg: "bg-primary/10",
+      sub: <span className="text-primary flex items-center font-bold text-[10px] sm:text-xs">
+        <ArrowUpRight className="w-3 h-3 mr-0.5" /> +{roi}% ROI
+      </span>
+    },
+    { title: "Wallet Balance", value: formatValue(walletBalance), icon: Wallet, color: "text-secondary-foreground", bg: "bg-secondary/20", sub: "Available to invest" },
+    { title: "Tokens Held", value: showBalance ? totalTokens.toLocaleString() : "****", icon: Coins, color: "text-primary", bg: "bg-primary/10", sub: `${holdingsCount} commodities` },
+    { title: "Daily Return", value: showBalance ? "₦0" : "****", icon: TrendingUp, color: "text-primary", bg: "bg-primary/10", sub: "Calculated daily" },
   ];
 
   return (
@@ -162,15 +171,15 @@ const UserDashboard = () => {
                 <AreaChart data={portfolioHistory}>
                   <defs>
                     <linearGradient id="portGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#2E7D32" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#2E7D32" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground)/0.1)" />
                   <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
                   <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => `₦${(v / 1e6).toFixed(0)}M`} tick={{ fontSize: 10 }} width={50} />
                   <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} formatter={(v: number) => [`₦${(v / 1e6).toFixed(1)}M`, '']} />
-                  <Area type="monotone" dataKey="value" stroke="#10B981" fill="url(#portGrad)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="value" stroke="#2E7D32" fill="url(#portGrad)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -242,14 +251,13 @@ const UserDashboard = () => {
             {recentActivity.map((act) => (
               <div key={act.id} className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                  <div className={`p-1 sm:p-1.5 rounded-full shrink-0 ${
-                    act.type === "BUY" ? "bg-primary/20 text-primary" :
-                    act.type === "SELL" ? "bg-red-500/20 text-red-500" :
-                    "bg-blue-500/20 text-blue-500"
-                  }`}>
+                  <div className={`p-1 sm:p-1.5 rounded-full shrink-0 ${act.type === "BUY" ? "bg-primary/20 text-primary" :
+                      act.type === "SELL" ? "bg-red-500/20 text-red-500" :
+                        "bg-blue-500/20 text-blue-500"
+                    }`}>
                     {act.type === "BUY" ? <ShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> :
-                     act.type === "SELL" ? <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> :
-                     <Coins className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                      act.type === "SELL" ? <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> :
+                        <Coins className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs sm:text-sm font-medium truncate">

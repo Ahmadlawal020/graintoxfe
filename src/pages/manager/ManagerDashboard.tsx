@@ -58,8 +58,8 @@ const ManagerDashboard = () => {
   
   const { id } = useAuth();
   const { data: userProfile, isLoading: profileLoading } = useGetUserByIdQuery(id, { skip: !id });
-  const { data: allWarehouses = [], isLoading: whLoading } = useGetWarehousesQuery(undefined);
-  const { data: allOps = [], isLoading: opsLoading } = useGetStorageOperationsQuery(undefined);
+  const { data: allWarehouses = [], isLoading: whLoading } = useGetWarehousesQuery(undefined, { pollingInterval: 60000 });
+  const { data: allOps = [], isLoading: opsLoading } = useGetStorageOperationsQuery(undefined, { pollingInterval: 15000 });
 
   const isLoading = profileLoading || whLoading || opsLoading;
 
@@ -140,7 +140,7 @@ const ManagerDashboard = () => {
   return (
     <div className="space-y-6 animate-fade-in p-2 pb-20">
       {/* Smart Header with Site Selection */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900 text-foreground p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900 text-white p-6 rounded-3xl shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
         <div className="relative z-10">
           <h1 className="text-4xl font-black tracking-tighter uppercase italic flex items-center gap-4">
@@ -148,17 +148,17 @@ const ManagerDashboard = () => {
              Infrastructure Control
           </h1>
           <div className="flex flex-wrap items-center gap-2 mt-2 opacity-80">
-            <Badge variant="outline" className="text-primary/80 border-primary/30 uppercase text-[10px] font-bold">
+            <Badge variant="outline" className="text-white border-white/20 uppercase text-[10px] font-bold">
                {myWarehouses.length} Allocated Sites
             </Badge>
-            <span className="text-xs font-medium uppercase tracking-widest flex items-center gap-1">
+            <span className="text-xs font-medium uppercase tracking-widest flex items-center gap-1 text-white/70">
                <Activity className="h-3 w-3" /> System Heartbeat Stable
             </span>
           </div>
         </div>
 
         <div className="w-full lg:w-72 relative z-10">
-           <Label className="text-[10px] font-black uppercase text-foreground/50 mb-1.5 block tracking-widest ml-1">Focus Facility</Label>
+           <Label className="text-[10px] font-black uppercase text-white/50 mb-1.5 block tracking-widest ml-1">Focus Facility</Label>
            <Select value={selectedFacilityId} onValueChange={setSelectedFacilityId}>
               <SelectTrigger className="bg-accent border-border text-foreground h-12 rounded-xl focus:ring-primary/50">
                  <div className="flex items-center gap-2">
@@ -166,10 +166,10 @@ const ManagerDashboard = () => {
                     <SelectValue placeholder="All Sites" />
                  </div>
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 text-foreground border-border">
-                 <SelectItem value="all" className="focus:bg-primary focus:text-foreground">Aggregated View (Global)</SelectItem>
+              <SelectContent className="bg-slate-900 text-white border-border">
+                 <SelectItem value="all" className="focus:bg-primary focus:text-white">Aggregated View (Global)</SelectItem>
                  {myWarehouses.map((wh: any) => (
-                    <SelectItem key={wh._id} value={wh._id} className="focus:bg-primary focus:text-foreground">
+                    <SelectItem key={wh._id} value={wh._id} className="focus:bg-primary focus:text-white">
                        {wh.name}
                     </SelectItem>
                  ))}
@@ -278,7 +278,7 @@ const ManagerDashboard = () => {
 
         {/* Action Sidebar */}
         <div className="lg:col-span-4 space-y-6">
-           <Card className="bg-primary/90 text-foreground border-none shadow-2xl p-2 rounded-3xl">
+           <Card className="bg-primary/90 text-primary-foreground border-none shadow-2xl p-2 rounded-3xl">
               <CardHeader className="pb-2">
                  <CardTitle className="text-base font-black flex items-center gap-2 uppercase tracking-wide">
                     <ClipboardList className="h-5 w-5" />
@@ -293,8 +293,8 @@ const ManagerDashboard = () => {
                  ].map((t, i) => (
                     <div key={i} className="bg-accent p-3 rounded-2xl flex items-center justify-between border border-border hover:bg-accent transition-colors pointer-events-auto cursor-pointer">
                        <div>
-                          <p className="text-xs font-black uppercase tracking-tight">{t.task}</p>
-                          <p className="text-[10px] font-bold text-foreground/60 tracking-widest">{t.site}</p>
+                          <p className="text-xs font-black uppercase tracking-tight text-white">{t.task}</p>
+                          <p className="text-[10px] font-bold text-white/60 tracking-widest">{t.site}</p>
                        </div>
                        <span className="text-[10px] font-black bg-white text-primary/90 px-2 py-1 rounded-lg">{t.time}</span>
                     </div>

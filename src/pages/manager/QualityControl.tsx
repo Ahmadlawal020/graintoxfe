@@ -1,25 +1,33 @@
 import React, { useState } from "react";
-import { ShieldCheck, Search, CheckCircle2, XCircle, Clock, Eye, Wheat, Scale, Microscope, AlertTriangle } from "lucide-react";
+import { 
+  ShieldCheck, Search, CheckCircle2, XCircle, Clock, Eye, Wheat, 
+  Scale, Microscope, AlertTriangle, Truck, ClipboardCheck, History as HistoryIcon, Package
+} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useGetStorageOperationsQuery } from "@/services/api/storageApiSlice";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGetStorageOperationsQuery, useUpdateStorageOperationMutation } from "@/services/api/storageApiSlice";
 import { useGetPlatformUsersQuery, useGetUserByIdQuery } from "@/services/api/userApiSlice";
 import { useGetWarehousesQuery } from "@/services/api/warehouseApiSlice";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import { useToast } from "@/components/ui/use-toast";
 
 const QualityControl = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("requests");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { id: currentUserId } = useAuth();
-  const { data: userProfile } = useGetUserByIdQuery(currentUserId, { skip: !currentUserId });
-  const { data: allWarehouseData } = useGetWarehousesQuery(undefined);
-  const { data: operations = [], isLoading: opsLoading } = useGetStorageOperationsQuery(undefined);
-  const { data: users = [], isLoading: usersLoading } = useGetPlatformUsersQuery(undefined);
+  const { data: userProfile } = useGetUserByIdQuery(currentUserId, { skip: !currentUserId, pollingInterval: 60000 });
+  const { data: allWarehouseData } = useGetWarehousesQuery(undefined, { pollingInterval: 60000 });
+  const { data: operations = [], isLoading: opsLoading } = useGetStorageOperationsQuery(undefined, { pollingInterval: 10000 });
+  const { data: users = [], isLoading: usersLoading } = useGetPlatformUsersQuery(undefined, { pollingInterval: 60000 });
+  const [updateStatus, { isLoading: isUpdating }] = useUpdateStorageOperationMutation();
 
   const allWarehouses = Array.isArray(allWarehouseData) ? allWarehouseData : [];
   const myWarehouses = React.useMemo(() => {
@@ -27,7 +35,6 @@ const QualityControl = () => {
       ? userProfile.assignedWarehouse 
       : (userProfile?.assignedWarehouse ? [userProfile.assignedWarehouse] : []);
       
-    // Exact match for managerId or assignment
     return allWarehouses.filter((wh: any) => {
       const matchProfile = assigned.includes(wh.name) || assigned.includes(wh._id);
       const matchManagerId = wh.managerId === currentUserId || wh.managerId?._id === currentUserId;
@@ -35,156 +42,171 @@ const QualityControl = () => {
     });
   }, [allWarehouses, userProfile, currentUserId]);
 
-  // Filter only deposits to the manager's assigned warehouses
-  const depositOps = React.useMemo(() => {
-    const warehouseIds = myWarehouses.map((wh: any) => wh._id);
-    return operations.filter(
-      (op: any) => op.type === "DEPOSIT" && warehouseIds.includes(op.warehouse?._id || op.warehouse)
-    );
-  }, [operations, myWarehouses]);
+  const warehouseIds = myWarehouses.map((wh: any) => wh._id);
 
-  const inspections = depositOps.map((op: any) => {
-    const depositorData = users.find((u: any) => u._id === op.user);
-    const depositorName = depositorData ? `${depositorData.firstName} ${depositorData.lastName}` : (op.user ? `ID: ${op.user.substring(0,8)}` : "Unknown");
-    
-    return {
-      _id: op._id,
-      lot: op.receiptNo || `OP-${op._id.substring(0, 6)}`,
-      commodity: op.commodity?.name || "Unknown",
-      investor: depositorName,
-      quantity: `${op.quantity} ${op.unit || "kg"}`,
-      moisture: op.moisture,
-      foreignMatter: op.foreignMatter,
-      pestDamage: op.pestDamage,
-      grade: op.qcStatus === "PASSED" ? "Grade A" : (op.qcStatus === "FAILED" ? "Rejected" : "Pending"),
-      inspector: op.qcStatus !== "PENDING" ? "QC Assigned" : "—",
-      date: new Date(op.timestamp).toLocaleDateString(),
-      status: op.qcStatus || "PENDING"
-    };
+  const handleStatusUpdate = async (id: string, newStatus: string, message: string) => {
+    try {
+      await updateStatus({ id, status: newStatus }).unwrap();
+      toast({ title: "Success", description: message });
+    } catch (error: any) {
+      toast({ 
+        title: "Error", 
+        description: error?.data?.message || "Failed to update status", 
+        variant: "destructive" 
+      });
+    }
+  };
+
+  const getStatusConfig = (status: string, qcStatus?: string) => {
+    if (status === "PENDING") return { icon: <Clock className="w-3 h-3 mr-1" />, class: "bg-amber-500/10 text-amber-500", label: "Request Pending" };
+    if (status === "APPROVED") return { icon: <Truck className="w-3 h-3 mr-1" />, class: "bg-blue-500/10 text-blue-500", label: "Awaiting Delivery" };
+    if (status === "REJECTED") return { icon: <XCircle className="w-3 h-3 mr-1" />, class: "bg-red-500/10 text-red-500", label: "Rejected" };
+    if (status === "DEPOSITED") {
+      if (qcStatus === "PASSED") return { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-primary/10 text-primary", label: "QC Passed" };
+      if (qcStatus === "FAILED") return { icon: <XCircle className="w-3 h-3 mr-1" />, class: "bg-red-500/10 text-red-500", label: "QC Failed" };
+      return { icon: <Microscope className="w-3 h-3 mr-1" />, class: "bg-purple-500/10 text-purple-500", label: "QC Pending" };
+    }
+    return { icon: <Clock className="w-3 h-3 mr-1" />, class: "bg-muted text-muted-foreground", label: status };
+  };
+
+  const filteredOps = operations.filter((op: any) => {
+    const isMine = warehouseIds.includes(op.warehouse?._id || op.warehouse);
+    if (!isMine) return false;
+
+    const matchesSearch = 
+      op.receiptNo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      op.commodity?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!matchesSearch) return false;
+
+    switch (activeTab) {
+      case "requests": return op.status === "PENDING";
+      case "deliveries": return op.status === "APPROVED";
+      case "qc": return op.status === "DEPOSITED" && op.qcStatus === "PENDING";
+      case "history": return op.status === "REJECTED" || (op.status === "DEPOSITED" && op.qcStatus !== "PENDING");
+      default: return true;
+    }
   });
-
-  const filteredInspections = inspections.filter((insp: any) =>
-    insp.commodity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    insp.lot.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    insp.investor.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const stats = {
-    total: inspections.length,
-    pending: inspections.filter((i) => i.status === "PENDING").length,
-    passed: inspections.filter((i) => i.status === "PASSED").length,
-    failed: inspections.filter((i) => i.status === "FAILED").length,
-  };
-
-  const statusBadge = (status: string) => {
-    const config: Record<string, { icon: React.ReactNode; class: string; label: string }> = {
-      PENDING: { icon: <Clock className="w-3 h-3 mr-1" />, class: "bg-amber-500/10 text-amber-500 border-amber-500/20", label: "Pending" },
-      PASSED: { icon: <CheckCircle2 className="w-3 h-3 mr-1" />, class: "bg-primary/10 text-primary border-primary/20", label: "Passed" },
-      FAILED: { icon: <XCircle className="w-3 h-3 mr-1" />, class: "bg-red-500/10 text-red-500 border-red-500/20", label: "Failed" },
-    };
-    const c = config[status] || config.PENDING;
-    return <Badge variant="outline" className={`${c.class} flex items-center w-fit`}>{c.icon} {c.label}</Badge>;
-  };
-
-  const moistureIndicator = (val: number) => {
-    if (val > 14) return <span className="text-red-500 font-semibold">{val}%</span>;
-    if (val > 12.5) return <span className="text-amber-500 font-semibold">{val}%</span>;
-    return <span className="text-primary font-semibold">{val}%</span>;
-  };
 
   return (
     <div className="space-y-6 animate-fade-in p-2">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Quality Control</h1>
-          <p className="text-muted-foreground">Inspect and grade incoming grain deposits</p>
+          <h1 className="text-3xl font-bold text-foreground">Warehouse Operations</h1>
+          <p className="text-muted-foreground">Manage requests, deliveries, and quality control</p>
         </div>
-        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" size="sm">
-          <Microscope className="mr-2 h-4 w-4" /> Start Inspection
-        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[
-          { title: "Total Inspections", value: stats.total, icon: ShieldCheck, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Pending", value: stats.pending, icon: Clock, color: "text-amber-500", bg: "bg-amber-500/10" },
-          { title: "Passed", value: stats.passed, icon: CheckCircle2, color: "text-blue-500", bg: "bg-blue-500/10" },
-          { title: "Failed", value: stats.failed, icon: XCircle, color: "text-red-500", bg: "bg-red-500/10" },
-        ].map((stat, i) => (
-          <Card key={i} className="glass-card">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-              <div className={`p-2 rounded-lg ${stat.bg}`}><stat.icon className={`h-4 w-4 ${stat.color}`} /></div>
-            </CardHeader>
-            <CardContent><div className="text-2xl font-bold">{stat.value}</div></CardContent>
-          </Card>
-        ))}
-      </div>
+      <Tabs defaultValue="requests" onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="bg-muted/50 p-1">
+          <TabsTrigger value="requests" className="flex items-center gap-2">
+            <ClipboardCheck className="w-4 h-4" /> Requests
+            {operations.filter(op => op.status === "PENDING" && warehouseIds.includes(op.warehouse?._id)).length > 0 && (
+              <Badge className="ml-1 px-1.5 h-4 min-w-[1rem] bg-amber-500 text-[10px]">
+                {operations.filter(op => op.status === "PENDING" && warehouseIds.includes(op.warehouse?._id)).length}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="deliveries" className="flex items-center gap-2">
+            <Truck className="w-4 h-4" /> Deliveries
+          </TabsTrigger>
+          <TabsTrigger value="qc" className="flex items-center gap-2">
+            <Microscope className="w-4 h-4" /> QC Needed
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-2">
+            <HistoryIcon className="w-4 h-4" /> History
+          </TabsTrigger>
+        </TabsList>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <CardTitle className="flex items-center gap-2"><Scale className="w-5 h-5 text-primary" /> Inspection Log</CardTitle>
-              <CardDescription>Grain quality assessments with moisture, foreign matter, and pest damage readings</CardDescription>
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search records..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-8" />
+              </div>
             </div>
-            <div className="relative w-full md:w-64">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search inspections..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-8" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Lot #</TableHead>
-                  <TableHead>Commodity</TableHead>
-                  <TableHead>Investor</TableHead>
-                  <TableHead>Qty</TableHead>
-                  <TableHead>Moisture</TableHead>
-                  <TableHead>Foreign Matter</TableHead>
-                  <TableHead>Pest Damage</TableHead>
-                  <TableHead>Grade</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredInspections.map((insp) => (
-                  <TableRow key={insp._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/manager/qc/${insp._id}`)}>
-                    <TableCell className="font-mono text-xs text-primary/90">{insp.lot}</TableCell>
-                    <TableCell className="font-medium flex items-center gap-1.5"><Wheat className="h-4 w-4 text-primary" />{insp.commodity}</TableCell>
-                    <TableCell className="text-sm">{insp.investor}</TableCell>
-                    <TableCell className="text-sm font-semibold">{insp.quantity}</TableCell>
-                    <TableCell>{insp.moisture ? moistureIndicator(insp.moisture) : "—"}</TableCell>
-                    <TableCell className={insp.foreignMatter > 1.5 ? "text-red-500 font-semibold" : "text-muted-foreground"}>{insp.foreignMatter ? `${insp.foreignMatter}%` : "—"}</TableCell>
-                    <TableCell className={insp.pestDamage > 2 ? "text-red-500 font-semibold" : "text-muted-foreground"}>{insp.pestDamage ? `${insp.pestDamage}%` : "—"}</TableCell>
-                    <TableCell>
-                      {insp.grade !== "Pending" ? (
-                        <Badge className={insp.grade === "Grade A" ? "bg-primary/90 text-foreground" : insp.grade === "Rejected" ? "bg-red-500 text-foreground" : "bg-amber-500 text-foreground"}>{insp.grade}</Badge>
-                      ) : <span className="text-muted-foreground text-sm">—</span>}
-                    </TableCell>
-                    <TableCell>{statusBadge(insp.status)}</TableCell>
-                    <TableCell>
-                      {insp.status === "PENDING" ? (
-                        <Button variant="outline" size="sm" className="h-7 text-[10px] uppercase font-bold" onClick={(e) => { e.stopPropagation(); navigate(`/manager/qc/${insp._id}`); }}>
-                           Review
-                        </Button>
-                      ) : (
-                        <Button variant="ghost" size="sm" className="h-7 text-[10px] uppercase font-bold text-muted-foreground" onClick={(e) => { e.stopPropagation(); navigate(`/manager/qc/${insp._id}`); }}>
-                           View
-                        </Button>
-                      )}
-                    </TableCell>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Lot / Receipt</TableHead>
+                    <TableHead>Commodity</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Delivery</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {filteredOps.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                        No records found in this section.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredOps.map((op: any) => {
+                      const config = getStatusConfig(op.status, op.qcStatus);
+                      return (
+                        <TableRow key={op._id} className="hover:bg-muted/50 transition">
+                          <TableCell className="font-mono text-xs text-primary/90">{op.receiptNo}</TableCell>
+                          <TableCell className="font-medium flex items-center gap-1.5">
+                            <Wheat className="h-4 w-4 text-primary" />{op.commodity?.name}
+                          </TableCell>
+                          <TableCell className="text-sm font-semibold">{op.quantity} {op.unit || "kg"}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-[10px] uppercase font-bold">
+                              {op.deliveryMethod === "PICK_UP" ? "Pickup" : "Drop-off"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className={`${config.class} border-transparent flex items-center w-fit`}>
+                              {config.icon} {config.label}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {activeTab === "requests" && (
+                              <div className="flex justify-end gap-2">
+                                <Button size="sm" variant="outline" className="text-red-500 border-red-500/20 hover:bg-red-500/10" 
+                                  onClick={() => handleStatusUpdate(op._id, "REJECTED", "Request rejected")}>
+                                  Reject
+                                </Button>
+                                <Button size="sm" className="bg-primary/90 hover:bg-primary text-primary-foreground"
+                                  onClick={() => handleStatusUpdate(op._id, "APPROVED", "Request approved")}>
+                                  Approve
+                                </Button>
+                              </div>
+                            )}
+                            {activeTab === "deliveries" && (
+                              <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white"
+                                onClick={() => handleStatusUpdate(op._id, "DEPOSITED", "Marked as deposited")}>
+                                <Package className="w-4 h-4 mr-2" /> Mark Received
+                              </Button>
+                            )}
+                            {activeTab === "qc" && (
+                              <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white"
+                                onClick={() => navigate(`/manager/deposits/${op._id}`)}>
+                                <Microscope className="w-4 h-4 mr-2" /> Run QC
+                              </Button>
+                            )}
+                            {activeTab === "history" && (
+                              <Button variant="ghost" size="sm" onClick={() => navigate(`/manager/deposits/${op._id}`)}>
+                                <Eye className="w-4 h-4 mr-2" /> Details
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      </Tabs>
     </div>
   );
 };

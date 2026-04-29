@@ -4,15 +4,27 @@ import MainLayout from "@/layout/MainLayout";
 import adminRoutes from "./routes/AdminRoutes";
 import managerRoutes from "./routes/ManagerRoutes";
 import userRoutes from "./routes/UserRoutes";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 const AppRoutes = () => {
   return (
     <MainLayout>
       <Routes>
-        {adminRoutes}
-        {managerRoutes}
-        {userRoutes}
+        {/* Admin Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+          {adminRoutes}
+        </Route>
+
+        {/* Manager Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["Warehouse_Manager", "Admin"]} />}>
+          {managerRoutes}
+        </Route>
+
+        {/* User Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["User", "Admin"]} />}>
+          {userRoutes}
+        </Route>
 
         <Route path="/login" element={<Navigate to="/" replace />} />
         <Route

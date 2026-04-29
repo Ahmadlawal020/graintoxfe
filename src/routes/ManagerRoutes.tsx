@@ -19,6 +19,8 @@ const managerRoutes = (
     <Route path="/manager/stock/withdraw" element={<ProcessWithdrawal />} />
     <Route path="/manager/qc" element={<QualityControl />} />
     <Route path="/manager/qc/:id" element={<QCDetails />} />
+    <Route path="/manager/deposits" element={<QualityControl />} />
+    <Route path="/manager/deposits/:id" element={<QCDetails />} />
     <Route path="/manager/reports" element={<InventoryReports />} />
   </>
 );

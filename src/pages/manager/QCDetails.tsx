@@ -60,7 +60,7 @@ const QCDetails = () => {
         description: `Deposit evaluation has been marked as ${status}.`,
         variant: status === "FAILED" ? "destructive" : "default",
       });
-      navigate("/manager/qc");
+      navigate("/manager/deposits");
     } catch (error: any) {
       toast({
         title: "Error Processing QC",
@@ -87,8 +87,8 @@ const QCDetails = () => {
       <div className="flex flex-col items-center justify-center p-8 h-96 text-center">
         <AlertTriangle className="h-16 w-16 text-muted-foreground/20 mb-4" />
         <h2 className="text-2xl font-bold text-destructive">Record Not Found</h2>
-        <Button variant="outline" onClick={() => navigate("/manager/qc")} className="mt-6">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Inspections
+        <Button variant="outline" onClick={() => navigate("/manager/deposits")} className="mt-6">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Deposit Requests
         </Button>
       </div>
     );
@@ -99,13 +99,13 @@ const QCDetails = () => {
   return (
     <div className="space-y-6 animate-fade-in p-2 max-w-5xl mx-auto">
       <header>
-        <Button variant="ghost" size="sm" onClick={() => navigate("/manager/qc")} className="mb-2 -ml-2">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Inspections
+        <Button variant="ghost" size="sm" onClick={() => navigate("/manager/deposits")} className="mb-2 -ml-2">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Deposit Requests
         </Button>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black flex items-center gap-3 tracking-tight">
-              QC Process: {operation.receiptNo}
+              Deposit Review: {operation.receiptNo}
             </h1>
             <p className="text-muted-foreground mt-1">Review metrics and certify deposit compliance</p>
           </div>
@@ -141,6 +141,10 @@ const QCDetails = () => {
               <div className="space-y-1">
                  <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Intake Quantity</p>
                  <p className="font-black text-2xl text-primary/90">{operation.quantity} <span className="text-sm font-normal text-muted-foreground">{operation.unit}</span></p>
+              </div>
+              <div className="space-y-1">
+                 <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Delivery Method</p>
+                 <p className="font-bold text-sm">{operation.deliveryMethod === 'PICK_UP' ? 'PICKUP REQUESTED' : 'USER DROP-OFF'}</p>
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest">Timestamp</p>

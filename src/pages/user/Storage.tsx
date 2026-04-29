@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Wheat, Plus, ArrowLeft, History, Building2, ShieldCheck, Clock, Package, X } from "lucide-react";
+import { Wheat, Plus, ArrowLeft, History, Building2, ShieldCheck, Clock, Package, X, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -29,6 +29,7 @@ const Storage = () => {
     commodity: "",
     quantity: "",
     warehouse: "",
+    deliveryMethod: "DROP_OFF",
     receiptNo: `RQ-${Math.floor(1000 + Math.random() * 9000)}`,
     notes: ""
   });
@@ -120,6 +121,16 @@ const Storage = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
+                  <Label className="text-xs">Delivery Method</Label>
+                  <Select onValueChange={(v) => setFormData({...formData, deliveryMethod: v})}>
+                    <SelectTrigger className="h-11"><SelectValue placeholder="How will it arrive?" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DROP_OFF">I will bring it (Drop-off)</SelectItem>
+                      <SelectItem value="PICK_UP">Request Pickup</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                   <Label className="text-xs">Notes (optional)</Label>
                   <Input placeholder="Crop variety, moisture level..." value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} className="h-11" />
                 </div>
@@ -158,16 +169,28 @@ const Storage = () => {
                     <Input type="number" placeholder="e.g. 50" value={formData.quantity} onChange={(e) => setFormData({...formData, quantity: e.target.value})} />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Target Warehouse</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, warehouse: v})}>
-                    <SelectTrigger><SelectValue placeholder="Select facility" /></SelectTrigger>
-                    <SelectContent>
-                      {warehouses.map((wh: any) => (
-                        <SelectItem key={wh._id} value={wh._id}>{wh.name} ({wh.location})</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Target Warehouse</Label>
+                    <Select onValueChange={(v) => setFormData({...formData, warehouse: v})}>
+                      <SelectTrigger><SelectValue placeholder="Select facility" /></SelectTrigger>
+                      <SelectContent>
+                        {warehouses.map((wh: any) => (
+                          <SelectItem key={wh._id} value={wh._id}>{wh.name} ({wh.location})</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Delivery Method</Label>
+                    <Select onValueChange={(v) => setFormData({...formData, deliveryMethod: v})}>
+                      <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="DROP_OFF">I will bring it (Drop-off)</SelectItem>
+                        <SelectItem value="PICK_UP">Request Pickup</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Additional Notes</Label>
@@ -282,30 +305,52 @@ const Storage = () => {
             <CardContent className="p-2 sm:p-4 lg:p-6 pt-0">
               <div className="space-y-2 sm:space-y-3">
                 {operations.map((op: any) => (
-                  <div key={op._id} className="flex items-center justify-between p-3 sm:p-4 rounded-xl border border-muted hover:bg-muted/10 transition-all gap-3">
-                    <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
-                      <div className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${op.type === 'DEPOSIT' ? 'bg-primary/20 text-primary/90' : 'bg-blue-100 text-blue-700'}`}>
-                        {op.type === 'DEPOSIT' ? <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                  <div key={op._id} className="flex flex-col p-3 sm:p-4 rounded-xl border border-muted hover:bg-muted/10 transition-all gap-3">
+                    <div className="flex items-center justify-between w-full gap-3">
+                      <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
+                        <div className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${op.type === 'DEPOSIT' ? 'bg-primary/20 text-primary/90' : 'bg-blue-100 text-blue-700'}`}>
+                          {op.type === 'DEPOSIT' ? <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-xs sm:text-sm truncate">{op.type} - {op.commodity?.name}</p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
+                            {op.receiptNo} · {new Date(op.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-xs sm:text-sm truncate">{op.type} - {op.commodity?.name}</p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
-                          {op.receiptNo} · {new Date(op.createdAt).toLocaleDateString()}
+                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <div className="text-right hidden sm:block">
+                          <p className="text-sm font-bold">{op.quantity} kg</p>
+                          <p className="text-[10px] text-muted-foreground">{op.warehouse?.name}</p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={`text-[9px] sm:text-[10px] ${
+                            op.status === 'REJECTED' ? 'bg-red-500/10 text-red-600' :
+                            op.status === 'PENDING' ? 'bg-amber-500/10 text-amber-600' :
+                            op.status === 'APPROVED' ? 'bg-blue-500/10 text-blue-600' :
+                            op.qcStatus === 'PASSED' ? 'bg-primary/10 text-primary/90' :
+                            op.qcStatus === 'FAILED' ? 'bg-red-500/10 text-red-600' :
+                            'bg-purple-500/10 text-purple-600'
+                          }`}
+                        >
+                          {op.status === 'REJECTED' ? 'REJECTED' :
+                           op.status === 'PENDING' ? 'AWAITING APPROVAL' :
+                           op.status === 'APPROVED' ? 'APPROVED / DELIVER NOW' :
+                           op.qcStatus === 'PASSED' ? 'DEPOSITED / QC PASSED' :
+                           op.qcStatus === 'FAILED' ? 'DEPOSITED / QC FAILED' :
+                           'DEPOSITED / QC PENDING'}
+                        </Badge>
+                      </div>
+                    </div>
+                    {op.qcRemarks && (
+                      <div className="p-2 bg-muted/30 rounded-lg border border-dashed border-muted">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3" /> Manager Feedback
                         </p>
+                        <p className="text-xs text-foreground/80 mt-1 italic">"{op.qcRemarks}"</p>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                      <div className="text-right hidden sm:block">
-                        <p className="text-sm font-bold">{op.quantity} kg</p>
-                        <p className="text-[10px] text-muted-foreground">{op.warehouse?.name}</p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={`text-[9px] sm:text-[10px] ${op.qcStatus === 'PASSED' ? 'bg-primary/10 text-primary/90' : 'bg-amber-100/10 text-amber-600'}`}
-                      >
-                        {op.qcStatus || 'PROCESSING'}
-                      </Badge>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>

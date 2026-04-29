@@ -124,8 +124,8 @@ const Signup = () => {
     <div className="min-h-screen bg-card text-foreground flex flex-col font-sans selection:bg-primary/30">
       {/* Visual background decor */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-primary/90/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[100px]" />
       </div>
 
       <header className="p-6 flex items-center justify-between z-10 relative">
@@ -158,7 +158,7 @@ const Signup = () => {
             </p>
           </div>
 
-          <div className="bg-[#1e2329]/40 backdrop-blur-xl border border-border rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
+          <div className="bg-white/70 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
             
             {/* Step 1: Email Check */}
@@ -175,11 +175,12 @@ const Signup = () => {
                       className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                       value={formData.email}
                       onChange={handleInputChange}
+                      autoComplete="email"
                       required
                     />
                   </div>
                 </div>
-                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
+                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
                   {isLoading ? "Checking..." : "Continue"}
                   <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -196,10 +197,11 @@ const Signup = () => {
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                       <Input
                         id="firstName"
-                        placeholder="John"
+                        placeholder="First Name"
                         className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                         value={formData.firstName}
                         onChange={handleInputChange}
+                        autoComplete="given-name"
                         required
                       />
                     </div>
@@ -210,10 +212,11 @@ const Signup = () => {
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                       <Input
                         id="lastName"
-                        placeholder="Doe"
+                        placeholder="Last Name"
                         className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                         value={formData.lastName}
                         onChange={handleInputChange}
+                        autoComplete="family-name"
                         required
                       />
                     </div>
@@ -230,6 +233,7 @@ const Signup = () => {
                       className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50 [color-scheme:dark]"
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
+                      autoComplete="bday"
                       required
                     />
                   </div>
@@ -246,12 +250,13 @@ const Signup = () => {
                       className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                       value={formData.password}
                       onChange={handleInputChange}
+                      autoComplete="new-password"
                       required
                     />
                   </div>
                 </div>
 
-                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
+                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>
@@ -286,7 +291,7 @@ const Signup = () => {
 
                   <Button 
                     onClick={handleVerifyOTP} 
-                    className="w-full h-14 bg-primary hover:bg-primary/90 text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none mt-4" 
+                    className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none mt-4" 
                     disabled={isLoading || otpCode.length !== 6}
                   >
                     {isLoading ? "Verifying..." : "Verify & Login"}

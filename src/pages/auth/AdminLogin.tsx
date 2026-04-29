@@ -10,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
-  Eye, 
-  EyeOff, 
-  ShieldCheck, 
-  Building2, 
+import {
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  Building2,
   ArrowLeft,
   Wheat,
   Lock
@@ -30,7 +30,7 @@ const AdminLogin = () => {
     password: "",
     role: "Admin",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -98,7 +98,7 @@ const AdminLogin = () => {
       {/* Background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[120px]" />
       </div>
 
       <header className="p-6 flex items-center justify-between z-10">
@@ -108,7 +108,7 @@ const AdminLogin = () => {
           </div>
           <span className="text-2xl font-extrabold tracking-tight">Grain<span className="text-primary">toX</span> <span className="text-muted-foreground font-medium text-lg ml-2">HQ</span></span>
         </div>
-        <button 
+        <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all text-sm font-medium px-4 py-2 rounded-full hover:bg-accent"
         >
@@ -126,7 +126,7 @@ const AdminLogin = () => {
             <p className="text-muted-foreground">Authorized personnel only</p>
           </div>
 
-          <div className="bg-[#1e2329]/50 backdrop-blur-xl border border-gray-800 rounded-[2.5rem] p-8 md:p-10 shadow-2xl">
+          <div className="bg-white/70 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-muted-foreground font-medium ml-1">Access Level</Label>
@@ -134,7 +134,7 @@ const AdminLogin = () => {
                   <SelectTrigger className="bg-card border-gray-700 h-14 focus:ring-primary rounded-2xl">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1e2329] border-gray-700 text-foreground rounded-xl">
+                  <SelectContent className="bg-[#1e2329] border-gray-700 text-white rounded-xl">
                     <SelectItem value="Admin">Administrator</SelectItem>
                     <SelectItem value="Warehouse_Manager">Warehouse Manager</SelectItem>
                   </SelectContent>
@@ -151,6 +151,7 @@ const AdminLogin = () => {
                     className="bg-card border-gray-700 h-14 focus:ring-primary text-lg rounded-2xl pl-12"
                     value={formData.email}
                     onChange={handleInputChange}
+                    autoComplete="email"
                     required
                   />
                   <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -167,6 +168,7 @@ const AdminLogin = () => {
                     className="bg-card border-gray-700 h-14 focus:ring-primary text-lg rounded-2xl pl-12"
                     value={formData.password}
                     onChange={handleInputChange}
+                    autoComplete="current-password"
                     required
                   />
                   <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -180,8 +182,8 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              <Button 
-                className="w-full h-14 bg-primary/90 hover:bg-primary text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/90/20 transition-all active:scale-[0.98]" 
+              <Button
+                className="w-full h-14 bg-primary/90 hover:bg-primary text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/90/20 transition-all active:scale-[0.98]"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -195,7 +197,7 @@ const AdminLogin = () => {
               </Button>
 
               <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground font-medium">
-                <ShieldCheck className="w-3 h-3 text-primary" /> 
+                <ShieldCheck className="w-3 h-3 text-primary" />
                 End-to-End Encrypted Session
               </div>
             </form>

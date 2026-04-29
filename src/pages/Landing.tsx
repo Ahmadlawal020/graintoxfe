@@ -36,8 +36,8 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-sans">
       {/* Decorative Blur Elements */}
-      <div className="fixed top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[150px] pointer-events-none z-0" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none z-0" />
+      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] pointer-events-none z-0" />
+      <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] pointer-events-none z-0" />
 
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-border">
@@ -162,14 +162,14 @@ const LandingPage = () => {
 
       {/* Final CTA */}
       <section className="py-32 px-4 relative">
-        <div className="max-w-6xl mx-auto rounded-[4rem] bg-gradient-to-br from-primary/90 to-primary/90 p-16 md:p-24 relative overflow-hidden shadow-[0_40px_100px_rgba(16,185,129,0.2)]">
+        <div className="max-w-6xl mx-auto rounded-[4rem] bg-gradient-to-br from-primary to-primary/80 p-16 md:p-24 relative overflow-hidden shadow-[0_40px_100px_rgba(46,125,50,0.25)]">
           {/* Decorative patterns */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-accent rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
           <div className="relative z-10 text-center">
             <h2 className="text-5xl md:text-7xl font-black text-primary-foreground mb-8 tracking-tighter leading-[0.95]">Join the New Era of <br /> Agriculture.</h2>
-            <p className="text-primary/90/70 text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-bold leading-relaxed">
+            <p className="text-primary-foreground/80 text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-bold leading-relaxed">
               Scale your impact, secure your future, and trade with the speed of light on the GraintoX exchange.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -183,10 +183,10 @@ const LandingPage = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="!border-white/40 !text-white hover:!bg-white/10 w-full sm:w-auto px-12 h-20 text-xl font-black rounded-3xl transition-all"
+                className="!bg-white !text-primary !border-none hover:!bg-white/90 w-full sm:w-auto px-12 h-20 text-xl font-black rounded-3xl shadow-2xl transition-all hover:scale-105 active:scale-95"
                 onClick={() => window.location.href = 'mailto:ops@graintox.com'}
               >
-                Contact Ops <div className="ml-2 w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center"><Mail className="w-4 h-4" /></div>
+                Contact Ops <div className="ml-2 w-6 h-6 bg-primary/10 rounded-lg flex items-center justify-center"><Mail className="w-4 h-4 text-primary" /></div>
               </Button>
             </div>
           </div>

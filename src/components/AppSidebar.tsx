@@ -53,7 +53,7 @@ const managerMenuItems = [
   { title: "Dashboard", url: "/manager", icon: LayoutDashboard },
   { title: "My Warehouse", url: "/manager/warehouse", icon: Building2 },
   { title: "Stock Management", url: "/manager/stock", icon: ClipboardList },
-  { title: "Quality Control", url: "/manager/qc", icon: ShieldCheck },
+  { title: "Deposit Requests", url: "/manager/deposits", icon: ClipboardList },
   { title: "Inventory Reports", url: "/manager/reports", icon: FileText },
 ];
 
@@ -146,7 +146,7 @@ export function AppSidebar() {
 
         <div className="flex-1 overflow-y-auto">
           <SidebarGroup className="px-3 py-2">
-            <SidebarGroupLabel className="text-sidebar-foreground/70 px-3 py-2">
+            <SidebarGroupLabel className="text-sidebar-foreground px-3 py-2 font-black uppercase tracking-widest text-[10px]">
               {!collapsed && "Main Menu"}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -162,13 +162,13 @@ export function AppSidebar() {
                           item.url === "/user"
                         }
                         className={({ isActive: navIsActive }) =>
-                          `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm w-full ${navIsActive || isActive(item.url)
-                            ? "bg-primary/90 text-foreground shadow-lg shadow-primary/90/20"
-                            : "hover:bg-sidebar-accent text-sidebar-foreground hover:shadow-sm"
+                          `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm w-full ${navIsActive || isActive(item.url)
+                            ? "bg-secondary text-sidebar-background font-bold"
+                            : "hover:bg-primary/50 text-sidebar-foreground"
                           }`
                         }
                       >
-                        <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive(item.url) ? "text-foreground" : "text-primary"}`} />
+                        <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive(item.url) ? "text-sidebar-background" : "text-secondary"}`} />
                         {!collapsed && (
                           <span className="font-medium truncate">
                             {item.title}
@@ -186,9 +186,9 @@ export function AppSidebar() {
       <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-background">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton 
+            <SidebarMenuButton
               onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-500/10 hover:text-red-600 transition-all duration-200"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500 hover:text-white font-medium"
             >
               <LogOut className="w-4 h-4" />
               {!collapsed && <span className="font-medium">Logout</span>}

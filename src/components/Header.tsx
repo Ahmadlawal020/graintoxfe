@@ -98,8 +98,8 @@ export function Header() {
                   {role === "Admin"
                     ? "Administrator"
                     : role === "Warehouse_Manager"
-                    ? "Warehouse Manager"
-                    : role}
+                      ? "Warehouse Manager"
+                      : role}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -162,7 +162,7 @@ export function Header() {
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/config")}>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </DropdownMenuItem>

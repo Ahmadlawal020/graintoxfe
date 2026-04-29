@@ -16,7 +16,7 @@ const Portfolio = () => {
   const holdings = useMemo(() => {
     if (!userData?.holdings || !crops) return [];
 
-    const colors = ["#10B981", "#3B82F6", "#F59E0B", "#8B5CF6", "#EC4899", "#6366F1"];
+    const colors = ["#2E7D32", "#A5D6A7", "#1B5E20", "#4CAF50", "#81C784", "#2E7D32"];
 
     return userData.holdings.map((h: any, i: number) => {
       const crop = crops.find((c: any) => c.tokenSymbol === h.tokenSymbol);
@@ -63,9 +63,25 @@ const Portfolio = () => {
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {[
-          { title: "Total Value", value: `₦${(totalValue / 1e6).toFixed(1)}M`, icon: PieIcon, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Total P&L", value: `₦${(totalPnL / 1e6).toFixed(2)}M`, icon: TrendingUp, color: "text-blue-500", bg: "bg-blue-500/10", sub: <span className="text-primary flex items-center text-[10px] sm:text-xs"><ArrowUpRight className="w-3 h-3" /> +{totalPnLPct}%</span> },
-          { title: "Tokens Held", value: holdings.reduce((a, h) => a + h.tokens, 0), icon: Coins, color: "text-purple-500", bg: "bg-purple-500/10" },
+          {
+            title: "Total Value",
+            value: totalValue >= 1e6 ? `₦${(totalValue / 1e6).toFixed(1)}M` : `₦${totalValue.toLocaleString()}`,
+            icon: PieIcon,
+            color: "text-primary",
+            bg: "bg-primary/10"
+          },
+          {
+            title: "Total P&L",
+            value: Math.abs(totalPnL) >= 1e6 ? `₦${(totalPnL / 1e6).toFixed(2)}M` : `₦${totalPnL.toLocaleString()}`,
+            icon: TrendingUp,
+            color: "text-primary",
+            bg: "bg-primary/10",
+            sub: <span className={`flex items-center text-[10px] sm:text-xs ${totalPnL >= 0 ? "text-primary" : "text-red-500"}`}>
+              {totalPnL >= 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+              {totalPnLPct}%
+            </span>
+          },
+          { title: "Tokens Held", value: holdings.reduce((a, h) => a + h.tokens, 0).toLocaleString(), icon: Coins, color: "text-secondary-foreground", bg: "bg-secondary/20" },
         ].map((stat, i) => (
           <Card key={i} className="glass-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-4">
@@ -93,7 +109,7 @@ const Portfolio = () => {
                   <Pie data={pieData} cx="50%" cy="50%" innerRadius={40} outerRadius={70} paddingAngle={5} dataKey="value">
                     {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip formatter={(v: number) => [`₦${(v / 1e6).toFixed(1)}M`, '']} />
+                  <Tooltip formatter={(v: number) => [v >= 1e6 ? `₦${(v / 1e6).toFixed(1)}M` : `₦${v.toLocaleString()}`, 'Value']} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -145,7 +161,7 @@ const Portfolio = () => {
                       </div>
                       <div>
                         <span className="text-muted-foreground block">Value</span>
-                        <span className="font-semibold">₦{(h.value / 1e6).toFixed(1)}M</span>
+                        <span className="font-semibold">₦{h.value >= 1e6 ? `${(h.value / 1e6).toFixed(1)}M` : h.value.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -181,7 +197,7 @@ const Portfolio = () => {
                         <td className="p-3">{h.tokens}</td>
                         <td className="p-3 text-muted-foreground">₦{h.avgBuy.toLocaleString()}</td>
                         <td className="p-3 font-semibold">₦{h.currentPrice.toLocaleString()}</td>
-                        <td className="p-3 font-semibold">₦{(h.value / 1e6).toFixed(1)}M</td>
+                        <td className="p-3 font-semibold">₦{h.value >= 1e6 ? `${(h.value / 1e6).toFixed(1)}M` : h.value.toLocaleString()}</td>
                         <td className="p-3">
                           <span className={`flex items-center text-sm font-medium ${pnl >= 0 ? "text-primary" : "text-red-500"}`}>
                             {pnl >= 0 ? <ArrowUpRight className="w-3 h-3 mr-0.5" /> : <ArrowDownRight className="w-3 h-3 mr-0.5" />}

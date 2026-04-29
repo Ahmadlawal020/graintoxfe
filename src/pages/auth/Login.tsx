@@ -11,7 +11,9 @@ import {
   ShieldCheck, 
   Building2, 
   ArrowLeft,
-  Wheat
+  Wheat,
+  Mail,
+  Lock
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLoginUserMutation } from "@/services/api/authApiSlice";
@@ -83,8 +85,8 @@ const Login = () => {
     <div className="min-h-screen bg-card text-foreground flex flex-col font-sans selection:bg-primary/30">
       {/* Visual background decor */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-primary/90/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[100px]" />
       </div>
 
       <header className="p-6 flex items-center justify-between z-10 relative">
@@ -109,22 +111,26 @@ const Login = () => {
             <p className="text-muted-foreground">Enter your details to access your account</p>
           </div>
 
-          <div className="bg-[#1e2329]/40 backdrop-blur-xl border border-border rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
+          <div className="bg-white/70 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden relative group">
             {/* Top decorative line */}
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-muted-foreground font-medium ml-1">Email address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  className="bg-card/60 border-gray-800 h-14 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    className="bg-card/60 border-gray-800 h-14 pl-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    autoComplete="email"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -133,13 +139,15 @@ const Login = () => {
                   <button type="button" className="text-primary text-sm font-semibold hover:text-primary/80 transition-colors">Forgot password?</button>
                 </div>
                 <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="bg-card/60 border-gray-800 h-14 focus:ring-primary rounded-2xl text-lg pr-12 transition-all focus:border-primary/50"
+                    className="bg-card/60 border-gray-800 h-14 pl-12 pr-12 focus:ring-primary rounded-2xl text-lg transition-all focus:border-primary/50"
                     value={formData.password}
                     onChange={handleInputChange}
+                    autoComplete="current-password"
                     required
                   />
                   <button
@@ -157,7 +165,7 @@ const Login = () => {
                 <label htmlFor="remember" className="text-sm text-muted-foreground font-medium cursor-pointer">Remember me for 30 days</label>
               </div>
 
-              <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
+              <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin" />
