@@ -41,7 +41,7 @@ const WalletFinance = () => {
   const totalDeposits = summary?.totalDeposits || 0;
 
   return (
-    <div className="space-y-6 animate-fade-in p-4">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Financial Overview</h1>
@@ -129,16 +129,16 @@ const WalletFinance = () => {
           <CardDescription>Comprehensive list of all financial activities on the platform</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Amount</TableHead>
-                  <TableHead>Reference</TableHead>
+                  <TableHead className="hidden lg:table-cell">Reference</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead className="hidden md:table-cell">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -167,19 +167,19 @@ const WalletFinance = () => {
                         <Badge variant="outline">{tx.type.replace("_", " ")}</Badge>
                       </TableCell>
                       <TableCell className="font-semibold text-primary">₦{tx.amount?.toLocaleString()}</TableCell>
-                      <TableCell className="text-xs font-mono text-muted-foreground">{tx.reference}</TableCell>
+                      <TableCell className="text-xs font-mono text-muted-foreground hidden lg:table-cell">{tx.reference}</TableCell>
                       <TableCell>
                         <Badge 
                           className={
-                            tx.status === "Completed" ? "bg-primary/90 text-foreground" :
-                            tx.status === "Pending" ? "bg-amber-500 text-foreground" :
-                            "bg-red-600 text-foreground"
+                            tx.status === "Completed" ? "bg-primary/90 !text-white" :
+                            tx.status === "Pending" ? "bg-amber-500 !text-white" :
+                            "bg-red-600 !text-white"
                           }
                         >
                           {tx.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
                         {format(new Date(tx.createdAt), "MMM dd, yyyy HH:mm")}
                       </TableCell>
                     </TableRow>

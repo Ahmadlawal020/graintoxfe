@@ -53,12 +53,12 @@ const Investors = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const investors = [
-    { _id: "1", name: "Ibrahim Yusuf", email: "ibrahim@graintox.ng", phone: "+234 803 456 7890", portfolioValue: 12500000, tokens: 420, primaryToken: "GT-MAIZE", joinDate: "2026-01-15", kycStatus: "VERIFIED", tier: "Gold", roi: 15.8 },
-    { _id: "2", name: "Grace Eze", email: "grace@graintox.ng", phone: "+234 807 123 4567", portfolioValue: 28400000, tokens: 850, primaryToken: "GT-SOYA", joinDate: "2025-11-20", kycStatus: "VERIFIED", tier: "Platinum", roi: 22.3 },
-    { _id: "3", name: "Chidi Nwosu", email: "chidi@graintox.ng", phone: "+234 805 678 9012", portfolioValue: 5200000, tokens: 180, primaryToken: "GT-RICE", joinDate: "2026-03-05", kycStatus: "PENDING", tier: "Bronze", roi: 8.1 },
-    { _id: "4", name: "Hauwa Abdulkadir", email: "hauwa@graintox.ng", phone: "+234 809 234 5678", portfolioValue: 18900000, tokens: 620, primaryToken: "GT-MAIZE", joinDate: "2025-12-10", kycStatus: "VERIFIED", tier: "Gold", roi: 18.4 },
-    { _id: "5", name: "Emeka Obi", email: "emeka@graintox.ng", phone: "+234 810 345 6789", portfolioValue: 42100000, tokens: 1200, primaryToken: "GT-BEAN", joinDate: "2025-09-01", kycStatus: "VERIFIED", tier: "Platinum", roi: 28.7 },
-    { _id: "6", name: "Zainab Garba", email: "zainab@graintox.ng", phone: "+234 811 456 7890", portfolioValue: 3800000, tokens: 130, primaryToken: "GT-SORG", joinDate: "2026-04-01", kycStatus: "VERIFIED", tier: "Bronze", roi: 5.2 },
+    { _id: "1", name: "Ibrahim Yusuf", email: "ibrahim@graintox.ng", phone: "+234 803 456 7890", portfolioValue: 12500000, tokens: 420, primaryToken: "GT-MAIZE", joinDate: "2026-01-15", kycStatus: "VERIFIED", roi: 15.8 },
+    { _id: "2", name: "Grace Eze", email: "grace@graintox.ng", phone: "+234 807 123 4567", portfolioValue: 28400000, tokens: 850, primaryToken: "GT-SOYA", joinDate: "2025-11-20", kycStatus: "VERIFIED", roi: 22.3 },
+    { _id: "3", name: "Chidi Nwosu", email: "chidi@graintox.ng", phone: "+234 805 678 9012", portfolioValue: 5200000, tokens: 180, primaryToken: "GT-RICE", joinDate: "2026-03-05", kycStatus: "PENDING", roi: 8.1 },
+    { _id: "4", name: "Hauwa Abdulkadir", email: "hauwa@graintox.ng", phone: "+234 809 234 5678", portfolioValue: 18900000, tokens: 620, primaryToken: "GT-MAIZE", joinDate: "2025-12-10", kycStatus: "VERIFIED", roi: 18.4 },
+    { _id: "5", name: "Emeka Obi", email: "emeka@graintox.ng", phone: "+234 810 345 6789", portfolioValue: 42100000, tokens: 1200, primaryToken: "GT-BEAN", joinDate: "2025-09-01", kycStatus: "VERIFIED", roi: 28.7 },
+    { _id: "6", name: "Zainab Garba", email: "zainab@graintox.ng", phone: "+234 811 456 7890", portfolioValue: 3800000, tokens: 130, primaryToken: "GT-SORG", joinDate: "2026-04-01", kycStatus: "VERIFIED", roi: 5.2 },
   ];
 
   const filteredInvestors = investors.filter((inv) =>
@@ -79,14 +79,6 @@ const Investors = () => {
     { token: "GT-MILT", investors: 3, value: 8000000 },
   ];
 
-  const tierBadge = (tier: string) => {
-    const colors: Record<string, string> = {
-      Bronze: "bg-amber-700 text-foreground",
-      Gold: "bg-amber-500 text-foreground",
-      Platinum: "bg-gradient-to-r from-gray-300 to-gray-500 text-foreground",
-    };
-    return <Badge className={colors[tier] || ""}>{tier}</Badge>;
-  };
 
   return (
     <div className="space-y-6 animate-fade-in p-2">
@@ -162,7 +154,6 @@ const Investors = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Investor</TableHead>
-                  <TableHead>Tier</TableHead>
                   <TableHead>Portfolio Value</TableHead>
                   <TableHead>Tokens</TableHead>
                   <TableHead>Primary Token</TableHead>
@@ -185,7 +176,6 @@ const Investors = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{tierBadge(inv.tier)}</TableCell>
                     <TableCell className="font-semibold">₦{(inv.portfolioValue / 1e6).toFixed(1)}M</TableCell>
                     <TableCell>{inv.tokens.toLocaleString()}</TableCell>
                     <TableCell>

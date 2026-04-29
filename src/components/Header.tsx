@@ -68,11 +68,11 @@ export function Header() {
         <SidebarTrigger className="-ml-1">
           <Menu className="h-4 w-4" />
         </SidebarTrigger>
-        <div className="hidden sm:block">
-          <h1 className="text-lg font-bold">
+        <div className="flex flex-col">
+          <h1 className="text-sm sm:text-lg font-bold">
             GrainTox
           </h1>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[10px] text-muted-foreground hidden sm:block">
             Agricultural Digital Infrastructure
           </p>
         </div>

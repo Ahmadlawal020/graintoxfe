@@ -90,7 +90,7 @@ const InventoryReports = () => {
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          { title: `Net Inflow (${currentMonthName})`, value: `${netInflow} MT`, icon: TrendingUp, color: "text-primary", bg: "bg-primary/10" },
+          { title: `Net Inflow (${currentMonthName})`, value: `${netInflow} kg`, icon: TrendingUp, color: "text-primary", bg: "bg-primary/10" },
           { title: "Reports Generated", value: "12", icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Last Export", value: `${currentMonthName} 20`, icon: Calendar, color: "text-purple-500", bg: "bg-purple-500/10" },
         ].map((stat, i) => (
@@ -118,8 +118,8 @@ const InventoryReports = () => {
               <YAxis axisLine={false} tickLine={false} />
               <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', borderColor: 'hsl(var(--border))' }} />
               <Legend />
-              <Bar dataKey="deposits" fill="#10B981" name="Deposits (MT)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="withdrawals" fill="#3B82F6" name="Withdrawals (MT)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="deposits" fill="#10B981" name="Deposits (kg)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="withdrawals" fill="#3B82F6" name="Withdrawals (kg)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>

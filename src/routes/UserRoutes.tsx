@@ -5,6 +5,8 @@ import Portfolio from "@/pages/user/Portfolio";
 import Storage from "@/pages/user/Storage";
 import Wallet from "@/pages/shared/Wallet";
 import UserSettings from "@/pages/shared/UserSettings";
+import MyCrops from "@/pages/user/MyCrops";
+import CropDetails from "@/pages/user/CropDetails";
 
 const userRoutes = (
   <>
@@ -14,6 +16,8 @@ const userRoutes = (
     <Route path="/user/storage" element={<Storage />} />
     <Route path="/user/wallet" element={<Wallet />} />
     <Route path="/user/settings" element={<UserSettings />} />
+    <Route path="/user/crops" element={<MyCrops />} />
+    <Route path="/user/crops/:symbol" element={<CropDetails />} />
   </>
 );
 

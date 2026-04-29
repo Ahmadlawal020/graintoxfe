@@ -4,13 +4,39 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetUserByIdQuery } from "@/services/api/userApiSlice";
+import { useGetUserByIdQuery, useUpdateUserMutation } from "@/services/api/userApiSlice";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 const UserDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { data: user, isLoading, isError } = useGetUserByIdQuery(id || "");
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+
+  const handleToggleStatus = async () => {
+    if (!user) return;
+    const newStatus = user.status === "Active" ? "Suspended" : "Active";
+    try {
+      await updateUser({
+        id: id,
+        email: user.email,
+        status: newStatus
+      }).unwrap();
+      toast({
+        title: `User ${newStatus}`,
+        description: `Account for ${user.firstName} is now ${newStatus.toLowerCase()}.`,
+        className: newStatus === "Active" ? "bg-primary/90 !text-white" : "bg-red-600 !text-white"
+      });
+    } catch (err: any) {
+      toast({
+        title: "Action Failed",
+        description: err.data?.message || "Could not update user status",
+        variant: "destructive"
+      });
+    }
+  };
 
   const roleBadge = (role: string) => {
     const colors: Record<string, string> = {
@@ -36,10 +62,10 @@ const UserDetails = () => {
       <div className="space-y-6 p-2">
         <Skeleton className="h-9 w-64" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[1,2,3,4].map(i => <Skeleton key={i} className="h-28 w-full rounded-lg" />)}
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full rounded-lg" />)}
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {[1,2].map(i => <Skeleton key={i} className="h-64 w-full rounded-lg" />)}
+          {[1, 2].map(i => <Skeleton key={i} className="h-64 w-full rounded-lg" />)}
         </div>
       </div>
     );
@@ -50,21 +76,21 @@ const UserDetails = () => {
   const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString("en-NG", { year: "numeric", month: "short", day: "numeric" }) : "Never";
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
+        <div className="w-full">
           <Button variant="ghost" size="sm" onClick={() => navigate("/users")} className="mb-2">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Users
           </Button>
-          <div className="flex items-center gap-5">
-            <img 
-              src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
-              alt="avatar" 
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+            <img
+              src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`}
+              alt="avatar"
               className="h-20 w-20 rounded-full bg-primary/10 border-4 border-primary/20 shadow-lg object-cover"
             />
             <div>
               <h1 className="text-3xl font-bold text-foreground">{user.title} {user.firstName} {user.lastName}</h1>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-2">
                 {roleBadge(displayRole)}
                 <Badge variant={user.status === "Active" ? "default" : "secondary"}>{user.status}</Badge>
                 <Badge variant="outline" className={user.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
@@ -74,12 +100,21 @@ const UserDetails = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-row sm:flex-row gap-2 w-full md:w-auto justify-center sm:justify-start">
           <Button variant="outline" size="sm" onClick={() => navigate(`/users/edit/${id}`)}>
             <Edit className="h-4 w-4 mr-2" /> Edit
           </Button>
-          <Button variant="destructive" size="sm">
-            <Ban className="h-4 w-4 mr-2" /> Suspend
+          <Button
+            variant={user.status === "Active" ? "destructive" : "default"}
+            size="sm"
+            onClick={handleToggleStatus}
+            disabled={isUpdating}
+          >
+            {user.status === "Active" ? (
+              <><Ban className="h-4 w-4 mr-2" /> Suspend</>
+            ) : (
+              <><CheckCircle2 className="h-4 w-4 mr-2" /> Activate</>
+            )}
           </Button>
         </div>
       </header>
@@ -129,6 +164,32 @@ const UserDetails = () => {
             <CardTitle className="flex items-center gap-2"><Shield className="w-5 h-5 text-primary" /> Platform Activity</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {user.activities && user.activities.length > 0 ? (
+              <div className="space-y-4">
+                {user.activities.slice(0, 5).map((activity: any, i: number) => (
+                  <div key={i} className="flex gap-3 items-start pb-4 border-b last:border-0 last:pb-0">
+                    <div className="mt-1 w-2 h-2 rounded-full bg-primary shrink-0" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">{activity.action}</p>
+                      <p className="text-xs text-muted-foreground">{activity.details}</p>
+                      <p className="text-[10px] text-muted-foreground/60">
+                        {new Date(activity.timestamp).toLocaleString("en-NG", { 
+                          day: "numeric", 
+                          month: "short", 
+                          hour: "2-digit", 
+                          minute: "2-digit" 
+                        })} • IP: {activity.ip || "System"}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-6 text-center">
+                <Shield className="h-8 w-8 text-muted-foreground/20 mb-2" />
+                <p className="text-sm text-muted-foreground italic">No recent activity logs found</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -140,7 +201,7 @@ const UserDetails = () => {
           <CardContent>
             {displayRole === "User" && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/20 rounded-lg">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-muted/20 rounded-lg">
                   <div>
                     <p className="text-sm text-muted-foreground">Farm Location</p>
                     <p className="font-medium mt-1">{user.farmLocation || "N/A"}</p>
@@ -148,10 +209,6 @@ const UserDetails = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Primary Crops</p>
                     <p className="font-medium mt-1">{user.cropTypes?.join(", ") || "N/A"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Investor Tier</p>
-                    <p className="font-medium mt-1 text-purple-600">{user.investorTier || "Bronze"}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Portfolio Value</p>
@@ -176,7 +233,7 @@ const UserDetails = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Assigned Facility</p>
                   <div className="font-medium mt-1 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-primary"></span> 
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     {user.assignedWarehouse || "Unassigned"}
                   </div>
                 </div>

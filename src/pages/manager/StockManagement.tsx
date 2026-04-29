@@ -49,7 +49,7 @@ const StockManagement = () => {
       lot: op.receiptNo || `OP-${op._id.substring(0, 6)}`,
       bags: op.quantity || 0, // Using quantity as bags since weight is also stored or we can just show value
       weight: op.quantity || 0,
-      unit: op.unit || "MT",
+      unit: op.unit || "kg",
       section: op.section || "Main Vault",
       depositor: depositorName,
       depositDate: new Date(op.timestamp).toLocaleDateString(),
@@ -86,7 +86,7 @@ const StockManagement = () => {
       <div className="grid gap-4 md:grid-cols-3">
         {[
           { title: "Total Lots", value: stockItems.length, icon: Package, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Total Weight", value: `${stockItems.reduce((a, s) => a + s.weight, 0)} MT`, icon: Wheat, color: "text-blue-500", bg: "bg-blue-500/10" },
+          { title: "Total Weight", value: `${stockItems.reduce((a, s) => a + s.weight, 0)} kg`, icon: Wheat, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Pending QC", value: stockItems.filter(s => s.quality === "Pending QC").length, icon: Eye, color: "text-amber-500", bg: "bg-amber-500/10" },
         ].map((stat, i) => (
           <Card key={i} className="glass-card">
@@ -132,7 +132,7 @@ const StockManagement = () => {
                     </TableCell>
                     <TableCell className="font-mono text-xs text-primary/90">{item.lot}</TableCell>
                     <TableCell>{item.bags.toLocaleString()}</TableCell>
-                    <TableCell className="font-semibold">{item.weight} MT</TableCell>
+                    <TableCell className="font-semibold">{item.weight} kg</TableCell>
                     <TableCell><Badge variant="outline" className="text-[10px]">{item.section}</Badge></TableCell>
                     <TableCell className="text-sm">{item.depositor}</TableCell>
                     <TableCell>

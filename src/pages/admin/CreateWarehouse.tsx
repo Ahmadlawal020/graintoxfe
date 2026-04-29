@@ -119,7 +119,7 @@ const CreateWarehouse = () => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="capacity">Capacity (Metric Tonnes) *</Label>
+                <Label htmlFor="capacity">Capacity (kg) *</Label>
                 <Input id="capacity" name="capacity" type="number" value={formData.capacity} onChange={handleChange} required placeholder="e.g. 5000" />
               </div>
               <div>

@@ -130,7 +130,7 @@ const RecordStock = () => {
 
       toast({
         title: "Deposit Recorded Successfully",
-        description: `Recorded ${formData.weight} MT of ${selectedCrop.name}. Receipt: ${receiptNo}`,
+        description: `Recorded ${formData.weight} kg of ${selectedCrop.name}. Receipt: ${receiptNo}`,
         className: "bg-primary/90 text-foreground border-none shadow-lg shadow-primary/20"
       });
       navigate("/manager/stock");
@@ -183,7 +183,7 @@ const RecordStock = () => {
                    </SelectTrigger>
                    <SelectContent>
                       {myWarehouses.map((wh: any) => (
-                         <SelectItem key={wh._id} value={wh._id}>{wh.name} (Available: {wh.availableCapacity} MT)</SelectItem>
+                         <SelectItem key={wh._id} value={wh._id}>{wh.name} (Available: {wh.availableCapacity} kg)</SelectItem>
                       ))}
                    </SelectContent>
                 </Select>
@@ -339,7 +339,7 @@ const RecordStock = () => {
                 </div>
 
                 <div className="space-y-2">
-                   <Label className="text-xs font-black uppercase tracking-tighter text-muted-foreground">Total Weight (Metric Tons)</Label>
+                   <Label className="text-xs font-black uppercase tracking-tighter text-muted-foreground">Total Weight (kg)</Label>
                    <div className="relative">
                       <Weight className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input 
@@ -425,7 +425,7 @@ const RecordStock = () => {
                           </div>
                           <div className="flex justify-between items-center text-xs pt-2 border-t">
                              <span className="text-muted-foreground font-bold">Total Payload</span>
-                             <span className="font-black text-lg">{formData.weight || 0} MT</span>
+                             <span className="font-black text-lg">{formData.weight || 0} kg</span>
                           </div>
                        </div>
                        

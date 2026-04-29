@@ -19,9 +19,9 @@ const Storage = () => {
   const { firstName, lastName } = useAuth();
   const [isRequesting, setIsRequesting] = useState(false);
 
-  const { data: crops = [] } = useGetCropsQuery(undefined);
-  const { data: warehouses = [] } = useGetWarehousesQuery(undefined);
-  const { data: operations = [], isLoading: isOpsLoading } = useGetStorageOperationsQuery(undefined);
+  const { data: crops = [] } = useGetCropsQuery(undefined, { pollingInterval: 60000 });
+  const { data: warehouses = [] } = useGetWarehousesQuery(undefined, { pollingInterval: 60000 });
+  const { data: operations = [], isLoading: isOpsLoading } = useGetStorageOperationsQuery(undefined, { pollingInterval: 15000 });
   const [createRequest, { isLoading: isSubmitting }] = useCreateStorageOperationMutation();
 
   const [formData, setFormData] = useState({
@@ -69,7 +69,7 @@ const Storage = () => {
         </div>
         <Button 
           onClick={() => setIsRequesting(true)} 
-          className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20 w-full sm:w-auto"
+          className="bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/90/20 w-full sm:w-auto"
           size="sm"
         >
           <Plus className="w-3.5 h-3.5 mr-1.5" /> New Deposit
@@ -105,7 +105,7 @@ const Storage = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs">Quantity (MT)</Label>
+                  <Label className="text-xs">Quantity (kg)</Label>
                   <Input type="number" placeholder="e.g. 50" value={formData.quantity} onChange={(e) => setFormData({...formData, quantity: e.target.value})} className="h-11" />
                 </div>
                 <div className="space-y-2">
@@ -125,7 +125,7 @@ const Storage = () => {
                 </div>
                 <div className="flex gap-2 pt-2">
                   <Button type="button" variant="outline" onClick={() => setIsRequesting(false)} className="flex-1 h-11">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="flex-1 h-11 bg-primary/90 hover:bg-primary/90 text-foreground">
+                  <Button type="submit" disabled={isSubmitting} className="flex-1 h-11 bg-primary/90 hover:bg-primary/90 !text-white">
                     {isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
                 </div>
@@ -154,7 +154,7 @@ const Storage = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Quantity (MT)</Label>
+                    <Label>Quantity (kg)</Label>
                     <Input type="number" placeholder="e.g. 50" value={formData.quantity} onChange={(e) => setFormData({...formData, quantity: e.target.value})} />
                   </div>
                 </div>
@@ -175,7 +175,7 @@ const Storage = () => {
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
                   <Button type="button" variant="outline" onClick={() => setIsRequesting(false)}>Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="bg-primary/90 hover:bg-primary/90 text-foreground">
+                  <Button type="submit" disabled={isSubmitting} className="bg-primary/90 hover:bg-primary/90 !text-white">
                     {isSubmitting ? "Submitting..." : "Submit Request"}
                   </Button>
                 </div>
@@ -189,7 +189,7 @@ const Storage = () => {
         <div className="space-y-4 sm:space-y-6">
           {/* Active Holdings */}
           <Card className="border-none shadow-md overflow-hidden">
-            <CardHeader className="bg-primary/90 text-foreground p-3 sm:p-4">
+            <CardHeader className="bg-primary/90 !text-white p-3 sm:p-4">
               <CardTitle className="text-sm sm:text-lg flex items-center gap-2">
                 <Wheat className="w-4 h-4 sm:w-5 sm:h-5" /> Current Stored Assets
               </CardTitle>
@@ -214,7 +214,7 @@ const Storage = () => {
                         </Badge>
                       </div>
                       <div className="flex justify-between text-[11px] text-muted-foreground">
-                        <span><strong className="text-foreground">{op.quantity} MT</strong> stored</span>
+                        <span><strong className="text-foreground">{op.quantity} kg</strong> stored</span>
                         <span className="flex items-center gap-1">
                           {op.qcStatus === 'PASSED' ? <ShieldCheck className="w-3 h-3 text-primary" /> : <Clock className="w-3 h-3 text-amber-500" />}
                           QC: {op.qcStatus || 'Pending'}
@@ -246,7 +246,7 @@ const Storage = () => {
                         <tr key={op._id} className="hover:bg-muted/50 transition-colors">
                           <td className="px-4 lg:px-6 py-3 font-medium">{op.commodity?.name}</td>
                           <td className="px-4 lg:px-6 py-3">{op.warehouse?.name}</td>
-                          <td className="px-4 lg:px-6 py-3">{op.quantity} MT</td>
+                          <td className="px-4 lg:px-6 py-3">{op.quantity} kg</td>
                           <td className="px-4 lg:px-6 py-3">
                             <Badge variant="outline" className="bg-primary/10 text-primary/90 border-primary/30">Active</Badge>
                           </td>
@@ -296,7 +296,7 @@ const Storage = () => {
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                       <div className="text-right hidden sm:block">
-                        <p className="text-sm font-bold">{op.quantity} MT</p>
+                        <p className="text-sm font-bold">{op.quantity} kg</p>
                         <p className="text-[10px] text-muted-foreground">{op.warehouse?.name}</p>
                       </div>
                       <Badge

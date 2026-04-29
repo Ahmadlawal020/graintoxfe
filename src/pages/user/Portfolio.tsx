@@ -10,8 +10,8 @@ import { useGetCropsQuery } from "@/services/api/cropApiSlice";
 
 const Portfolio = () => {
   const user = useSelector(selectCurrentUser);
-  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(user?.id || "");
-  const { data: crops, isLoading: cropsLoading } = useGetCropsQuery(undefined);
+  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(user?.id || "", { pollingInterval: 10000 });
+  const { data: crops, isLoading: cropsLoading } = useGetCropsQuery(undefined, { pollingInterval: 30000 });
 
   const holdings = useMemo(() => {
     if (!userData?.holdings || !crops) return [];
@@ -137,7 +137,7 @@ const Portfolio = () => {
                     <div className="grid grid-cols-3 gap-2 text-[10px]">
                       <div>
                         <span className="text-muted-foreground block">Qty</span>
-                        <span className="font-semibold">{h.tokens} MT</span>
+                        <span className="font-semibold">{h.tokens} kg</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground block">Price</span>

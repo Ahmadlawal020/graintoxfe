@@ -17,7 +17,7 @@ const UserSettings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { id, firstName, lastName, email, status: roleStatus } = useAuth();
-  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "");
+  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "", { pollingInterval: 30000 });
   const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
   
   const kycStatus = userData?.kycStatus || "PENDING";
@@ -33,6 +33,7 @@ const UserSettings = () => {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [cameraType, setCameraType] = useState<"front" | "back" | "selfie">("front");
   const [kycStep, setKycStep] = useState(1);
+  const [retryKyc, setRetryKyc] = useState(false);
 
   const webcamRef = useRef<Webcam>(null);
 
@@ -70,10 +71,10 @@ const UserSettings = () => {
   }, [webcamRef, cameraType]);
 
   const handleSubmitKyc = async () => {
-    if (!id || !docType || !documentFile || !livePhoto) {
+    if (!id || !docType || !documentPreview || !livePhoto) {
       toast({
         title: "Missing Information",
-        description: "Please complete all verification steps.",
+        description: `Please complete all verification steps. Missing: ${!docType ? 'Document Type, ' : ''}${!documentPreview ? 'Document Photo, ' : ''}${!livePhoto ? 'Live Photo' : ''}`.replace(/, $/, ''),
         variant: "destructive"
       });
       return;
@@ -100,6 +101,9 @@ const UserSettings = () => {
           kycLivePhotoUrl: photoUpload.secure_url,
         },
       }).unwrap();
+
+      // Reset retry flag so the UI shows updated status from server
+      setRetryKyc(false);
 
       toast({
         title: "KYC Submitted",
@@ -214,7 +218,7 @@ const UserSettings = () => {
                         </div>
                       </div>
                       <div className="pt-2 sm:pt-6">
-                        <Button className="w-full bg-primary/90 hover:bg-primary/90 text-foreground h-10 sm:h-auto">Save Changes</Button>
+                        <Button className="w-full bg-primary/90 hover:bg-primary/90 !text-white h-10 sm:h-auto">Save Changes</Button>
                       </div>
                     </div>
                   </div>
@@ -267,7 +271,7 @@ const UserSettings = () => {
                         Your KYC documents are currently being reviewed by our compliance team. This usually takes 24-48 hours.
                       </p>
                     </div>
-                  ) : kycStatus === "REJECTED" ? (
+                  ) : kycStatus === "REJECTED" && !retryKyc ? (
                     <div className="p-6 sm:p-8 text-center bg-red-50 rounded-2xl border border-red-100 flex flex-col items-center">
                       <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-red-100 flex items-center justify-center text-red-600 mb-3 sm:mb-4">
                          <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10" />
@@ -280,8 +284,11 @@ const UserSettings = () => {
                         variant="destructive" 
                         className="mt-4 sm:mt-6 text-xs sm:text-sm" 
                         onClick={() => {
+                          setRetryKyc(true);
                           setKycStep(1);
+                          setDocumentFile(null);
                           setDocumentPreview(null);
+                          setDocumentBackFile(null);
                           setDocumentBackPreview(null);
                           setLivePhoto(null);
                           setDocType("");
@@ -517,7 +524,7 @@ const UserSettings = () => {
                             <Button variant="ghost" onClick={() => setKycStep(2)} className="flex-1" disabled={isSubmitting}>Back</Button>
                             <Button 
                               onClick={handleSubmitKyc} 
-                              className="flex-1 bg-primary/90 hover:bg-primary/90"
+                              className="flex-1 bg-primary/90 hover:bg-primary/90 !text-white"
                               disabled={isSubmitting}
                             >
                               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit for Verification"}

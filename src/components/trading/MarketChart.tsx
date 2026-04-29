@@ -15,24 +15,29 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
+    const isDark = document.documentElement.classList.contains('dark');
+    const bgColor = isDark ? '#0b0e11' : '#ffffff';
+    const textColor = isDark ? '#707a8a' : '#64748b';
+    const gridColor = isDark ? '#1f2226' : '#f1f5f9';
+
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#0b0e11' },
-        textColor: '#707a8a',
+        background: { type: ColorType.Solid, color: bgColor },
+        textColor: textColor,
       },
       grid: {
-        vertLines: { color: '#1f2226' },
-        horzLines: { color: '#1f2226' },
+        vertLines: { color: gridColor },
+        horzLines: { color: gridColor },
       },
       width: chartContainerRef.current.clientWidth,
       height: chartContainerRef.current.clientHeight,
       timeScale: {
-        borderColor: '#1f2226',
+        borderColor: gridColor,
         timeVisible: true,
         secondsVisible: false,
       },
       rightPriceScale: {
-        borderColor: '#1f2226',
+        borderColor: gridColor,
         scaleMargins: {
           top: 0.1,
           bottom: 0.2,
@@ -41,12 +46,12 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
       crosshair: {
         mode: 0, // Normal
         vertLine: {
-          color: '#5d6673',
+          color: isDark ? '#5d6673' : '#94a3b8',
           width: 0.5,
           style: 2, // Dashed
         },
         horzLine: {
-          color: '#5d6673',
+          color: isDark ? '#5d6673' : '#94a3b8',
           width: 0.5,
           style: 2,
         },
@@ -111,7 +116,7 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
 
   return (
     <div className="w-full h-full flex flex-col bg-card">
-      <div className="flex items-center justify-between px-3 md:px-4 py-2 shrink-0 border-b border-gray-800/40">
+      <div className="flex items-center justify-between px-3 md:px-4 py-2 shrink-0 border-b border-border/40">
         <div className="flex items-center gap-3 md:gap-5">
           <div className="flex flex-col">
             <span className="text-muted-foreground text-[8px] md:text-[10px] uppercase font-bold tracking-wider">Price</span>
@@ -128,11 +133,11 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
         </div>
 
         <div className="flex gap-2">
-          <div className="flex bg-[#161a1e]/90 rounded-md p-0.5 border border-gray-800/40">
+          <div className="flex bg-muted/30 rounded-md p-0.5 border border-border/40">
             <button
               onClick={() => setChartType('candle')}
               className={`h-5 md:h-6 px-2 rounded text-[9px] md:text-[10px] font-bold transition-all ${
-                chartType === 'candle' ? 'bg-gray-800 text-foreground shadow-sm' : 'text-muted-foreground'
+                chartType === 'candle' ? 'bg-primary !text-white shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Candle
@@ -140,7 +145,7 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol = 'MAIZE' }) => 
             <button
               onClick={() => setChartType('line')}
               className={`h-5 md:h-6 px-2 rounded text-[9px] md:text-[10px] font-bold transition-all ${
-                chartType === 'line' ? 'bg-gray-800 text-foreground shadow-sm' : 'text-muted-foreground'
+                chartType === 'line' ? 'bg-primary !text-white shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Line

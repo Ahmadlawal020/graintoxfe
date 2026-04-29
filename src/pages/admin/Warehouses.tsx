@@ -83,7 +83,7 @@ const Warehouses = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Warehouses</h1>
@@ -104,9 +104,9 @@ const Warehouses = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
           { title: "Total Facilities", value: warehouses.length, icon: Building2, color: "text-primary", bg: "bg-primary/10", sub: `${warehouses.filter((w: any) => w.status === "Active").length} operational` },
-          { title: "Total Capacity", value: `${(totalCapacity / 1000).toFixed(1)}K MT`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Metric tonnes overall" },
-          { title: "Current Stock", value: `${(totalStock / 1000).toFixed(1)}K MT`, icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", sub: `${utilization}% overall utilization` },
-          { title: "Avg Storage Fee", value: `₦${Math.round(warehouses.reduce((a: number, w: any) => a + (w.storageFeePerMT || 0), 0) / (warehouses.length || 1))}`, icon: Thermometer, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Per metric tonne" },
+          { title: "Total Capacity", value: `${(totalCapacity / 1000).toFixed(1)}K kg`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10", sub: "kg overall" },
+          { title: "Current Stock", value: `${(totalStock / 1000).toFixed(1)}K kg`, icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", sub: `${utilization}% overall utilization` },
+          { title: "Avg Storage Fee", value: `₦${Math.round(warehouses.reduce((a: number, w: any) => a + (w.storageFeePerKg || 0), 0) / (warehouses.length || 1))}`, icon: Thermometer, color: "text-amber-500", bg: "bg-amber-500/10", sub: "Per kg" },
         ].map((stat, i) => (
           <Card key={i} className="glass-card overflow-hidden group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -174,8 +174,8 @@ const Warehouses = () => {
                     />
                   </div>
                   <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>{currentStock.toLocaleString()} MT stored</span>
-                    <span>{cap.toLocaleString()} MT capacity</span>
+                    <span>{currentStock.toLocaleString()} kg stored</span>
+                    <span>{cap.toLocaleString()} kg capacity</span>
                   </div>
                 </div>
 

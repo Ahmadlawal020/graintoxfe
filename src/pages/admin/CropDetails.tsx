@@ -118,7 +118,7 @@ const CropDetails = () => {
                 <h1 className="text-4xl font-black tracking-tighter text-foreground">
                   {crop.name}
                 </h1>
-                <Badge className="bg-primary text-foreground border-none font-black text-[10px] tracking-widest px-3">
+                <Badge className="!bg-primary !text-white border-none font-black text-[10px] tracking-widest px-3">
                   {crop.tokenSymbol}
                 </Badge>
               </div>
@@ -127,7 +127,7 @@ const CropDetails = () => {
                 <Separator orientation="vertical" className="h-3 mx-1" />
                 <span className="flex items-center gap-1.5"><Globe className="h-3 w-3" /> {crop.category} Index</span>
                 <Separator orientation="vertical" className="h-3 mx-1" />
-                <Badge variant="outline" className="border-primary/30 text-primary/90 font-bold bg-primary/10/50">
+                <Badge variant="outline" className="border-primary/30 !text-primary font-bold bg-primary/10/50">
                   {crop.quality} Grade
                 </Badge>
               </div>
@@ -136,7 +136,7 @@ const CropDetails = () => {
         </div>
         <div className="flex items-center gap-3">
           <Button 
-            className="bg-slate-900 text-foreground hover:bg-slate-800 shadow-xl shadow-slate-900/10 px-8 h-12 font-bold group"
+            className="!bg-slate-900 !text-white hover:!bg-slate-800 shadow-xl shadow-slate-900/10 px-8 h-12 font-bold group"
             onClick={() => navigate(`/crops/edit/${id}`)}
           >
             <Edit className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" /> 
@@ -157,8 +157,8 @@ const CropDetails = () => {
       {/* Key Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Live Market Benchmark", value: `₦${(crop.pricePerUnit || 0).toLocaleString()}`, sub: "Per Metric Ton", icon: Coins, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Active Vaulted Inventory", value: `${(crop.totalStock || 0).toLocaleString()}`, sub: "Metric Tons", icon: Layers, color: "text-blue-500", bg: "bg-blue-500/10" },
+          { title: "Live Market Benchmark", value: `₦${(crop.pricePerUnit || 0).toLocaleString()}`, sub: "Per kg", icon: Coins, color: "text-primary", bg: "bg-primary/10" },
+          { title: "Active Vaulted Inventory", value: `${(crop.totalStock || 0).toLocaleString()}`, sub: "kg", icon: Layers, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Net Equity Valuation", value: `₦${(totalValue / 1e6).toFixed(1)}M`, sub: "Market Capitalization", icon: TrendingUp, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Tokenized Supply", value: `${Math.round(((crop.totalTokenized || 0) / (crop.totalStock || 1)) * 100)}%`, sub: "Liquidity Ratio", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10" },
         ].map((stat, i) => (
@@ -281,7 +281,7 @@ const CropDetails = () => {
                  <p className="text-xs text-foreground/80 leading-relaxed font-medium">
                     This asset is currently tradable on the GrainTox Marketplace. High liquidity detected.
                  </p>
-                 <Button className="w-full bg-white text-primary/90 hover:bg-primary/10 font-black text-xs h-10">
+                 <Button className="w-full !bg-white !text-primary hover:!bg-white/90 font-black text-xs h-10 shadow-lg">
                     OPEN TRADING TERMINAL
                  </Button>
               </CardContent>

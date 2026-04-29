@@ -9,8 +9,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <AppSidebar />
         <SidebarInset className="flex-1 flex flex-col min-h-0">
           <Header />
-          <main className="flex-1 relative overflow-y-auto bg-muted/30">
-            {children}
+          <main className="flex-1 relative overflow-y-auto bg-muted/30 p-0 sm:p-0">
+            <div className="h-full w-full">
+              {children}
+            </div>
           </main>
         </SidebarInset>
       </div>

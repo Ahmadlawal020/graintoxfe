@@ -110,7 +110,7 @@ const CreateCrop = () => {
             </div>
             <div className="space-y-4 pt-2">
               <div>
-                <Label htmlFor="pricePerUnit">Initial Price / MT (₦) *</Label>
+                <Label htmlFor="pricePerUnit">Initial Price / kg (₦) *</Label>
                 <Input id="pricePerUnit" name="pricePerUnit" type="number" min="0" value={formData.pricePerUnit} onChange={handleChange} required placeholder="e.g. 250000" />
               </div>
               <div>

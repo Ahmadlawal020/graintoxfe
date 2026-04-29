@@ -1,4 +1,5 @@
 import React from "react";
+import { Wheat } from "lucide-react";
 import {
   PieChart as PieIcon, Wallet, Coins, TrendingUp,
   ArrowUpRight, ArrowDownRight, Activity, Clock,
@@ -26,9 +27,9 @@ const UserDashboard = () => {
   const { id } = useAuth();
   const [showBalance, setShowBalance] = useState(true);
 
-  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "");
-  const { data: crops, isLoading: cropsLoading } = useGetCropsQuery(undefined);
-  const { data: trades, isLoading: tradesLoading } = useGetUserTradesQuery(undefined);
+  const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "", { pollingInterval: 10000 });
+  const { data: crops, isLoading: cropsLoading } = useGetCropsQuery(undefined, { pollingInterval: 30000 });
+  const { data: trades, isLoading: tradesLoading } = useGetUserTradesQuery(undefined, { pollingInterval: 15000 });
 
   const portfolioHistory = [
     { date: "Jan", value: 8500000 },
@@ -104,7 +105,7 @@ const UserDashboard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Your portfolio overview and market activity</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -114,8 +115,16 @@ const UserDashboard = () => {
             {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
           </Button>
           <Button
+            variant="outline"
             size="sm"
-            className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20"
+            className="h-9 rounded-full border-primary/20 text-primary hover:bg-primary/5"
+            onClick={() => navigate("/user/crops")}
+          >
+            <Wheat className="w-4 h-4 mr-1.5" /> My Crops
+          </Button>
+          <Button
+            size="sm"
+            className="h-9 bg-primary/90 hover:bg-primary/90 !text-white rounded-full shadow-lg shadow-primary/90/20"
             onClick={() => navigate("/user/market")}
           >
             <TrendingUp className="w-4 h-4 mr-1.5" /> Trade Now

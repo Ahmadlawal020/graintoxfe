@@ -16,7 +16,6 @@ const InvestorDetails = () => {
     name: "Grace Eze",
     email: "grace@graintox.ng",
     phone: "+234 807 123 4567",
-    tier: "Platinum",
     kycStatus: "VERIFIED",
     status: "Active",
     joinDate: "Nov 20, 2025",
@@ -39,7 +38,6 @@ const InvestorDetails = () => {
     ],
   };
 
-  const tierColors: Record<string, string> = { Bronze: "bg-amber-700", Gold: "bg-amber-500", Platinum: "bg-gray-400" };
   const pieData = investor.holdings.map((h) => ({ name: h.symbol, value: h.value, color: h.color }));
 
   return (
@@ -56,7 +54,6 @@ const InvestorDetails = () => {
             <div>
               <h1 className="text-3xl font-bold text-foreground">{investor.name}</h1>
               <div className="flex items-center gap-2 mt-1">
-                <Badge className={`${tierColors[investor.tier]} text-foreground`}>{investor.tier}</Badge>
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">KYC: {investor.kycStatus}</Badge>
               </div>
             </div>

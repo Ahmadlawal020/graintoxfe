@@ -48,66 +48,69 @@ const baseQuery = fetchBaseQuery({
   FetchBaseQueryMeta
 >;
 
+import { Mutex } from "async-mutex";
+
+const mutex = new Mutex();
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  // Perform the initial API request
+  // Wait until the mutex is available without locking it
+  await mutex.waitForUnlock();
+
   let result = await baseQuery(args, api, extraOptions);
 
-  // ✅ [FIX] Only attempt token refresh if user had a token (i.e., logged in)
-  const token = (api.getState() as { auth: { accessToken?: string } }).auth
-    .accessToken;
+  const token = (api.getState() as { auth: { accessToken?: string } }).auth.accessToken;
 
   if (
     (result?.error?.status === 401 || result?.error?.status === 403) &&
     token
   ) {
-    // 🛠️ Token might be expired — try refreshing it
-    const refreshResult = (await baseQuery(
-      "/api/auth/refresh",
-      api,
-      extraOptions,
-    )) as CustomQueryResult;
+    // Check whether the mutex is locked
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+      try {
+        const refreshResult = (await baseQuery(
+          "/api/auth/refresh",
+          api,
+          extraOptions
+        )) as CustomQueryResult;
 
-    if (refreshResult?.data) {
-      // ✅ Refresh succeeded — update credentials in store
-      api.dispatch(setCredentials(refreshResult.data as Credentials));
-
-      // 🔁 Retry the original request
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      // ❌ Refresh failed — log user out and override only if needed
-      api.dispatch(logout());
-
-      if (
-        refreshResult?.error?.status === 401 ||
-        refreshResult?.error?.status === 403
-      ) {
-        // ✅ [FIX] Only override message on failed refresh — not on login
-        refreshResult.error.data = {
-          message: "Your login has expired. Please log in again.",
-        };
+        if (refreshResult?.data) {
+          api.dispatch(setCredentials(refreshResult.data as Credentials));
+          // Retry the original query
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          api.dispatch(logout());
+          if (refreshResult?.error?.status === 401 || refreshResult?.error?.status === 403) {
+            refreshResult.error.data = {
+              message: "Your login has expired. Please log in again.",
+            };
+          }
+          return refreshResult as { error: FetchBaseQueryError };
+        }
+      } finally {
+        release();
       }
-
-      // Return the failed refresh attempt as the final result
-      return refreshResult as { error: FetchBaseQueryError };
+    } else {
+      // Wait until the mutex is available once more
+      await mutex.waitForUnlock();
+      result = await baseQuery(args, api, extraOptions);
     }
   }
 
-  // 💬 Normalize plain string errors into { message } object for consistency
   if (result.error && typeof result.error.data === "string") {
     result.error.data = { message: result.error.data };
   }
 
-  // ✅ Return the final result (whether successful or failed)
   return result;
 };
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Transactions", "User", "Trades", "PriceHistory"],
+  tagTypes: ["Transactions", "User", "Trades", "PriceHistory", "Dashboard", "Crop"],
   endpoints: () => ({}),
 });

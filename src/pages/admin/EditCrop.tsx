@@ -222,7 +222,7 @@ const EditCrop = () => {
                  <CardContent className="space-y-8">
                     <div className="grid md:grid-cols-2 gap-8">
                        <div className="space-y-3">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-foreground/50">Current Market Price (₦ / MT)</Label>
+                          <Label className="text-xs font-bold uppercase tracking-wider text-foreground/50">Current Market Price (₦ / kg)</Label>
                           <div className="relative">
                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/80 font-bold">₦</span>
                              <Input 
@@ -236,7 +236,7 @@ const EditCrop = () => {
                           </div>
                           <p className="text-[10px] text-foreground/40 italic flex items-center gap-1">
                              <Info className="h-3 w-3" />
-                             Estimated Trade Value: {priceFormatted} per Metric Ton.
+                             Estimated Trade Value: {priceFormatted} per kg.
                           </p>
                        </div>
                        <div className="space-y-3">

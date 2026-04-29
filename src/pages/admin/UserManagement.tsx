@@ -61,7 +61,7 @@ const UserManagement = () => {
       toast({
         title: "KYC Approved",
         description: `User ${user.firstName} ${user.lastName} is now verified.`,
-        className: "bg-primary/90 text-foreground border-none shadow-lg shadow-primary/20"
+        className: "bg-primary/90 !text-white border-none shadow-lg shadow-primary/20"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not approve KYC", variant: "destructive" });
@@ -76,7 +76,7 @@ const UserManagement = () => {
       toast({
         title: `User ${newStatus}`,
         description: `User account is now ${newStatus.toLowerCase()}.`,
-        className: newStatus === "Active" ? "bg-primary/90 text-foreground" : "bg-red-600 text-foreground"
+        className: newStatus === "Active" ? "bg-primary/90 !text-white" : "bg-red-600 !text-white"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not update status", variant: "destructive" });
@@ -128,14 +128,14 @@ const UserManagement = () => {
       Admin: "bg-red-600",
     };
     return (
-      <Badge className={`${colors[role] || "bg-gray-600"} text-foreground text-[10px]`}>
+      <Badge className={`${colors[role] || "bg-gray-600"} !text-white text-[10px]`}>
         {role?.replace("_", " ") || "Unknown"}
       </Badge>
     );
   };
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header>
         <h1 className="text-3xl font-bold text-foreground">User Management</h1>
         <p className="text-muted-foreground">
@@ -203,16 +203,16 @@ const UserManagement = () => {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>User & ID</TableHead>
                   <TableHead>Role</TableHead>
-                  <TableHead>Platform Details</TableHead>
-                  <TableHead>Contact Info</TableHead>
+                  <TableHead className="hidden md:table-cell">Platform Details</TableHead>
+                  <TableHead className="hidden lg:table-cell">Contact Info</TableHead>
                   <TableHead>KYC & Status</TableHead>
-                  <TableHead>Joined</TableHead>
+                  <TableHead className="hidden xl:table-cell">Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -220,7 +220,7 @@ const UserManagement = () => {
                 {filteredUsers.map((user) => {
                   // Determine dynamic details based on role
                   const role = user.role?.[0] || "";
-                  let platformDetail = user.farmLocation ? `Farm: ${user.farmLocation}` : (user.investorTier ? `Tier: ${user.investorTier}` : "—");
+                  let platformDetail = user.farmLocation ? `Farm: ${user.farmLocation}` : "—";
                   
                   const joinedDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A";
 
@@ -244,7 +244,7 @@ const UserManagement = () => {
                       </div>
                     </TableCell>
                     <TableCell>{roleBadge(role)}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="text-muted-foreground">{platformDetail}</div>
                         {(user.walletBalance !== undefined && user.walletBalance !== null) && (
@@ -254,7 +254,7 @@ const UserManagement = () => {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-muted-foreground text-xs">
                           <Phone className="mr-1.5 h-3 w-3" />
@@ -270,7 +270,7 @@ const UserManagement = () => {
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden xl:table-cell">
                        <span className="text-xs text-muted-foreground">{joinedDate}</span>
                     </TableCell>
                     <TableCell className="text-right">

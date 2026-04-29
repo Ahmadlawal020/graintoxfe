@@ -78,15 +78,23 @@ const ProcessWithdrawal = () => {
     }
   }, [myWarehouses, selectedWarehouseId]);
 
-  const filteredCrops = crops?.filter((c: any) => 
-    c.name.toLowerCase().includes(cropSearch.toLowerCase()) || 
-    c.code.toLowerCase().includes(cropSearch.toLowerCase())
-  );
+  const filteredCrops = crops?.filter((c: any) => {
+    if (selectedUser) {
+      const holding = selectedUser.holdings?.find((h: any) => h.crop === c._id);
+      if (!holding || holding.amount <= 0) return false;
+    }
+    return c.name.toLowerCase().includes(cropSearch.toLowerCase()) || 
+           c.code.toLowerCase().includes(cropSearch.toLowerCase());
+  });
 
-  const filteredUsers = users?.filter((u: any) => 
-    `${u.firstName} ${u.lastName}`.toLowerCase().includes(userSearch.toLowerCase()) ||
-    u.email.toLowerCase().includes(userSearch.toLowerCase())
-  );
+  const filteredUsers = users?.filter((u: any) => {
+    if (selectedCrop) {
+      const holding = u.holdings?.find((h: any) => h.crop === selectedCrop._id);
+      if (!holding || holding.amount <= 0) return false;
+    }
+    return `${u.firstName} ${u.lastName}`.toLowerCase().includes(userSearch.toLowerCase()) ||
+           u.email.toLowerCase().includes(userSearch.toLowerCase());
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -99,6 +107,19 @@ const ProcessWithdrawal = () => {
       toast({
         title: "Missing Information",
         description: "Please ensure all required fields are filled.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const holding = selectedUser.holdings?.find((h: any) => h.crop === selectedCrop._id);
+    const availableBalance = holding?.amount || 0;
+    const withdrawWeight = Number(formData.weight);
+
+    if (withdrawWeight > availableBalance) {
+      toast({
+        title: "Insufficient Balance",
+        description: `Cannot withdraw ${withdrawWeight} kg. ${selectedUser.firstName} only has ${availableBalance.toLocaleString()} kg of ${selectedCrop.name}.`,
         variant: "destructive"
       });
       return;
@@ -121,7 +142,7 @@ const ProcessWithdrawal = () => {
 
       toast({
         title: "Withdrawal Processed",
-        description: `Successfully reduced inventory by ${formData.weight} MT. Dispatch Receipt: ${receiptNo}`,
+        description: `Successfully reduced inventory by ${formData.weight} kg. Dispatch Receipt: ${receiptNo}`,
         className: "bg-blue-600 text-foreground border-none shadow-lg shadow-blue-500/20"
       });
       navigate("/manager/stock");
@@ -172,7 +193,7 @@ const ProcessWithdrawal = () => {
                    </SelectTrigger>
                    <SelectContent>
                       {myWarehouses.map((wh: any) => (
-                         <SelectItem key={wh._id} value={wh._id}>{wh.name} (Current Cap: {wh.capacity - wh.availableCapacity} MT used)</SelectItem>
+                         <SelectItem key={wh._id} value={wh._id}>{wh.name} (Current Cap: {wh.capacity - wh.availableCapacity} kg used)</SelectItem>
                       ))}
                    </SelectContent>
                 </Select>
@@ -206,7 +227,14 @@ const ProcessWithdrawal = () => {
                             selectedCrop?._id === crop._id ? "bg-primary/10 border-primary" : "bg-background hover:bg-muted"
                           }`}
                         >
-                          <div className="font-bold text-sm">{crop.name}</div>
+                          <div className="font-bold text-sm">
+                            {crop.name}
+                            {selectedUser && (
+                              <span className="ml-2 text-xs text-muted-foreground font-normal">
+                                ({selectedUser.holdings?.find((h: any) => h.crop === crop._id)?.amount?.toLocaleString() || 0} kg available)
+                              </span>
+                            )}
+                          </div>
                           {selectedCrop?._id === crop._id && <CheckCircle2 className="h-4 w-4 text-primary" />}
                         </div>
                       ))
@@ -242,7 +270,14 @@ const ProcessWithdrawal = () => {
                             selectedUser?._id === u._id ? "bg-blue-500/10 border-blue-500" : "bg-background hover:bg-muted"
                           }`}
                         >
-                          <div className="font-bold text-sm">{u.firstName} {u.lastName}</div>
+                          <div className="font-bold text-sm">
+                            {u.firstName} {u.lastName}
+                            {selectedCrop && (
+                              <span className="ml-2 text-xs text-muted-foreground font-normal">
+                                ({u.holdings?.find((h: any) => h.crop === selectedCrop._id)?.amount?.toLocaleString() || 0} kg)
+                              </span>
+                            )}
+                          </div>
                           {selectedUser?._id === u._id && <CheckCircle2 className="h-4 w-4 text-blue-500" />}
                         </div>
                       ))
@@ -267,8 +302,25 @@ const ProcessWithdrawal = () => {
                    <Input name="bags" type="number" placeholder="e.g. 50" className="h-12 bg-muted/30 border-none font-bold" value={formData.bags} onChange={handleInputChange} required />
                 </div>
                 <div className="space-y-2">
-                   <Label className="text-xs font-black uppercase text-muted-foreground">Total Weight (MT)</Label>
-                   <Input name="weight" type="number" step="0.01" placeholder="e.g. 2.50" className="h-12 bg-muted/30 border-none font-bold" value={formData.weight} onChange={handleInputChange} required />
+                   <div className="flex justify-between items-center">
+                     <Label className="text-xs font-black uppercase text-muted-foreground">Total Weight (kg)</Label>
+                     {selectedCrop && selectedUser && (
+                       <span className="text-[10px] font-bold text-blue-600 bg-blue-500/10 px-2 py-0.5 rounded">
+                         Max: {selectedUser.holdings?.find((h: any) => h.crop === selectedCrop._id)?.amount?.toLocaleString() || 0} kg
+                       </span>
+                     )}
+                   </div>
+                   <Input 
+                     name="weight" 
+                     type="number" 
+                     step="0.01" 
+                     max={selectedCrop && selectedUser ? selectedUser.holdings?.find((h: any) => h.crop === selectedCrop._id)?.amount : undefined}
+                     placeholder="e.g. 2500" 
+                     className="h-12 bg-muted/30 border-none font-bold" 
+                     value={formData.weight} 
+                     onChange={handleInputChange} 
+                     required 
+                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
                    <Label className="text-xs font-black uppercase text-muted-foreground">Dispatch Notes</Label>
@@ -290,7 +342,7 @@ const ProcessWithdrawal = () => {
                        <div className="p-4 rounded-2xl bg-muted/30 space-y-3 font-medium">
                           <div className="flex justify-between text-xs"><span>Account</span><span className="font-bold">{selectedUser.firstName} {selectedUser.lastName}</span></div>
                           <div className="flex justify-between text-xs"><span>Commodity</span><span className="font-bold">{selectedCrop.name}</span></div>
-                          <div className="flex justify-between text-xs pt-2 border-t"><span>Deduction Volume</span><span className="font-black">{formData.weight || 0} MT</span></div>
+                          <div className="flex justify-between text-xs pt-2 border-t"><span>Deduction Volume</span><span className="font-black">{formData.weight || 0} kg</span></div>
                        </div>
                        
                        <Button type="submit" disabled={isSubmitting} className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-foreground font-black text-lg">

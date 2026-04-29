@@ -29,7 +29,6 @@ const EditUser = () => {
     kycStatus: "PENDING",
     assignedWarehouse: "",
     farmLocation: "",
-    investorTier: "Bronze",
   });
 
   // Populate form once user data loads
@@ -47,7 +46,6 @@ const EditUser = () => {
         kycStatus: user.kycStatus || "PENDING",
         assignedWarehouse: user.assignedWarehouse || "",
         farmLocation: user.farmLocation || "",
-        investorTier: user.investorTier || "Bronze",
       });
     }
   }, [user]);
@@ -95,7 +93,7 @@ const EditUser = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header>
         <Button variant="ghost" size="sm" onClick={() => navigate(`/users/${id}`)} className="mb-2">
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to User Profile
@@ -206,7 +204,6 @@ const EditUser = () => {
                       <SelectItem value="Active">Active</SelectItem>
                       <SelectItem value="Suspended">Suspended</SelectItem>
                       <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Deactivated">Deactivated</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -229,53 +226,36 @@ const EditUser = () => {
             <div className="space-y-4 border rounded-lg p-4 shadow-sm bg-card">
               <div className="flex items-center space-x-2">
                 <Shield className="h-5 w-5 text-purple-500" />
-                <h2 className="text-lg font-medium">Compliance & Tiers</h2>
+                <h2 className="text-lg font-medium">Platform & Location</h2>
               </div>
               <div className="space-y-3">
-                <div>
-                  <Label htmlFor="kycStatus">KYC Status</Label>
-                  <Select value={formData.kycStatus} onValueChange={(v) => handleSelectChange("kycStatus", v)}>
-                    <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PENDING">Pending</SelectItem>
-                      <SelectItem value="VERIFIED">Verified</SelectItem>
-                      <SelectItem value="REJECTED">Rejected</SelectItem>
-                      <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
                 {formData.role === "User" && (
                   <>
                     <div>
                       <Label htmlFor="farmLocation">Primary Farm Location</Label>
                       <Input id="farmLocation" name="farmLocation" value={formData.farmLocation} onChange={handleChange} placeholder="e.g. Dawanau, Kano" />
                     </div>
-                    <div>
-                      <Label htmlFor="investorTier">Investment Tier</Label>
-                      <Select value={formData.investorTier} onValueChange={(v) => handleSelectChange("investorTier", v)}>
-                        <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Bronze">Bronze (Standard)</SelectItem>
-                          <SelectItem value="Gold">Gold (Premium)</SelectItem>
-                          <SelectItem value="Platinum">Platinum (Institutional)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </>
+                )}
+                {formData.role === "Warehouse_Manager" && (
+                  <div>
+                    <Label htmlFor="assignedWarehouse">Assigned Warehouse Facility</Label>
+                    <Input id="assignedWarehouse" name="assignedWarehouse" value={formData.assignedWarehouse} onChange={handleChange} placeholder="e.g. Kano Central Silo" />
+                  </div>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-4 bg-muted/40 rounded-lg border-2 border-dashed">
+          <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-muted/40 rounded-lg border-2 border-dashed gap-4">
             <div className="flex items-center gap-3">
                <AlertTriangle className="h-5 w-5 text-red-500" />
-               <div>
+               <div className="text-center sm:text-left">
                   <p className="text-sm font-semibold">Security Confirmation</p>
                   <p className="text-xs text-muted-foreground">Submit changes to record updates in the secondary immutable audit log.</p>
                </div>
             </div>
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 w-full sm:w-auto">
               <Button variant="outline" type="button" onClick={() => navigate(`/users/${id}`)}>Cancel</Button>
               <Button type="submit" disabled={isUpdating} className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20 px-8">
                 {isUpdating ? "Processing..." : "Authorized Update"}

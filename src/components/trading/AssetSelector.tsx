@@ -8,8 +8,8 @@ const AssetSelector = ({ assets, onSelect }: { assets: any[], onSelect: (asset: 
   const filtered = assets.filter(a => a.symbol.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="w-full h-full bg-[#161a1e] flex flex-col font-sans">
-      <div className="p-4 space-y-4 bg-[#1e2329]/10">
+    <div className="w-full h-full bg-card flex flex-col font-sans">
+      <div className="p-4 space-y-4 bg-accent/10">
         <div className="flex items-center justify-between">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Markets</h3>
           <div className="flex gap-1">
@@ -23,7 +23,7 @@ const AssetSelector = ({ assets, onSelect }: { assets: any[], onSelect: (asset: 
             placeholder="Search Assets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 bg-card border-none h-9 text-xs text-foreground placeholder:text-muted-foreground placeholder:font-bold placeholder:uppercase placeholder:tracking-tighter focus:ring-1 focus:ring-primary/30 rounded-md transition-all outline-none"
+            className="w-full pl-9 pr-4 bg-muted border-none h-9 text-xs text-foreground placeholder:text-muted-foreground placeholder:font-bold placeholder:uppercase placeholder:tracking-tighter focus:ring-1 focus:ring-primary/30 rounded-md transition-all outline-none"
           />
         </div>
 
@@ -39,7 +39,7 @@ const AssetSelector = ({ assets, onSelect }: { assets: any[], onSelect: (asset: 
           <div
             key={asset.symbol}
             onClick={() => onSelect(asset)}
-            className="grid grid-cols-3 px-4 py-2.5 hover:bg-[#1e2329] cursor-pointer transition-all border-l-2 border-transparent hover:border-primary group"
+            className="grid grid-cols-3 px-4 py-2.5 hover:bg-muted cursor-pointer transition-all border-l-2 border-transparent hover:border-primary group"
           >
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">

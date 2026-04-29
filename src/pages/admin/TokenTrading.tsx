@@ -114,7 +114,7 @@ const TokenTrading = () => {
   const totalMarketCap = tokens.reduce((acc, t) => acc + t.marketCap, 0);
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Token & Trading</h1>
@@ -206,8 +206,8 @@ const TokenTrading = () => {
                     <TableHead>Token</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>24h Change</TableHead>
-                    <TableHead>24h Volume</TableHead>
-                    <TableHead>Market Cap</TableHead>
+                    <TableHead className="hidden md:table-cell">24h Volume</TableHead>
+                    <TableHead className="hidden lg:table-cell">Market Cap</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -231,8 +231,8 @@ const TokenTrading = () => {
                           {Math.abs(token.change24h)}%
                         </span>
                       </TableCell>
-                      <TableCell className="text-sm">₦{(token.volume24h / 1e6).toFixed(1)}M</TableCell>
-                      <TableCell className="text-sm">₦{(token.marketCap / 1e6).toFixed(0)}M</TableCell>
+                      <TableCell className="text-sm hidden md:table-cell">₦{(token.volume24h / 1e6).toFixed(1)}M</TableCell>
+                      <TableCell className="text-sm hidden lg:table-cell">₦{(token.marketCap / 1e6).toFixed(0)}M</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

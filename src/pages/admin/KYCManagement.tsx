@@ -94,11 +94,11 @@ const KYCManagement = () => {
       Medium: "bg-amber-500",
       High: "bg-red-500",
     };
-    return <Badge className={`${colors[level]} text-foreground text-[10px]`}>{level} Risk</Badge>;
+    return <Badge className={`${colors[level]} !text-white text-[10px]`}>{level} Risk</Badge>;
   };
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header>
         <h1 className="text-3xl font-bold text-foreground">KYC Management</h1>
         <p className="text-muted-foreground">
@@ -169,15 +169,15 @@ const KYCManagement = () => {
             </select>
           </div>
 
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Applicant</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Document Type</TableHead>
-                  <TableHead>Submitted</TableHead>
-                  <TableHead>Risk Level</TableHead>
+                  <TableHead className="hidden sm:table-cell">Role</TableHead>
+                  <TableHead className="hidden lg:table-cell">Document Type</TableHead>
+                  <TableHead className="hidden md:table-cell">Submitted</TableHead>
+                  <TableHead className="hidden xl:table-cell">Risk Level</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -211,18 +211,18 @@ const KYCManagement = () => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <Badge variant="secondary" className="text-[10px]">
                           {role.replace("_", " ")}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm">{app.kycDocType || "National ID"}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-sm hidden lg:table-cell">{app.kycDocType || "National ID"}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
                         {new Date(app.kycSubmittedAt || app.createdAt || Date.now()).toLocaleDateString("en-NG", {
                           day: "numeric", month: "short", year: "numeric",
                         })}
                       </TableCell>
-                      <TableCell>{riskBadge(getRiskLevel(kycStatus))}</TableCell>
+                      <TableCell className="hidden xl:table-cell">{riskBadge(getRiskLevel(kycStatus))}</TableCell>
                       <TableCell>{statusBadge(kycStatus)}</TableCell>
                       <TableCell className="text-right">
                         <Button onClick={(e) => { e.stopPropagation(); navigate(`/kyc/${app._id}`); }} variant="default" size="sm" className="h-8 shadow-sm">

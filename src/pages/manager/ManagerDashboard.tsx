@@ -181,8 +181,8 @@ const ManagerDashboard = () => {
       {/* Grid Metrics */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Aggregated Stock", value: `${currentStock.toLocaleString()}`, unit: "MT", icon: Package, color: "text-primary", bg: "bg-primary/10", sub: `${utilization}% Total Capacity` },
-          { title: "Net Availability", value: `${totalAvailable.toLocaleString()}`, unit: "MT", icon: Building2, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Ready for Deposits" },
+          { title: "Aggregated Stock", value: `${currentStock.toLocaleString()}`, unit: "kg", icon: Package, color: "text-primary", bg: "bg-primary/10", sub: `${utilization}% Total Capacity` },
+          { title: "Net Availability", value: `${totalAvailable.toLocaleString()}`, unit: "kg", icon: Building2, color: "text-blue-500", bg: "bg-blue-500/10", sub: "Ready for Deposits" },
           { title: "Network Status", value: "ACTIVE", unit: "", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10", sub: "All Sensors Online" },
           { title: "Site Alerts", value: "00", unit: "NEW", icon: AlertTriangle, color: "text-amber-500", bg: "bg-amber-500/10", sub: "No critical failures" },
         ].map((stat, i) => (
@@ -236,7 +236,7 @@ const ManagerDashboard = () => {
                          contentStyle={{ backgroundColor: 'black', border: 'none', borderRadius: '12px', color: 'white' }}
                          itemStyle={{ fontWeight: 'bold' }}
                        />
-                       <Area type="monotone" dataKey="stock" stroke="#10B981" fill="url(#managerGrad)" name="Total MT" strokeWidth={4} dot={{ r: 4, fill: "#10B981" }} />
+                       <Area type="monotone" dataKey="stock" stroke="#10B981" fill="url(#managerGrad)" name="Total kg" strokeWidth={4} dot={{ r: 4, fill: "#10B981" }} />
                     </AreaChart>
                  </ResponsiveContainer>
               </CardContent>
@@ -259,7 +259,7 @@ const ManagerDashboard = () => {
                                 {op.type === 'DEPOSIT' ? <ArrowDownRight className="h-6 w-6" /> : <ArrowUpRight className="h-6 w-6" />}
                              </div>
                              <div>
-                                <p className="font-black text-sm uppercase tracking-tight">{op.type} — {op.quantity} MT</p>
+                                <p className="font-black text-sm uppercase tracking-tight">{op.type} — {op.quantity} kg</p>
                                 <p className="text-[10px] font-bold text-muted-foreground uppercase">{op.commodity?.name} · {op.warehouse?.name}</p>
                              </div>
                           </div>

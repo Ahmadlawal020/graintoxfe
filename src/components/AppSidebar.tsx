@@ -62,6 +62,7 @@ const userMenuItems = [
   { title: "Marketplace", url: "/user/market", icon: Coins },
   { title: "My Portfolio", url: "/user/portfolio", icon: PieChart },
   { title: "My Storage", url: "/user/storage", icon: Building2 },
+  { title: "My Crops", url: "/user/crops", icon: Wheat },
   { title: "Wallet", url: "/user/wallet", icon: Wallet },
   { title: "Settings", url: "/user/settings", icon: Settings },
 ];
@@ -117,8 +118,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`${collapsed ? "w-16" : "w-64"
-        } transition-all duration-300 border-r border-sidebar-border bg-sidebar-background`}
+      className="border-r border-sidebar-border bg-sidebar-background"
       collapsible="icon"
     >
       <SidebarContent className="bg-sidebar-background text-sidebar-foreground h-full">

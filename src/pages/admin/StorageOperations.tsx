@@ -120,7 +120,7 @@ const StorageOperations = () => {
     );
   }
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Storage Operations</h1>
@@ -128,7 +128,7 @@ const StorageOperations = () => {
             Track grain deposits, withdrawals, and inter-warehouse transfers
           </p>
         </div>
-        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20">
+        <Button className="bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/20">
           <Plus className="mr-2 h-4 w-4" />
           Log Operation
         </Button>
@@ -193,18 +193,18 @@ const StorageOperations = () => {
             </select>
           </div>
 
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Receipt</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead>Commodity</TableHead>
+                  <TableHead className="hidden md:table-cell">Commodity</TableHead>
                   <TableHead>Qty</TableHead>
-                  <TableHead>Warehouse</TableHead>
-                  <TableHead>Investor</TableHead>
+                  <TableHead className="hidden lg:table-cell">Warehouse</TableHead>
+                  <TableHead className="hidden xl:table-cell">Investor</TableHead>
                   <TableHead>QC Status</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead className="hidden md:table-cell">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -212,17 +212,17 @@ const StorageOperations = () => {
                   <TableRow key={op._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/storage/${op._id}`)}>
                     <TableCell className="font-mono text-xs font-medium text-primary/90">{op.receiptNo}</TableCell>
                     <TableCell>{typeBadge(op.type)}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <div className="flex items-center gap-2">
                         <Wheat className="h-4 w-4 text-primary" />
                         <span className="font-medium">{op.commodity?.name || "Unknown"}</span>
                       </div>
                     </TableCell>
                     <TableCell className="font-semibold">{op.quantity} {op.unit}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate">{op.warehouse?.name || "N/A"}</TableCell>
-                    <TableCell className="text-sm">{op.investor}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate hidden lg:table-cell">{op.warehouse?.name || "N/A"}</TableCell>
+                    <TableCell className="text-sm hidden xl:table-cell">{op.investor}</TableCell>
                     <TableCell>{qcBadge(op.qcStatus)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
                       {new Date(op.timestamp).toLocaleDateString("en-NG", {
                         day: "numeric", month: "short",
                       })}

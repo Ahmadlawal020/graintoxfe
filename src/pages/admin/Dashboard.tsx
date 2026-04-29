@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,48 +36,85 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
+import { useGetAdminStatsQuery } from "@/services/api/dashboardApiSlice";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState("month");
 
-  // Sample data for GrainTox
-  const storageTrends = [
-    { month: "Jan", maize: 450, rice: 300, beans: 120 },
-    { month: "Feb", maize: 520, rice: 350, beans: 150 },
-    { month: "Mar", maize: 600, rice: 420, beans: 180 },
-    { month: "Apr", maize: 580, rice: 400, beans: 200 },
-    { month: "May", maize: 720, rice: 480, beans: 250 },
-    { month: "Jun", maize: 850, rice: 550, beans: 300 },
-  ];
+  const { data, isLoading, error } = useGetAdminStatsQuery(undefined, {
+    pollingInterval: 30000,
+  });
 
-  const cropDistribution = [
-    { name: "Maize", value: 45, color: "#10B981" }, // Emerald 500
-    { name: "Rice", value: 30, color: "#3B82F6" },  // Blue 500
-    { name: "Soybeans", value: 15, color: "#F59E0B" }, // Amber 500
-    { name: "Sorghum", value: 10, color: "#EF4444" }, // Red 500
-  ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  const tradingVolume = [
-    { month: "Jan", buy: 125000, sell: 95000 },
-    { month: "Feb", buy: 135000, sell: 98000 },
-    { month: "Mar", buy: 145000, sell: 102000 },
-    { month: "Apr", buy: 140000, sell: 100000 },
-    { month: "May", buy: 155000, sell: 105000 },
-    { month: "Jun", buy: 165000, sell: 108000 },
-  ];
+  if (error) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-xl font-bold text-red-500">Error loading dashboard data</h2>
+        <p className="text-muted-foreground">Please check your connection and try again.</p>
+        <Button onClick={() => window.location.reload()} className="mt-4">Retry</Button>
+      </div>
+    );
+  }
 
-  const recentTransactions = [
-    { id: 1, type: "deposit", message: "Investor Musa deposited 50 bags of Maize", time: "2 minutes ago", status: "success" },
-    { id: 2, type: "trade", message: "New trade: 10 GT-MAIZE tokens @ ₦25,000", time: "15 minutes ago", status: "info" },
-    { id: 3, type: "kyc", message: "Agent Sarah submitted KYC for verification", time: "1 hour ago", status: "warning" },
-    { id: 4, type: "withdrawal", message: "Withdrawal request: ₦150,000 by User #402", time: "2 hours ago", status: "pending" },
-  ];
+  const { stats, storageTrends, portfolioDistribution, recentOperations, pendingTasks } = data;
 
-  const pendingTasks = [
-    { id: 1, title: "8 Pending KYCs", desc: "Awaiting document verification", priority: "High" },
-    { id: 2, title: "3 Quality Checks", desc: "Warehouse #02 inbound audit", priority: "Medium" },
-    { id: 3, title: "Wallet Rebalancing", desc: "Bank settlements due", priority: "Low" },
+  const statsCards = [
+    {
+      title: "Total Registered Users",
+      value: stats.totalUsers.toLocaleString(),
+      icon: Users,
+      trend: stats.userGrowth >= 0 ? `+${stats.userGrowth}%` : `${stats.userGrowth}%`,
+      trendLabel: "from last month",
+      color: "text-primary",
+      borderColor: "bg-primary",
+      trendColor: "text-primary"
+    },
+    {
+      title: "Active Warehouses",
+      value: stats.activeWarehouses,
+      icon: Building2,
+      trend: `${stats.statesCount} States`,
+      trendLabel: "across Nigeria",
+      color: "text-blue-500",
+      borderColor: "bg-blue-500",
+      trendColor: "text-blue-500"
+    },
+    {
+      title: "Total Asset Value (GTV)",
+      value: `₦${(stats.gtv / 1000000000).toFixed(1)}B`,
+      icon: Coins,
+      trend: "+₦140M",
+      trendLabel: "weekly growth",
+      color: "text-amber-500",
+      borderColor: "bg-amber-500",
+      trendColor: "text-primary"
+    },
+    {
+      title: "Platform Liquidity",
+      value: `₦${(stats.liquidity / 1000000).toFixed(1)}M`,
+      icon: Wallet,
+      trend: "-2.4%",
+      trendLabel: "from peak",
+      color: "text-purple-500",
+      borderColor: "bg-purple-500",
+      trendColor: "text-red-500"
+    }
   ];
 
   return (
@@ -91,87 +127,65 @@ const Dashboard = () => {
         </div>
         <div className="flex gap-2">
           <Badge variant="outline" className="px-3 py-1 border-primary/20 text-primary bg-primary/5">
+            <span className="relative flex h-2 w-2 mr-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
             System Live
           </Badge>
-          <Button size="sm" className="bg-primary/90 hover:bg-primary/90 text-foreground border-0 shadow-lg shadow-primary/90/20">
-            <Plus className="w-4 h-4 mr-2" />
-            Quick Actions
-          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" className="bg-primary/90 hover:bg-primary/90 !text-white border-0 shadow-lg shadow-primary/90/20">
+                <Plus className="w-4 h-4 mr-2" />
+                Quick Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 glass-card border-primary/10">
+              <DropdownMenuLabel>Create New</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/users/create")} className="cursor-pointer">
+                <Users className="mr-2 h-4 w-4 text-primary" />
+                <span>New Platform User</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/staff/create")} className="cursor-pointer">
+                <Users className="mr-2 h-4 w-4 text-blue-500" />
+                <span>New Staff Member</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/warehouses/create")} className="cursor-pointer">
+                <Building2 className="mr-2 h-4 w-4 text-amber-500" />
+                <span>New Warehouse</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/crops/create")} className="cursor-pointer">
+                <Wheat className="mr-2 h-4 w-4 text-emerald-500" />
+                <span>New Crop Type</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="glass-card overflow-hidden group">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Registered Users</CardTitle>
-            <Users className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24,502</div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-primary flex items-center bg-primary/10 px-1.5 py-0.5 rounded">
-                <ArrowUpRight className="w-3 h-3 mr-1" />
-                +12%
-              </span>
-              <span className="text-xs text-muted-foreground ml-2">from last month</span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-primary/20 group-hover:bg-primary transition-all" />
-        </Card>
-
-        <Card className="glass-card overflow-hidden group">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Warehouses</CardTitle>
-            <Building2 className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-blue-500 flex items-center bg-blue-500/10 px-1.5 py-0.5 rounded">
-                6 States
-              </span>
-              <span className="text-xs text-muted-foreground ml-2">across Nigeria</span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-500/20 group-hover:bg-blue-500 transition-all" />
-        </Card>
-
-        <Card className="glass-card overflow-hidden group">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Asset Value (GTV)</CardTitle>
-            <Coins className="h-4 w-4 text-amber-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">₦2.4B</div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-primary flex items-center bg-primary/10 px-1.5 py-0.5 rounded">
-                <ArrowUpRight className="w-3 h-3 mr-1" />
-                +₦140M
-              </span>
-              <span className="text-xs text-muted-foreground ml-2">weekly growth</span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-amber-500/20 group-hover:bg-amber-500 transition-all" />
-        </Card>
-
-        <Card className="glass-card overflow-hidden group">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Platform Liquidity</CardTitle>
-            <Wallet className="h-4 w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">₦450.2M</div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-red-500 flex items-center bg-red-500/10 px-1.5 py-0.5 rounded">
-                <ArrowDownRight className="w-3 h-3 mr-1" />
-                -2.4%
-              </span>
-              <span className="text-xs text-muted-foreground ml-2">from peak</span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-500/20 group-hover:bg-purple-500 transition-all" />
-        </Card>
+        {statsCards.map((card, idx) => (
+          <Card key={idx} className="glass-card overflow-hidden group relative">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+              <card.icon className={`h-4 w-4 ${card.color}`} />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{card.value}</div>
+              <div className="flex items-center mt-1">
+                <span className={`text-xs ${card.trendColor} flex items-center bg-muted/20 px-1.5 py-0.5 rounded`}>
+                  {card.trend.includes('+') ? <ArrowUpRight className="w-3 h-3 mr-1" /> : (card.trend.includes('-') ? <ArrowDownRight className="w-3 h-3 mr-1" /> : null)}
+                  {card.trend}
+                </span>
+                <span className="text-xs text-muted-foreground ml-2">{card.trendLabel}</span>
+              </div>
+            </CardContent>
+            <div className={`absolute bottom-0 left-0 w-full h-1 ${card.borderColor}/20 group-hover:${card.borderColor} transition-all`} />
+          </Card>
+        ))}
       </div>
 
       {/* Charts Row */}
@@ -180,7 +194,7 @@ const Dashboard = () => {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              Storage Volume Trends (MT)
+              Storage Volume Trends (kg)
               <Badge variant="secondary">6 Months</Badge>
             </CardTitle>
           </CardHeader>
@@ -231,7 +245,7 @@ const Dashboard = () => {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={cropDistribution}
+                  data={portfolioDistribution}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -239,7 +253,7 @@ const Dashboard = () => {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {cropDistribution.map((entry, index) => (
+                  {portfolioDistribution.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -263,12 +277,12 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentTransactions.map((op) => (
-                <div key={op.id} className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all">
+              {recentOperations.map((op: any) => (
+                <div key={op.id} className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer" onClick={() => navigate(`/storage/${op.id}`)}>
                   <div className={`mt-1.5 p-1.5 rounded-full ${
                     op.status === 'success' ? 'bg-primary/20 text-primary' :
-                    op.status === 'warning' ? 'bg-amber-500/20 text-amber-500' :
-                    'bg-blue-500/20 text-blue-500'
+                    op.status === 'error' ? 'bg-red-500/20 text-red-500' :
+                    'bg-amber-500/20 text-amber-500'
                   }`}>
                     {op.type === 'deposit' ? <Wheat className="w-3.5 h-3.5" /> : 
                      op.type === 'trade' ? <Coins className="w-3.5 h-3.5" /> : 
@@ -276,9 +290,9 @@ const Dashboard = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{op.message}</p>
-                    <p className="text-xs text-muted-foreground">{op.time}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(op.time).toLocaleString()}</p>
                   </div>
-                  <Badge variant="outline" className={`text-[10px] uppercase.tracking-wider ${
+                  <Badge variant="outline" className={`text-[10px] uppercase tracking-wider ${
                     op.status === 'success' ? 'border-primary/20 text-primary' :
                     'border-muted text-muted-foreground'
                   }`}>
@@ -287,7 +301,7 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" className="w-full mt-4 border-primary/20 hover:bg-primary/5 hover:text-primary">
+            <Button variant="outline" onClick={() => navigate("/storage")} className="w-full mt-4 border-primary/20 hover:bg-primary/5 hover:text-primary">
               <Eye className="w-4 h-4 mr-2" />
               View All Logs
             </Button>
@@ -304,8 +318,8 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {pendingTasks.map((task) => (
-                <div key={task.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-l-4 border-l-primary">
+              {pendingTasks.map((task: any) => (
+                <div key={task.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-l-4 border-l-primary cursor-pointer hover:bg-muted/30 transition-all" onClick={() => navigate(task.id === 1 ? "/kyc" : "/storage")}>
                   <div>
                     <p className="font-semibold text-sm">{task.title}</p>
                     <p className="text-xs text-muted-foreground">{task.desc}</p>
@@ -314,13 +328,13 @@ const Dashboard = () => {
                     task.priority === 'High' ? 'bg-red-500' :
                     task.priority === 'Medium' ? 'bg-amber-500' :
                     'bg-blue-500'
-                  } text-foreground`}>
+                  } !text-white`}>
                     {task.priority}
                   </Badge>
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4 bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20">
+            <Button onClick={() => navigate("/kyc")} className="w-full mt-4 bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/90/20">
               <ClipboardList className="w-4 h-4 mr-2" />
               Enter Task Manager
             </Button>

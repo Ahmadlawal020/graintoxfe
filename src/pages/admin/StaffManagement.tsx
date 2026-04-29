@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 import { useGetUsersQuery, useUpdateUserMutation } from "@/services/api/userApiSlice";
+import { UserRole, UserStatus } from "@/lib/enums";
 
 const StaffManagement = () => {
   const navigate = useNavigate();
@@ -54,13 +55,13 @@ const StaffManagement = () => {
 
   const handleToggleStatus = async (e: React.MouseEvent, user: any) => {
     e.stopPropagation();
-    const newStatus = user.status === "Active" ? "Suspended" : "Active";
+    const newStatus = user.status === UserStatus.Active ? UserStatus.Suspended : UserStatus.Active;
     try {
       await updateUser({ id: user._id, email: user.email, status: newStatus }).unwrap();
       toast({
         title: `Staff ${newStatus}`,
         description: `Staff account is now ${newStatus.toLowerCase()}.`,
-        className: newStatus === "Active" ? "bg-primary/90 text-foreground" : "bg-red-600 text-foreground"
+        className: newStatus === UserStatus.Active ? "bg-primary/90 !text-white" : "bg-red-600 !text-white"
       });
     } catch (err: any) {
       toast({ title: "Action Failed", description: err.data?.message || "Could not update status", variant: "destructive" });
@@ -74,7 +75,7 @@ const StaffManagement = () => {
       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const userRole = user.role?.[0] || "";
-    const isInternalUser = ["Warehouse_Manager", "Admin"].includes(userRole);
+    const isInternalUser = [UserRole.WarehouseManager, UserRole.Admin].includes(userRole as UserRole);
 
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
     
@@ -85,10 +86,10 @@ const StaffManagement = () => {
     `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
 
   const stats = {
-    total: users.filter(u => ["Warehouse_Manager", "Admin"].includes(u.role?.[0])).length,
-    active: users.filter((u) => u.status === "Active" && ["Warehouse_Manager", "Admin"].includes(u.role?.[0])).length,
-    suspended: users.filter((u) => u.status === "Suspended" && ["Warehouse_Manager", "Admin"].includes(u.role?.[0])).length,
-    admins: users.filter((u) => u.role?.[0] === "Admin").length,
+    total: users.filter((u: any) => [UserRole.WarehouseManager, UserRole.Admin].includes(u.role?.[0] as UserRole)).length,
+    active: users.filter((u: any) => u.status === UserStatus.Active && [UserRole.WarehouseManager, UserRole.Admin].includes(u.role?.[0] as UserRole)).length,
+    suspended: users.filter((u: any) => u.status === UserStatus.Suspended && [UserRole.WarehouseManager, UserRole.Admin].includes(u.role?.[0] as UserRole)).length,
+    admins: users.filter((u: any) => u.role?.[0] === UserRole.Admin).length,
   };
 
   const roleBadge = (role: string) => {
@@ -100,14 +101,14 @@ const StaffManagement = () => {
       Admin: "bg-red-600",
     };
     return (
-      <Badge className={`${colors[role] || "bg-gray-600"} text-foreground text-[10px]`}>
+      <Badge className={`${colors[role] || "bg-gray-600"} !text-white text-[10px]`}>
         {role?.replace("_", " ") || "Unknown"}
       </Badge>
     );
   };
 
   return (
-    <div className="space-y-6 animate-fade-in p-2">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6">
       <header>
         <h1 className="text-3xl font-bold text-foreground">Staff Management</h1>
         <p className="text-muted-foreground">
@@ -148,7 +149,7 @@ const StaffManagement = () => {
                 View and manage all internal staff accounts
               </CardDescription>
             </div>
-            <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" onClick={() => navigate("/staff/create")}>
+            <Button className="bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/90/20" onClick={() => navigate("/staff/create")}>
               <Plus className="mr-2 h-4 w-4" />
               Add Staff
             </Button>
@@ -179,16 +180,16 @@ const StaffManagement = () => {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Staff & ID</TableHead>
                   <TableHead>Role</TableHead>
-                  <TableHead>Assigned Facility</TableHead>
-                  <TableHead>Contact Info</TableHead>
+                  <TableHead className="hidden md:table-cell">Assigned Facility</TableHead>
+                  <TableHead className="hidden lg:table-cell">Contact Info</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
+                  <TableHead className="hidden xl:table-cell">Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -198,7 +199,7 @@ const StaffManagement = () => {
                   const assignedWarehouses = Array.isArray(user.assignedWarehouse) ? user.assignedWarehouse : (user.assignedWarehouse ? [user.assignedWarehouse] : []);
                   
                   let assignment: React.ReactNode = "—";
-                  if (role === "Warehouse_Manager") {
+                  if (role === UserRole.WarehouseManager) {
                     if (assignedWarehouses.length === 0) {
                       assignment = <span className="text-muted-foreground italic">Unassigned</span>;
                     } else if (assignedWarehouses.length === 1) {
@@ -235,10 +236,10 @@ const StaffManagement = () => {
                       </div>
                     </TableCell>
                     <TableCell>{roleBadge(role)}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <div className="text-sm text-muted-foreground">{assignment}</div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-muted-foreground text-xs">
                           <Phone className="mr-1.5 h-3 w-3" />
@@ -247,11 +248,11 @@ const StaffManagement = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.status === "Active" ? "default" : "secondary"} className="text-[10px] scale-90 origin-left">
+                      <Badge variant={user.status === UserStatus.Active ? "default" : "secondary"} className="text-[10px] scale-90 origin-left">
                         {user.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden xl:table-cell">
                        <span className="text-xs text-muted-foreground">{joinedDate}</span>
                     </TableCell>
                     <TableCell className="text-right">
@@ -265,9 +266,9 @@ const StaffManagement = () => {
                           <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/staff/${user._id}`); }}>
                             <Edit className="mr-2 h-4 w-4" /> View / Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem className={user.status === "Active" ? "text-destructive" : "text-primary"} onClick={(e) => handleToggleStatus(e, user)}>
-                            {user.status === "Active" ? <Ban className="mr-2 h-4 w-4" /> : <UserCheck className="mr-2 h-4 w-4" />} 
-                            {user.status === "Active" ? "Suspend" : "Activate"}
+                          <DropdownMenuItem className={user.status === UserStatus.Active ? "text-destructive" : "text-primary"} onClick={(e) => handleToggleStatus(e, user)}>
+                            {user.status === UserStatus.Active ? <Ban className="mr-2 h-4 w-4" /> : <UserCheck className="mr-2 h-4 w-4" />} 
+                            {user.status === UserStatus.Active ? "Suspend" : "Activate"}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

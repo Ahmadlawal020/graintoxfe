@@ -92,9 +92,9 @@ const WarehouseDetail = () => {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "Total Capacity", value: `${capacity.toLocaleString()} MT`, icon: Building2, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Current Stock", value: `${currentStock.toLocaleString()} MT`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
-          { title: "Available Space", value: `${available.toLocaleString()} MT`, icon: Activity, color: "text-amber-500", bg: "bg-amber-500/10" },
+          { title: "Total Capacity", value: `${capacity.toLocaleString()} kg`, icon: Building2, color: "text-primary", bg: "bg-primary/10" },
+          { title: "Current Stock", value: `${currentStock.toLocaleString()} kg`, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
+          { title: "Available Space", value: `${available.toLocaleString()} kg`, icon: Activity, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Utilization", value: `${utilization}%`, icon: PieChartIcon, color: utilColor.split(' ')[0], bg: utilColor.split(' ')[1] },
         ].map((stat, i) => (
           <Card key={i} className="glass-card">
@@ -123,7 +123,7 @@ const WarehouseDetail = () => {
                   <Pie data={mockCropsStored} cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={5} dataKey="value">
                     {mockCropsStored.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value} MT`, 'Stored']} />
+                  <Tooltip formatter={(value) => [`${value} kg`, 'Stored']} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -133,7 +133,7 @@ const WarehouseDetail = () => {
               {mockCropsStored.map((c, i) => (
                 <div key={i} className="flex items-center justify-between text-sm">
                   <div className="flex items-center"><div className="w-2.5 h-2.5 rounded-full mr-2" style={{ backgroundColor: c.color }} />{c.name}</div>
-                  <span className="font-medium text-muted-foreground">{c.value.toLocaleString()} MT</span>
+                  <span className="font-medium text-muted-foreground">{c.value.toLocaleString()} kg</span>
                 </div>
               ))}
             </div>
@@ -152,7 +152,7 @@ const WarehouseDetail = () => {
               { label: "Facility Owner", value: warehouse.ownerName || "Unknown" },
               { label: "Operating Company", value: warehouse.companyName || "N/A" },
               { label: "Owner Phone", value: warehouse.ownerPhone || "N/A" },
-              { label: "Storage Rate Policy", value: `₦${warehouse.storageFeePerMT?.toLocaleString() || 0} per MT` },
+              { label: "Storage Rate Policy", value: `₦${warehouse.storageFeePerKg?.toLocaleString() || 0} per kg` },
               { label: "Certification Number", value: warehouse.certNumber || "N/A" },
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors">

@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { selectCurrentUser } from "../../services/authSlice";
 import { useGetUserByIdQuery } from "../../services/api/userApiSlice";
 import {
-  useInitializeDepositMutation,
   useInstantDepositMutation,
   useGetUserTransactionsQuery,
   useVerifyDepositMutation
 } from "../../services/api/financeApiSlice";
-import { usePaystackPayment } from "react-paystack";
+import { PaystackButton } from "react-paystack";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -24,17 +23,14 @@ const Wallet = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(user?.id || "");
   const { data: transactions, isLoading: txLoading } = useGetUserTransactionsQuery(undefined);
-  const [initializeDeposit] = useInitializeDepositMutation();
   const [instantDeposit] = useInstantDepositMutation();
   const [verifyDeposit] = useVerifyDepositMutation();
 
   const [amount, setAmount] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [verifyingRef, setVerifyingRef] = useState<string | null>(null);
 
-  // Generate a unique reference once per deposit session or stable enough
-  const [txRef, setTxRef] = useState((new Date()).getTime().toString());
-
-  // Check for reference in URL (handle redirect)
+  // Check for reference in URL (handle redirect from Paystack)
   useEffect(() => {
     const reference = searchParams.get("reference") || searchParams.get("trxref");
     if (reference) {
@@ -43,87 +39,69 @@ const Wallet = () => {
   }, [searchParams]);
 
   const handleAutoVerify = async (reference: string) => {
+    if (verifyingRef === reference) return;
+    setVerifyingRef(reference);
     setLoading(true);
     try {
+      console.log("[Wallet] Auto-verifying redirect reference:", reference);
       await verifyDeposit(reference).unwrap();
       toast.success("Deposit verified successfully!");
-      // Clear search params to avoid re-verification on refresh
       setSearchParams({});
     } catch (error: any) {
-      console.error("Auto-verification failed:", error);
+      console.error("[Wallet] Auto-verification failed:", error);
       toast.error(error.data?.message || "Verification failed");
       setSearchParams({});
     } finally {
       setLoading(false);
+      setVerifyingRef(null);
     }
   };
 
-  // Paystack config
-  const config = {
-    reference: txRef,
+  // Generate a fresh reference for every potential transaction
+  const generateRef = () => `GT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+
+  const parsedAmount = parseFloat(amount) || 0;
+  const amountInKobo = Math.round(parsedAmount * 100);
+  const isValidAmount = parsedAmount >= 100;
+
+  // PaystackButton componentProps — always fresh on each render
+  const paystackProps = {
     email: user?.email || "",
-    amount: parseFloat(amount) * 100, // Amount in kobo
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "pk_test_placeholder",
-  };
-
-  const onSuccess = async (reference: any) => {
-    setLoading(true);
-    try {
-      await verifyDeposit(reference.reference).unwrap();
-      toast.success("Deposit successful!");
-      setAmount("");
-      setTxRef((new Date()).getTime().toString()); // Refresh reference for next time
-    } catch (error: any) {
-      toast.error(error.data?.message || "Verification failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onClose = () => {
-    toast.info("Transaction cancelled");
-    setLoading(false);
-  };
-
-  const initializePayment = usePaystackPayment(config);
-
-  const handleDeposit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!amount || parseFloat(amount) <= 0) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
-
-    // Generate a fresh reference for this specific attempt
-    const newRef = (new Date()).getTime().toString();
-    setTxRef(newRef);
-
-    setLoading(true);
-    try {
-      // 1. Initialize on the backend with this reference
-      const response = await initializeDeposit({
-        amount: parseFloat(amount),
-        reference: newRef
-      }).unwrap();
-
-      console.log("[Wallet] Backend initialized:", response);
-
-      // 2. Open Paystack popup using the hook
-      // Pass the config directly to initializePayment to ensure it uses the fresh reference
-      const paymentConfig = {
-        ...config,
-        reference: newRef,
-        onSuccess: (response: any) => onSuccess(response),
-        onClose: () => onClose(),
-      };
-
-      initializePayment(paymentConfig);
-
-    } catch (error: any) {
-      console.error("Deposit error:", error);
-      toast.error(error.data?.message || "Failed to initialize deposit");
-      setLoading(false);
-    }
+    amount: amountInKobo,
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "",
+    reference: generateRef(),
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "User ID",
+          variable_name: "user_id",
+          value: user?.id || "",
+        }
+      ],
+      userId: user?.id || "",
+      type: "Wallet_Topup",
+    },
+    text: loading ? "Processing..." : "Paystack Deposit",
+    className: "paystack-deposit-btn inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 sm:h-10 px-4 py-2",
+    onSuccess: async (reference: any) => {
+      const ref = reference.reference || reference.trxref || reference;
+      console.log("[Wallet] Paystack onSuccess. Reference:", ref);
+      setLoading(true);
+      try {
+        await verifyDeposit(ref).unwrap();
+        toast.success("Deposit successful!");
+        setAmount("");
+      } catch (error: any) {
+        console.error("[Wallet] Verification after payment failed:", error);
+        toast.error(error.data?.message || "Verification failed. Your payment was received — contact support if balance doesn't update.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    onClose: () => {
+      console.log("[Wallet] Paystack popup closed");
+      toast.info("Payment cancelled");
+    },
   };
 
   const handleInstantDeposit = async (e: React.FormEvent) => {
@@ -185,23 +163,27 @@ const Wallet = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
-              <form onSubmit={handleDeposit} className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₦</span>
                   <Input
                     type="number"
-                    placeholder="Enter amount"
+                    placeholder="Enter amount (min ₦100)"
                     className="pl-8 h-11 sm:h-10"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     disabled={loading}
+                    min="100"
                   />
                 </div>
-                <Button type="submit" disabled={loading || !amount} className="h-11 sm:h-10">
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  Paystack Deposit
-                </Button>
-              </form>
+                {isValidAmount ? (
+                  <PaystackButton {...paystackProps} />
+                ) : (
+                  <Button disabled className="h-11 sm:h-10">
+                    Paystack Deposit
+                  </Button>
+                )}
+              </div>
               <div className="flex items-center gap-4">
                 <div className="h-[1px] flex-1 bg-border"></div>
                 <span className="text-xs text-muted-foreground uppercase font-medium">Or for testing</span>

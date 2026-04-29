@@ -96,7 +96,7 @@ const CropManagement = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in p-2 pb-10">
+    <div className="space-y-6 animate-fade-in p-4 md:p-6 pb-10">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-extrabold text-foreground tracking-tight flex items-center gap-3">
@@ -112,7 +112,7 @@ const CropManagement = () => {
              <RefreshCw className="h-4 w-4" />
           </Button>
           <Button 
-            className="flex-1 md:flex-none bg-primary/90 hover:bg-primary/90 text-foreground shadow-xl shadow-primary/20 px-6"
+            className="flex-1 md:flex-none bg-primary/90 hover:bg-primary/90 !text-white shadow-xl shadow-primary/20 px-6"
             onClick={() => navigate("/crops/create")}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -125,7 +125,7 @@ const CropManagement = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[
           { title: "Market Depth", value: crops.length, sub: "Listed Commodities", icon: Target, color: "text-primary", bg: "bg-primary/10" },
-          { title: "Aggregated Stock", value: `${(totalStock / 1000).toFixed(1)}K`, sub: "Metric Tons", icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
+          { title: "Aggregated Stock", value: `${(totalStock / 1000).toFixed(1)}K`, sub: "kg", icon: Package, color: "text-blue-500", bg: "bg-blue-500/10" },
           { title: "Market Cap", value: `₦${(totalValue / 1e9).toFixed(2)}B`, sub: "Gross Liquidity", icon: Coins, color: "text-amber-500", bg: "bg-amber-500/10" },
           { title: "Global Volume", value: "+12.4%", sub: "Last 24h Trend", icon: Activity, color: "text-purple-500", bg: "bg-purple-500/10" },
         ].map((stat, i) => (
@@ -172,10 +172,10 @@ const CropManagement = () => {
                 <TableHeader className="bg-muted/50 border-none">
                   <TableRow>
                     <TableHead className="pl-6 uppercase text-[10px] font-bold tracking-widest">Asset / Code</TableHead>
-                    <TableHead className="uppercase text-[10px] font-bold tracking-widest text-center">Category</TableHead>
+                    <TableHead className="uppercase text-[10px] font-bold tracking-widest text-center hidden md:table-cell">Category</TableHead>
                     <TableHead className="uppercase text-[10px] font-bold tracking-widest">Market Price</TableHead>
-                    <TableHead className="uppercase text-[10px] font-bold tracking-widest">Inventory</TableHead>
-                    <TableHead className="uppercase text-[10px] font-bold tracking-widest">Grade</TableHead>
+                    <TableHead className="uppercase text-[10px] font-bold tracking-widest hidden lg:table-cell">Inventory</TableHead>
+                    <TableHead className="uppercase text-[10px] font-bold tracking-widest hidden xl:table-cell">Grade</TableHead>
                     <TableHead className="uppercase text-[10px] font-bold tracking-widest text-right pr-6">Value / Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -194,13 +194,13 @@ const CropManagement = () => {
                           <div>
                             <div className="font-bold text-base">{crop.name}</div>
                             <div className="flex items-center gap-2">
-                               <Badge className="h-4 py-0 text-[9px] bg-primary text-foreground border-none">{crop.tokenSymbol}</Badge>
+                               <Badge className="h-4 py-0 text-[9px] bg-primary !text-white border-none">{crop.tokenSymbol}</Badge>
                                <span className="text-[10px] font-mono text-muted-foreground">{crop.code}</span>
                             </div>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell className="text-center hidden md:table-cell">
                          <Badge variant="outline" className="text-[10px] bg-muted/50 border-none px-2">{crop.category}</Badge>
                       </TableCell>
                       <TableCell>
@@ -210,20 +210,20 @@ const CropManagement = () => {
                             +2.4%
                          </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden lg:table-cell">
                          <div className="flex items-center gap-1.5 font-bold">
                             <span>{(crop.totalStock || 0).toLocaleString()}</span>
-                            <span className="text-[10px] text-muted-foreground font-normal">MT</span>
+                            <span className="text-[10px] text-muted-foreground font-normal">kg</span>
                          </div>
                          <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
                             <Package className="h-2.5 w-2.5" />
                             {(crop.totalTokenized || 0).toLocaleString()} Tokenized
                          </div>
                       </TableCell>
-                      <TableCell>
-                         <Badge className={crop.quality === "Grade A" ? "bg-primary" : "bg-amber-500"}>
-                            {crop.quality?.split(' ')?.[1] || "A"}
-                         </Badge>
+                      <TableCell className="hidden xl:table-cell">
+                          <Badge className={crop.quality === "Grade A" ? "bg-primary !text-white" : "bg-amber-500 !text-white"}>
+                             {crop.quality?.split(' ')?.[1] || "A"}
+                          </Badge>
                       </TableCell>
                       <TableCell className="text-right pr-6">
                          <div className="font-bold text-sm">₦{(((crop.totalStock || 0) * (crop.pricePerUnit || 0)) / 1e6).toFixed(1)}M</div>

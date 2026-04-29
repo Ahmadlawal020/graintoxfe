@@ -52,7 +52,7 @@ const QualityControl = () => {
       lot: op.receiptNo || `OP-${op._id.substring(0, 6)}`,
       commodity: op.commodity?.name || "Unknown",
       investor: depositorName,
-      quantity: `${op.quantity} ${op.unit || "MT"}`,
+      quantity: `${op.quantity} ${op.unit || "kg"}`,
       moisture: op.moisture,
       foreignMatter: op.foreignMatter,
       pestDamage: op.pestDamage,
