@@ -48,7 +48,6 @@ const CreateStaff = () => {
   
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    userId: "",
     firstName: "",
     lastName: "",
     title: "Mr",
@@ -103,7 +102,6 @@ const CreateStaff = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.userId) newErrors.userId = "Employee ID is required";
     if (!formData.firstName) newErrors.firstName = "First name is required";
     if (!formData.lastName) newErrors.lastName = "Last name is required";
     if (!formData.email) newErrors.email = "Email is required";
@@ -221,19 +219,6 @@ const CreateStaff = () => {
                   className={errors.lastName ? "border-destructive" : ""}
                 />
                  {errors.lastName && <p className="text-[10px] text-destructive">{errors.lastName}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="userId">Employee / Staff ID</Label>
-                <Input 
-                  id="userId" 
-                  name="userId" 
-                  placeholder="e.g. GTX-STAFF-001" 
-                  value={formData.userId} 
-                  onChange={handleChange}
-                  className={`font-mono ${errors.userId ? "border-destructive" : ""}`}
-                />
-                 {errors.userId && <p className="text-[10px] text-destructive">{errors.userId}</p>}
               </div>
             </CardContent>
           </Card>

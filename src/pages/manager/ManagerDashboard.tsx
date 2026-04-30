@@ -142,16 +142,16 @@ const ManagerDashboard = () => {
       {/* Smart Header with Site Selection */}
       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900 text-white p-6 rounded-3xl shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
-        <div className="relative z-10">
-          <h1 className="text-4xl font-black tracking-tighter uppercase italic flex items-center gap-4">
-             <Layers className="h-10 w-10 text-primary/80" />
+        <div className="relative z-10 w-full sm:w-auto">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tighter uppercase italic flex items-center gap-3">
+             <Layers className="h-8 w-8 lg:h-10 lg:w-10 text-primary/80" />
              Infrastructure Control
           </h1>
           <div className="flex flex-wrap items-center gap-2 mt-2 opacity-80">
-            <Badge variant="outline" className="text-white border-white/20 uppercase text-[10px] font-bold">
+            <Badge variant="outline" className="text-white border-white/20 uppercase text-[9px] sm:text-[10px] font-bold">
                {myWarehouses.length} Allocated Sites
             </Badge>
-            <span className="text-xs font-medium uppercase tracking-widest flex items-center gap-1 text-white/70">
+            <span className="text-[10px] sm:text-xs font-medium uppercase tracking-widest flex items-center gap-1 text-white/70">
                <Activity className="h-3 w-3" /> System Heartbeat Stable
             </span>
           </div>
@@ -196,10 +196,10 @@ const ManagerDashboard = () => {
              </CardHeader>
              <CardContent className="relative z-10">
                 <div className="flex items-baseline gap-2">
-                   <div className="text-4xl font-black tracking-tighter">{stat.value}</div>
-                   <div className="text-xs font-bold text-muted-foreground uppercase">{stat.unit}</div>
+                   <div className="text-3xl sm:text-4xl font-black tracking-tighter">{stat.value}</div>
+                   <div className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase">{stat.unit}</div>
                 </div>
-                <p className="text-[11px] font-bold text-muted-foreground mt-1 flex items-center gap-1 opacity-70">
+                <p className="text-[10px] sm:text-[11px] font-bold text-muted-foreground mt-1 flex items-center gap-1 opacity-70">
                    <ChevronRight className="h-3 w-3" /> {stat.sub}
                 </p>
              </CardContent>
@@ -253,19 +253,23 @@ const ManagerDashboard = () => {
               <CardContent>
                  <div className="space-y-3">
                     {filteredOps.slice(0, 6).map((op: any) => (
-                       <div key={op._id} className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-primary/20 transition-all group">
-                          <div className="flex items-center gap-4">
-                             <div className={`h-11 w-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${op.type === 'DEPOSIT' ? 'bg-primary/10 text-primary/90' : 'bg-blue-500/10 text-blue-600'}`}>
-                                {op.type === 'DEPOSIT' ? <ArrowDownRight className="h-6 w-6" /> : <ArrowUpRight className="h-6 w-6" />}
+                       <div key={op._id} className="flex items-center justify-between p-3 sm:p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-primary/20 transition-all group">
+                          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                             <div className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 ${op.type === 'DEPOSIT' ? 'bg-primary/10 text-primary/90' : 'bg-blue-500/10 text-blue-600'}`}>
+                                {op.type === 'DEPOSIT' ? <ArrowDownRight className="h-5 w-5 sm:h-6 sm:w-6" /> : <ArrowUpRight className="h-5 w-5 sm:h-6 sm:w-6" />}
                              </div>
-                             <div>
-                                <p className="font-black text-sm uppercase tracking-tight">{op.type} — {op.quantity} kg</p>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase">{op.commodity?.name} · {op.warehouse?.name}</p>
+                             <div className="min-w-0">
+                                <p className="font-black text-xs sm:text-sm uppercase tracking-tight truncate">
+                                   {op.type} — {op.quantity} kg
+                                </p>
+                                <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase truncate">
+                                   {op.commodity?.name} · {op.warehouse?.name}
+                                </p>
                              </div>
                           </div>
-                          <div className="text-right">
-                             <p className="text-xs font-black italic tracking-widest">{new Date(op.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                             <Badge className={op.qcStatus === 'PASSED' ? 'bg-primary text-[9px] h-4 uppercase font-black px-1.5' : 'bg-amber-500 text-[9px] h-4 uppercase font-black px-1.5'}>
+                          <div className="text-right shrink-0">
+                             <p className="text-[10px] sm:text-xs font-black italic tracking-widest">{new Date(op.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                             <Badge className={op.qcStatus === 'PASSED' ? 'bg-primary text-[8px] sm:text-[9px] h-3.5 sm:h-4 uppercase font-black px-1.5' : 'bg-amber-500 text-[8px] sm:text-[9px] h-3.5 sm:h-4 uppercase font-black px-1.5'}>
                                 {op.qcStatus}
                              </Badge>
                           </div>

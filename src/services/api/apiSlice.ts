@@ -79,7 +79,20 @@ const baseQueryWithReauth: BaseQueryFn<
         )) as CustomQueryResult;
 
         if (refreshResult?.data) {
-          api.dispatch(setCredentials(refreshResult.data as Credentials));
+          const data = refreshResult.data as any;
+          const currentAuth = (api.getState() as any).auth;
+          
+          api.dispatch(setCredentials({ 
+            accessToken: data.accessToken, 
+            user: {
+              id: data.id,
+              email: data.email,
+              roles: data.roles,
+              firstName: data.firstName,
+              lastName: data.lastName
+            },
+            activeRole: currentAuth.activeRole
+          }));
           // Retry the original query
           result = await baseQuery(args, api, extraOptions);
         } else {

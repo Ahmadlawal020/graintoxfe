@@ -136,7 +136,13 @@ const Login = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
                   <Label className="text-muted-foreground font-medium">Password</Label>
-                  <button type="button" className="text-primary text-sm font-semibold hover:text-primary/80 transition-colors">Forgot password?</button>
+                  <button 
+                    type="button" 
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-primary text-sm font-semibold hover:text-primary/80 transition-colors"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />

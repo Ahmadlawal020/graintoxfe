@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
-import { User, ShieldCheck, Mail, Phone, MapPin, ArrowLeft, Camera, Upload, AlertCircle, CheckCircle2, X, Loader2, RefreshCw } from "lucide-react";
+import { User, ShieldCheck, Mail, Phone, MapPin, ArrowLeft, Camera, Upload, AlertCircle, CheckCircle2, X, Loader2, RefreshCw, Lock } from "lucide-react";
 import Webcam from "react-webcam";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useSubmitKycMutation, useGetUserByIdQuery } from "@/services/api/userApiSlice";
@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import useAuth from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
+import { useUpdateUserMutation, useChangePasswordMutation } from "@/services/api/userApiSlice";
+import { Eye, EyeOff } from "lucide-react";
 
 const UserSettings = () => {
   const navigate = useNavigate();
@@ -19,9 +21,41 @@ const UserSettings = () => {
   const { id, firstName, lastName, email, status: roleStatus } = useAuth();
   const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "", { pollingInterval: 30000 });
   const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
   
   const kycStatus = userData?.kycStatus || "PENDING";
   const [activeTab, setActiveTab] = useState("profile");
+
+  // Profile States
+  const [profileData, setProfileData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    address: "",
+  });
+
+  // Password States
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  React.useEffect(() => {
+    if (userData) {
+      setProfileData({
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        phone: userData.phone || "",
+        address: userData.address || "",
+      });
+    }
+  }, [userData]);
 
   // KYC States
   const [docType, setDocType] = useState("");
@@ -70,57 +104,106 @@ const UserSettings = () => {
     }
   }, [webcamRef, cameraType]);
 
-  const handleSubmitKyc = async () => {
-    if (!id || !docType || !documentPreview || !livePhoto) {
+  const handleUpdateProfile = async () => {
+    try {
+      await updateUser({
+        id,
+        email,
+        ...profileData
+      }).unwrap();
       toast({
-        title: "Missing Information",
-        description: `Please complete all verification steps. Missing: ${!docType ? 'Document Type, ' : ''}${!documentPreview ? 'Document Photo, ' : ''}${!livePhoto ? 'Live Photo' : ''}`.replace(/, $/, ''),
-        variant: "destructive"
+        title: "Profile Updated",
+        description: "Your information has been saved successfully.",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Update Failed",
+        description: err.data?.message || "Failed to update profile",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({
+        title: "Mismatch",
+        description: "New passwords do not match",
+        variant: "destructive",
       });
       return;
     }
 
     try {
-      toast({ title: "Uploading...", description: "Uploading your verification documents." });
+      await changePassword({
+        id,
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      }).unwrap();
       
-      const docUpload = await uploadToCloudinary(documentPreview!);
-      const photoUpload = await uploadToCloudinary(livePhoto!);
+      toast({
+        title: "Password Changed",
+        description: "Your password has been updated successfully.",
+      });
       
-      let docBackUrl = "";
-      if (docType !== "International Passport" && documentBackPreview) {
-        const docBackUpload = await uploadToCloudinary(documentBackPreview);
-        docBackUrl = docBackUpload.secure_url;
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.data?.message || "Failed to change password",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSubmitKyc = async () => {
+    try {
+      if (!documentPreview || !livePhoto) {
+        toast({ title: "Incomplete", description: "All photos are required", variant: "destructive" });
+        return;
       }
+      
+      // Upload images to Cloudinary
+      const frontUrl = await uploadToCloudinary(documentPreview);
+      const backUrl = documentBackPreview ? await uploadToCloudinary(documentBackPreview) : null;
+      const selfieUrl = await uploadToCloudinary(livePhoto);
 
       await submitKyc({
-        id,
+        id: id,
         data: {
-          kycDocType: docType,
-          kycDocumentUrl: docUpload.secure_url,
-          kycDocumentBackUrl: docBackUrl,
-          kycLivePhotoUrl: photoUpload.secure_url,
-        },
+          idType: docType,
+          idFrontUrl: frontUrl,
+          idBackUrl: backUrl,
+          selfieUrl: selfieUrl
+        }
       }).unwrap();
-
-      // Reset retry flag so the UI shows updated status from server
-      setRetryKyc(false);
 
       toast({
         title: "KYC Submitted",
-        description: "Your documents have been submitted and are now under review.",
+        description: "Your documents are now under review. We will notify you once verified.",
       });
-    } catch (error) {
-      console.error("KYC Submission Error:", error);
+      
+      // Reset state
+      setKycStep(1);
+      setDocumentPreview(null);
+      setDocumentBackPreview(null);
+      setLivePhoto(null);
+    } catch (err: any) {
       toast({
         title: "Submission Failed",
-        description: "Failed to submit KYC. Please try again.",
-        variant: "destructive"
+        description: err.data?.message || "An error occurred while uploading your documents.",
+        variant: "destructive",
       });
     }
   };
 
   const tabs = [
     { id: "profile", label: "Profile", icon: User },
+    { id: "security", label: "Security", icon: Lock },
     { id: "kyc", label: "KYC", icon: ShieldCheck },
   ];
 
@@ -157,10 +240,13 @@ const UserSettings = () => {
               <Button 
                 key={tab.id}
                 variant={activeTab === tab.id ? "default" : "ghost"} 
-                className={`w-full justify-start gap-2 ${activeTab === tab.id ? "bg-primary/90" : ""}`}
+                className={`w-full justify-start gap-2 ${activeTab === tab.id ? "bg-primary/90 hover:bg-primary" : ""}`}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <tab.icon className="w-4 h-4" /> {tab.label === "Profile" ? "Personal Profile" : "KYC Verification"}
+                <tab.icon className="w-4 h-4" /> 
+                {tab.id === "profile" ? "Personal Profile" : 
+                 tab.id === "security" ? "Security & Access" : 
+                 "KYC Verification"}
               </Button>
             ))}
           </div>
@@ -195,35 +281,142 @@ const UserSettings = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-3 sm:space-y-4">
                       <div className="space-y-1.5 sm:space-y-2">
-                        <Label className="text-xs sm:text-sm">Email Address</Label>
+                        <Label className="text-xs sm:text-sm">First Name</Label>
+                        <Input 
+                          value={profileData.firstName} 
+                          onChange={(e) => setProfileData({...profileData, firstName: e.target.value})}
+                          className="h-10 sm:h-auto text-sm" 
+                        />
+                      </div>
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <Label className="text-xs sm:text-sm">Last Name</Label>
+                        <Input 
+                          value={profileData.lastName} 
+                          onChange={(e) => setProfileData({...profileData, lastName: e.target.value})}
+                          className="h-10 sm:h-auto text-sm" 
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <Label className="text-xs sm:text-sm">Email Address (Read-only)</Label>
                         <div className="relative">
                           <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input value={email} disabled className="pl-10 h-10 sm:h-auto text-sm" />
+                          <Input value={email} disabled className="pl-10 h-10 sm:h-auto text-sm bg-muted/30" />
                         </div>
                       </div>
                       <div className="space-y-1.5 sm:space-y-2">
                         <Label className="text-xs sm:text-sm">Phone Number</Label>
                         <div className="relative">
                           <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input defaultValue="+234 812 345 6789" className="pl-10 h-10 sm:h-auto text-sm" />
+                          <Input 
+                            value={profileData.phone} 
+                            onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                            className="pl-10 h-10 sm:h-auto text-sm" 
+                          />
                         </div>
                       </div>
-                    </div>
-                    <div className="space-y-3 sm:space-y-4">
                       <div className="space-y-1.5 sm:space-y-2">
-                        <Label className="text-xs sm:text-sm">Location</Label>
+                        <Label className="text-xs sm:text-sm">Residential Address</Label>
                         <div className="relative">
                           <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input defaultValue="Lere LGA, Kaduna State" className="pl-10 h-10 sm:h-auto text-sm" />
+                          <Input 
+                            value={profileData.address} 
+                            onChange={(e) => setProfileData({...profileData, address: e.target.value})}
+                            className="pl-10 h-10 sm:h-auto text-sm" 
+                          />
                         </div>
                       </div>
                       <div className="pt-2 sm:pt-6">
-                        <Button className="w-full bg-primary/90 hover:bg-primary/90 !text-white h-10 sm:h-auto">Save Changes</Button>
+                        <Button 
+                          onClick={handleUpdateProfile} 
+                          disabled={isUpdatingUser}
+                          className="w-full bg-primary/90 hover:bg-primary !text-foreground font-bold h-11 shadow-lg shadow-primary/20"
+                        >
+                          {isUpdatingUser ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                          Save Changes
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          ) : activeTab === "security" ? (
+            <div className="space-y-6">
+               <Card className="border-none shadow-md">
+                  <CardHeader>
+                     <CardTitle>Change Password</CardTitle>
+                     <CardDescription>Update your credentials to keep your account secure.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                     <div className="space-y-2">
+                        <Label>Current Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            type={showCurrentPassword ? "text" : "password"} 
+                            className="pl-10 pr-10"
+                            value={passwordData.currentPassword}
+                            onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <Label>New Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            type={showNewPassword ? "text" : "password"} 
+                            className="pl-10 pr-10"
+                            value={passwordData.newPassword}
+                            onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <Label>Confirm New Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            type={showConfirmPassword ? "text" : "password"} 
+                            className="pl-10 pr-10"
+                            value={passwordData.confirmPassword}
+                            onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                     </div>
+                     <Button 
+                      className="w-full bg-primary/90 hover:bg-primary !text-foreground font-bold h-11"
+                      onClick={handleChangePassword}
+                      disabled={isChangingPassword}
+                     >
+                        {isChangingPassword ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                        Update Password
+                     </Button>
+                  </CardContent>
+               </Card>
             </div>
           ) : (
             <div className="space-y-4 sm:space-y-6">

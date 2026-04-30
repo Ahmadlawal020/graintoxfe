@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, ShieldCheck, CheckCircle2, XCircle, AlertTriangle, FileText, Scale, Droplets, Bug, Microscope } from "lucide-react";
+import { ArrowLeft, ShieldCheck, CheckCircle2, XCircle, AlertTriangle, FileText, Scale, Droplets, Bug, Microscope, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -218,19 +218,27 @@ const QCDetails = () => {
                 <Button 
                   type="button"
                   variant="outline"
-                  className="w-full text-red-500 border-red-500/20 hover:bg-red-500/10 font-bold"
+                  className="w-full text-red-500 border-red-500/20 hover:bg-red-500/10 font-bold h-11"
                   onClick={() => handleAction("FAILED")}
                   disabled={isUpdating}
                 >
-                  <XCircle className="w-4 h-4 mr-2" /> Reject Deposit
+                  {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                    <>
+                      <XCircle className="w-4 h-4 mr-2" /> Reject
+                    </>
+                  )}
                 </Button>
                 <Button 
                   type="button"
-                  className="w-full bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20 font-bold"
+                  className="w-full bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20 font-bold h-11"
                   onClick={() => handleAction("PASSED")}
                   disabled={isUpdating}
                 >
-                  <CheckCircle2 className="w-4 h-4 mr-2" /> Certify & Pass
+                  {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 mr-2" /> Certify & Pass
+                    </>
+                  )}
                 </Button>
               </div>
             )}

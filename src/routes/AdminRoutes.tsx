@@ -20,6 +20,7 @@ import {
   StorageOperations,
   TokenTrading,
   WalletFinance,
+  Withdrawals,
   Investors,
   InvestorDetails,
   StaffDetails,
@@ -60,6 +61,7 @@ const adminRoutes = (
     <Route path="/trading" element={<TokenTrading />} />
     {/* Finance */}
     <Route path="/finance" element={<WalletFinance />} />
+    <Route path="/withdrawals" element={<Withdrawals />} />
     {/* Investors */}
     <Route path="/investors" element={<Investors />} />
     <Route path="/investors/:id" element={<InvestorDetails />} />

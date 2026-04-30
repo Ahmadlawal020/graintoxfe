@@ -108,11 +108,11 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-onest;
+    @apply bg-background text-foreground font-montserrat;
   }
 
-  .font-onest {
-    font-family: 'Onest', sans-serif;
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
   }
 }
 

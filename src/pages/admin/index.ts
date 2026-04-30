@@ -19,6 +19,7 @@ export { default as StorageOperations } from "./StorageOperations";
 export { default as StorageDetails } from "./StorageDetails";
 export { default as TokenTrading } from "./TokenTrading";
 export { default as WalletFinance } from "./WalletFinance";
+export { default as Withdrawals } from "./Withdrawals";
 export { default as Investors } from "./Investors";
 export { default as InvestorDetails } from "./InvestorDetails";
 export { default as StaffDetails } from "./StaffDetails";

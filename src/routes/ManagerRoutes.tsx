@@ -8,6 +8,7 @@ import {
   RecordStock,
   ProcessWithdrawal,
   QCDetails,
+  ManagerSettings,
 } from "@/pages/manager";
 
 const managerRoutes = (
@@ -22,6 +23,7 @@ const managerRoutes = (
     <Route path="/manager/deposits" element={<QualityControl />} />
     <Route path="/manager/deposits/:id" element={<QCDetails />} />
     <Route path="/manager/reports" element={<InventoryReports />} />
+    <Route path="/manager/settings" element={<ManagerSettings />} />
   </>
 );
 

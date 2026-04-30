@@ -199,7 +199,7 @@ const TokenTrading = () => {
             <CardDescription>Live prices for all grain-backed tokens</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -215,18 +215,18 @@ const TokenTrading = () => {
                     <TableRow key={token.symbol} className="hover:bg-muted/50 transition cursor-pointer">
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Coins className="h-4 w-4 text-primary" />
+                          <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center hidden min-[400px]:flex">
+                            <Coins className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                           </div>
-                          <div>
-                            <div className="font-semibold">{token.symbol}</div>
-                            <div className="text-xs text-muted-foreground">{token.name}</div>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-xs sm:text-sm">{token.symbol}</div>
+                            <div className="text-[10px] text-muted-foreground truncate max-w-[80px] sm:max-w-none">{token.name}</div>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="font-semibold">₦{token.price.toLocaleString()}</TableCell>
+                      <TableCell className="font-semibold text-xs sm:text-sm">₦{token.price.toLocaleString()}</TableCell>
                       <TableCell>
-                        <span className={`flex items-center text-sm font-medium ${token.change24h >= 0 ? "text-primary" : "text-red-500"}`}>
+                        <span className={`flex items-center text-[11px] sm:text-sm font-medium ${token.change24h >= 0 ? "text-primary" : "text-red-500"}`}>
                           {token.change24h >= 0 ? <ArrowUpRight className="h-3 w-3 mr-0.5" /> : <ArrowDownRight className="h-3 w-3 mr-0.5" />}
                           {Math.abs(token.change24h)}%
                         </span>
@@ -252,24 +252,24 @@ const TokenTrading = () => {
           <CardContent>
             <div className="space-y-3">
               {recentTrades.map((trade) => (
-                <div key={trade.id} className="flex items-center justify-between p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-1.5 rounded-full ${trade.type === "BUY" ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-500"}`}>
-                      {trade.type === "BUY" ? <ArrowDownRight className="w-3.5 h-3.5" /> : <ArrowUpRight className="w-3.5 h-3.5" />}
+                <div key={trade.id} className="flex items-center justify-between p-2 sm:p-3 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className={`p-1 sm:p-1.5 rounded-full shrink-0 ${trade.type === "BUY" ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-500"}`}>
+                      {trade.type === "BUY" ? <ArrowDownRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
                     </div>
-                    <div>
-                      <div className="text-sm font-medium">
+                    <div className="min-w-0">
+                      <div className="text-xs sm:text-sm font-medium truncate">
                         {trade.type} {trade.amount} {trade.token}
                       </div>
-                      <div className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {trade.time}
+                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-2.5 h-2.5" /> {trade.time}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">₦{trade.total.toLocaleString()}</div>
-                    <div className="text-xs text-muted-foreground flex items-center justify-end gap-1">
-                      <User className="w-3 h-3" /> {trade.buyer}
+                  <div className="text-right shrink-0">
+                    <div className="text-xs sm:text-sm font-semibold">₦{trade.total.toLocaleString()}</div>
+                    <div className="text-[10px] text-muted-foreground flex items-center justify-end gap-1">
+                      <User className="w-2.5 h-2.5" /> <span className="truncate max-w-[60px] sm:max-w-none">{trade.buyer}</span>
                     </div>
                   </div>
                 </div>

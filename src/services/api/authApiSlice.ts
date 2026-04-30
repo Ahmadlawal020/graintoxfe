@@ -24,15 +24,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const { accessToken, id, roles } = data;
+          const { accessToken, id, roles, email, firstName, lastName } = data as any;
 
           const user = {
             id,
-            email: arg.email,
+            email: email || arg.email,
             roles,
+            firstName,
+            lastName
           };
 
-          dispatch(setCredentials({ accessToken, user }));
+          dispatch(setCredentials({ accessToken, user, activeRole: roles[0] }));
         } catch (err) {
           console.error("Login error:", err);
         }
@@ -63,18 +65,18 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include", // Important for cookies
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, getState, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const { accessToken, id, roles } = data;
+          const { accessToken, id, roles, email, firstName, lastName } = data as any;
 
-          const user = {
-            id,
-            email: "", // Email is not returned in refresh, so you may want to decode or store persistently
-            roles,
-          };
+          const currentAuth = (getState() as any).auth;
 
-          dispatch(setCredentials({ accessToken, user }));
+          dispatch(setCredentials({ 
+            accessToken, 
+            user: { id, email, roles, firstName, lastName },
+            activeRole: currentAuth?.activeRole
+          }));
         } catch (err) {
           console.error("Refresh token error:", err);
         }
@@ -106,19 +108,37 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const { accessToken, id, roles } = data;
+          const { accessToken, id, roles, email, firstName, lastName } = data as any;
 
           const user = {
             id,
-            email: arg.email,
+            email: email || arg.email,
             roles,
+            firstName,
+            lastName
           };
 
-          dispatch(setCredentials({ accessToken, user }));
+          dispatch(setCredentials({ accessToken, user, activeRole: roles[0] }));
         } catch (err) {
           console.error("OTP verification error:", err);
         }
       },
+    }),
+
+    forgotPassword: builder.mutation<{ message: string }, { email: string }>({
+      query: (body) => ({
+        url: "/api/auth/forgot-password",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    resetPassword: builder.mutation<{ message: string }, any>({
+      query: (body) => ({
+        url: "/api/auth/reset-password",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
@@ -130,4 +150,6 @@ export const {
   useCheckEmailMutation,
   useRegisterUserMutation,
   useVerifyOTPMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApiSlice;

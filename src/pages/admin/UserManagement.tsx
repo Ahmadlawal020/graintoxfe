@@ -95,7 +95,7 @@ const UserManagement = () => {
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
     
     return matchesSearch && isPlatformUser && matchesRole;
-  });
+  }).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const getInitials = (firstName: string, lastName: string) =>
     `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
@@ -176,6 +176,10 @@ const UserManagement = () => {
                 View and manage all registered platform users
               </CardDescription>
             </div>
+            <Button className="bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/90/20" onClick={() => navigate("/users/create")}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add User
+            </Button>
           </div>
         </CardHeader>
 
@@ -208,19 +212,17 @@ const UserManagement = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>User & ID</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead className="hidden md:table-cell">Platform Details</TableHead>
-                  <TableHead className="hidden lg:table-cell">Contact Info</TableHead>
-                  <TableHead>KYC & Status</TableHead>
+                  <TableHead className="hidden lg:table-cell">Platform Details</TableHead>
+                  <TableHead className="hidden xl:table-cell">Contact Info</TableHead>
+                  <TableHead className="hidden md:table-cell">KYC & Status</TableHead>
                   <TableHead className="hidden xl:table-cell">Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="hidden sm:table-cell text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers.map((user) => {
                   // Determine dynamic details based on role
-                  const role = user.role?.[0] || "";
-                  let platformDetail = user.farmLocation ? `Farm: ${user.farmLocation}` : "—";
+                  let platformDetail = user.address ? `Loc: ${user.address}` : (user.farmLocation ? `Farm: ${user.farmLocation}` : "—");
                   
                   const joinedDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A";
 
@@ -231,20 +233,19 @@ const UserManagement = () => {
                         <img 
                           src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
                           alt="avatar" 
-                          className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm"
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm hidden min-[400px]:block"
                         />
-                        <div>
-                          <div className="font-medium text-foreground">{user.title} {user.firstName} {user.lastName}</div>
-                          <div className="flex items-center text-xs text-muted-foreground mt-0.5 space-x-2">
-                            <span>{user.email}</span>
-                            <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                            <span className="font-mono text-[10px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-foreground truncate">{user.title} {user.firstName} {user.lastName}</div>
+                          <div className="flex flex-wrap items-center text-[10px] sm:text-xs text-muted-foreground mt-0.5 gap-x-2">
+                            <span className="truncate max-w-[120px] sm:max-w-[200px]">{user.email}</span>
+                            <span className="hidden md:inline w-1 h-1 rounded-full bg-gray-400"></span>
+                            <span className="hidden md:inline-block font-mono text-[9px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
                           </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{roleBadge(role)}</TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden lg:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="text-muted-foreground">{platformDetail}</div>
                         {(user.walletBalance !== undefined && user.walletBalance !== null) && (
@@ -254,7 +255,7 @@ const UserManagement = () => {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">
+                    <TableCell className="hidden xl:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-muted-foreground text-xs">
                           <Phone className="mr-1.5 h-3 w-3" />
@@ -262,10 +263,12 @@ const UserManagement = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col items-start gap-1">
-                        {kycBadge(user.kycStatus)}
-                        <Badge variant={user.status === "Active" ? "default" : "secondary"} className="text-[10px] scale-90 origin-left">
+                    <TableCell className="hidden md:table-cell">
+                      <div className="flex flex-col space-y-1">
+                        <Badge variant="outline" className={`w-fit text-[9px] h-4 py-0 ${user.kycStatus === 'VERIFIED' ? 'border-primary/50 text-primary' : 'border-amber-500/50 text-amber-600'}`}>
+                          {user.kycStatus || 'PENDING'}
+                        </Badge>
+                        <Badge variant={user.status === 'Active' ? 'default' : 'secondary'} className="w-fit text-[9px] h-4 py-0 scale-90 origin-left">
                           {user.status}
                         </Badge>
                       </div>
@@ -273,7 +276,7 @@ const UserManagement = () => {
                     <TableCell className="hidden xl:table-cell">
                        <span className="text-xs text-muted-foreground">{joinedDate}</span>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="hidden sm:table-cell text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>

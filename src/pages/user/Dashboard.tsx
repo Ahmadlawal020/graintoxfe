@@ -107,51 +107,51 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-fade-in p-4 sm:p-6">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in p-2 sm:p-6 max-w-full overflow-x-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Your portfolio overview and market activity</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-foreground truncate">Dashboard</h1>
+          <p className="text-[10px] sm:text-sm text-muted-foreground truncate">Portfolio overview & market activity</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 w-full sm:w-auto">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-8 w-8 shrink-0"
             onClick={() => setShowBalance(!showBalance)}
           >
-            {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+            {showBalance ? <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="h-9 rounded-full border-primary/20 text-primary hover:bg-primary/5"
+            className="h-8 sm:h-9 rounded-full border-primary/20 text-primary hover:bg-primary/5 text-[10px] sm:text-xs flex-1 sm:flex-none px-2 sm:px-4"
             onClick={() => navigate("/user/crops")}
           >
-            <Wheat className="w-4 h-4 mr-1.5" /> My Crops
+            <Wheat className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" /> <span className="truncate">Crops</span>
           </Button>
           <Button
             size="sm"
-            className="h-9 bg-primary/90 hover:bg-primary/90 !text-white rounded-full shadow-lg shadow-primary/90/20"
+            className="h-8 sm:h-9 bg-primary/90 hover:bg-primary/90 !text-white rounded-full shadow-lg text-[10px] sm:text-xs flex-1 sm:flex-none px-2 sm:px-4"
             onClick={() => navigate("/user/market")}
           >
-            <TrendingUp className="w-4 h-4 mr-1.5" /> Trade Now
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" /> <span className="truncate">Trade</span>
           </Button>
         </div>
       </div>
 
       {/* Stats - scrollable on very small screens */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
         {stats.map((stat, i) => (
           <Card key={i} className="glass-card overflow-hidden group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-4">
-              <CardTitle className="text-[11px] sm:text-sm font-medium leading-tight">{stat.title}</CardTitle>
-              <div className={`p-1.5 sm:p-2 rounded-lg ${stat.bg} shrink-0`}><stat.icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${stat.color}`} /></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
+              <CardTitle className="text-[9px] sm:text-sm font-medium leading-tight truncate">{stat.title}</CardTitle>
+              <div className={`p-1 sm:p-2 rounded-lg ${stat.bg} shrink-0`}><stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`} /></div>
             </CardHeader>
-            <CardContent className="p-3 sm:p-4 pt-0">
-              <div className="text-lg sm:text-2xl font-bold truncate">{stat.value}</div>
-              <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 truncate">{stat.sub}</div>
+            <CardContent className="p-2 sm:p-4 pt-0">
+              <div className="text-sm sm:text-2xl font-bold truncate">{stat.value}</div>
+              <div className="text-[8px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 truncate">{stat.sub}</div>
             </CardContent>
           </Card>
         ))}

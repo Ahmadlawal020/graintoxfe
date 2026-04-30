@@ -63,27 +63,27 @@ export function Header() {
     "U";
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background px-4 lg:px-6">
-      <div className="flex items-center gap-2">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background px-2 sm:px-4 lg:px-6 overflow-hidden">
+      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
         <SidebarTrigger className="-ml-1">
           <Menu className="h-4 w-4" />
         </SidebarTrigger>
-        <div className="flex flex-col">
-          <h1 className="text-sm sm:text-lg font-bold">
+        <div className="flex flex-col min-w-0">
+          <h1 className="text-xs sm:text-lg font-bold truncate">
             GrainTox
           </h1>
-          <p className="text-[10px] text-muted-foreground hidden sm:block">
+          <p className="text-[9px] text-muted-foreground hidden min-[400px]:block truncate">
             Agricultural Digital Infrastructure
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         {/* ✅ Only show Switch Role if user has multiple roles */}
         {roles.length > 1 && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="hidden md:flex">
+              <Button variant="outline" size="sm" className="hidden lg:flex">
                 Switch Role
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
@@ -109,36 +109,38 @@ export function Header() {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="relative">
-              <Bell className="h-4 w-4" />
+            <Button variant="outline" size="icon" className="relative h-8 w-8 sm:h-9 sm:w-9">
+              <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               {unreadCount > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                <Badge className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center p-0 text-[10px]">
                   {unreadCount}
                 </Badge>
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-80">
             <div className="p-2">
-              <h4 className="font-medium">Notifications</h4>
+              <h4 className="font-medium text-sm">Notifications</h4>
             </div>
             <DropdownMenuSeparator />
-            {notifications.map((notification) => (
-              <DropdownMenuItem
-                key={notification.id}
-                className="flex flex-col items-start p-3"
-              >
-                <div className="flex w-full justify-between">
-                  <span className="text-sm">{notification.message}</span>
-                  {notification.unread && (
-                    <div className="h-2 w-2 bg-primary rounded-full"></div>
-                  )}
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  {notification.time}
-                </span>
-              </DropdownMenuItem>
-            ))}
+            <div className="max-h-[300px] overflow-y-auto">
+              {notifications.map((notification) => (
+                <DropdownMenuItem
+                  key={notification.id}
+                  className="flex flex-col items-start p-3"
+                >
+                  <div className="flex w-full justify-between gap-2">
+                    <span className="text-xs sm:text-sm leading-snug">{notification.message}</span>
+                    {notification.unread && (
+                      <div className="h-1.5 w-1.5 bg-primary rounded-full shrink-0 mt-1"></div>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground mt-1">
+                    {notification.time}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -147,27 +149,31 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
-                <AvatarFallback>{initials}</AvatarFallback>
+                <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuItem disabled>
-              <User className="mr-2 h-4 w-4" />
+            <DropdownMenuItem disabled className="opacity-100">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">
-                  {displayName || "Unknown User"}
+                <p className="text-sm font-bold truncate">
+                  {displayName || "User"}
                 </p>
-                <p className="text-xs text-muted-foreground">{email}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{email}</p>
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/settings")}>
+            <DropdownMenuItem onClick={() => {
+              const settingsPath = activeRole === "Admin" ? "/settings" : 
+                                  activeRole === "Warehouse_Manager" ? "/manager/settings" : 
+                                  "/user/settings";
+              navigate(settingsPath);
+            }}>
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
               <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>

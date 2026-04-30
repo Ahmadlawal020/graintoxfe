@@ -78,17 +78,17 @@ const MyWarehouse = () => {
 
   return (
     <div className="space-y-6 animate-fade-in p-2">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">My Warehouse</h1>
-          <p className="text-muted-foreground flex items-center gap-1">
-            <MapPin className="w-4 h-4" /> {warehouse.location}, {warehouse.state}
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Warehouse</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5" /> {warehouse.location}, {warehouse.state}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {assignedWarehouses.length > 1 && (
             <Select value={liveWarehouse?._id} onValueChange={(val) => setSelectedWarehouseId(val)}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px] h-9 text-xs">
                 <SelectValue placeholder="Select Facility" />
               </SelectTrigger>
               <SelectContent>
@@ -98,8 +98,8 @@ const MyWarehouse = () => {
               </SelectContent>
             </Select>
           )}
-          <Button variant="outline" size="sm">
-            <Settings className="mr-2 h-4 w-4" /> Facility Settings
+          <Button variant="outline" size="sm" className="w-full sm:w-auto h-9 text-xs">
+            <Settings className="mr-1.5 h-3.5 w-3.5" /> Facility Settings
           </Button>
         </div>
       </div>
@@ -118,8 +118,8 @@ const MyWarehouse = () => {
               <div className={`p-2 rounded-lg ${stat.bg}`}><stat.icon className={`h-4 w-4 ${stat.color}`} /></div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              {stat.subtitle && <p className="text-xs text-muted-foreground mt-1">{stat.subtitle}</p>}
+              <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
+              {stat.subtitle && <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 truncate">{stat.subtitle}</p>}
             </CardContent>
           </Card>
         ))}

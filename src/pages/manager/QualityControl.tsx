@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { 
   ShieldCheck, Search, CheckCircle2, XCircle, Clock, Eye, Wheat, 
-  Scale, Microscope, AlertTriangle, Truck, ClipboardCheck, History as HistoryIcon, Package
+  Scale, Microscope, AlertTriangle, Truck, ClipboardCheck, History as HistoryIcon, Package, Loader2
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -97,23 +97,23 @@ const QualityControl = () => {
       </div>
 
       <Tabs defaultValue="requests" onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger value="requests" className="flex items-center gap-2">
-            <ClipboardCheck className="w-4 h-4" /> Requests
+        <TabsList className="bg-muted/50 p-1 w-full flex justify-start overflow-x-auto no-scrollbar">
+          <TabsTrigger value="requests" className="flex items-center gap-2 text-xs sm:text-sm">
+            <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Requests
             {operations.filter(op => op.status === "PENDING" && warehouseIds.includes(op.warehouse?._id)).length > 0 && (
-              <Badge className="ml-1 px-1.5 h-4 min-w-[1rem] bg-amber-500 text-[10px]">
+              <Badge className="ml-1 px-1.5 h-3.5 sm:h-4 min-w-[1rem] bg-amber-500 text-[8px] sm:text-[10px]">
                 {operations.filter(op => op.status === "PENDING" && warehouseIds.includes(op.warehouse?._id)).length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="deliveries" className="flex items-center gap-2">
-            <Truck className="w-4 h-4" /> Deliveries
+          <TabsTrigger value="deliveries" className="flex items-center gap-2 text-xs sm:text-sm">
+            <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Deliveries
           </TabsTrigger>
-          <TabsTrigger value="qc" className="flex items-center gap-2">
-            <Microscope className="w-4 h-4" /> QC Needed
+          <TabsTrigger value="qc" className="flex items-center gap-2 text-xs sm:text-sm">
+            <Microscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> QC Needed
           </TabsTrigger>
-          <TabsTrigger value="history" className="flex items-center gap-2">
-            <HistoryIcon className="w-4 h-4" /> History
+          <TabsTrigger value="history" className="flex items-center gap-2 text-xs sm:text-sm">
+            <HistoryIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> History
           </TabsTrigger>
         </TabsList>
 
@@ -131,19 +131,38 @@ const QualityControl = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Lot / Receipt</TableHead>
+                    <TableHead className="hidden md:table-cell">Lot / Receipt</TableHead>
                     <TableHead>Commodity</TableHead>
                     <TableHead>Quantity</TableHead>
-                    <TableHead>Delivery</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead className="hidden lg:table-cell">Delivery</TableHead>
+                    <TableHead className="hidden md:table-cell">Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredOps.length === 0 ? (
+                  {opsLoading ? (
+                    [1, 2, 3, 4, 5].map((i) => (
+                      <TableRow key={i}>
+                        <TableCell className="hidden md:table-cell"><div className="h-4 w-20 bg-muted animate-pulse rounded" /></TableCell>
+                        <TableCell><div className="h-4 w-32 bg-muted animate-pulse rounded" /></TableCell>
+                        <TableCell><div className="h-4 w-16 bg-muted animate-pulse rounded" /></TableCell>
+                        <TableCell className="hidden lg:table-cell"><div className="h-4 w-24 bg-muted animate-pulse rounded" /></TableCell>
+                        <TableCell className="hidden md:table-cell"><div className="h-4 w-24 bg-muted animate-pulse rounded" /></TableCell>
+                        <TableCell className="text-right"><div className="h-8 w-20 bg-muted animate-pulse rounded ml-auto" /></TableCell>
+                      </TableRow>
+                    ))
+                  ) : filteredOps.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
-                        No records found in this section.
+                      <TableCell colSpan={6} className="h-64 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-3">
+                           <div className="p-4 bg-muted/20 rounded-full">
+                              <ClipboardCheck className="w-8 h-8 text-muted-foreground/50" />
+                           </div>
+                           <div className="space-y-1">
+                              <p className="font-bold text-foreground">No operations found</p>
+                              <p className="text-sm text-muted-foreground">There are currently no {activeTab} for your assigned warehouses.</p>
+                           </div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -151,49 +170,66 @@ const QualityControl = () => {
                       const config = getStatusConfig(op.status, op.qcStatus);
                       return (
                         <TableRow key={op._id} className="hover:bg-muted/50 transition">
-                          <TableCell className="font-mono text-xs text-primary/90">{op.receiptNo}</TableCell>
-                          <TableCell className="font-medium flex items-center gap-1.5">
-                            <Wheat className="h-4 w-4 text-primary" />{op.commodity?.name}
+                          <TableCell className="font-mono text-[10px] text-primary/90 hidden md:table-cell">{op.receiptNo}</TableCell>
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-1.5 truncate max-w-[120px] sm:max-w-none">
+                              <Wheat className="h-3.5 w-3.5 text-primary shrink-0" />{op.commodity?.name}
+                            </div>
                           </TableCell>
-                          <TableCell className="text-sm font-semibold">{op.quantity} {op.unit || "kg"}</TableCell>
-                          <TableCell>
+                          <TableCell className="text-xs sm:text-sm font-semibold whitespace-nowrap">{op.quantity} {op.unit || "kg"}</TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             <Badge variant="outline" className="text-[10px] uppercase font-bold">
                               {op.deliveryMethod === "PICK_UP" ? "Pickup" : "Drop-off"}
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className={`${config.class} border-transparent flex items-center w-fit`}>
+                          <TableCell className="hidden md:table-cell">
+                            <Badge variant="outline" className={`${config.class} border-transparent flex items-center w-fit text-[10px] py-0`}>
                               {config.icon} {config.label}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
                             {activeTab === "requests" && (
-                              <div className="flex justify-end gap-2">
-                                <Button size="sm" variant="outline" className="text-red-500 border-red-500/20 hover:bg-red-500/10" 
-                                  onClick={() => handleStatusUpdate(op._id, "REJECTED", "Request rejected")}>
-                                  Reject
+                              <div className="flex justify-end gap-1.5 sm:gap-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  disabled={isUpdating}
+                                  className="h-8 text-[10px] sm:text-xs text-red-500 border-red-500/20 hover:bg-red-500/10 px-2 sm:px-3" 
+                                  onClick={() => handleStatusUpdate(op._id, "REJECTED", "Request rejected")}
+                                >
+                                  {isUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
                                 </Button>
-                                <Button size="sm" className="bg-primary/90 hover:bg-primary text-primary-foreground"
-                                  onClick={() => handleStatusUpdate(op._id, "APPROVED", "Request approved")}>
-                                  Approve
+                                <Button 
+                                  size="sm" 
+                                  disabled={isUpdating}
+                                  className="h-8 text-[10px] sm:text-xs bg-primary/90 hover:bg-primary text-primary-foreground px-2 sm:px-3"
+                                  onClick={() => handleStatusUpdate(op._id, "APPROVED", "Request approved")}
+                                >
+                                  {isUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
                                 </Button>
                               </div>
                             )}
                             {activeTab === "deliveries" && (
-                              <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white"
-                                onClick={() => handleStatusUpdate(op._id, "DEPOSITED", "Marked as deposited")}>
-                                <Package className="w-4 h-4 mr-2" /> Mark Received
+                              <Button 
+                                size="sm" 
+                                disabled={isUpdating}
+                                className="h-8 text-[10px] sm:text-xs bg-blue-500 hover:bg-blue-600 text-white"
+                                onClick={() => handleStatusUpdate(op._id, "DEPOSITED", "Marked as deposited")}
+                              >
+                                {isUpdating ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <Package className="w-3.5 h-3.5 mr-1.5" />}
+                                <span className="hidden sm:inline">{isUpdating ? "Processing..." : "Mark Received"}</span>
+                                <span className="sm:hidden">{isUpdating ? "..." : "Received"}</span>
                               </Button>
                             )}
                             {activeTab === "qc" && (
-                              <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white"
+                              <Button size="sm" className="h-8 text-[10px] sm:text-xs bg-purple-500 hover:bg-purple-600 text-white"
                                 onClick={() => navigate(`/manager/deposits/${op._id}`)}>
-                                <Microscope className="w-4 h-4 mr-2" /> Run QC
+                                <Microscope className="w-3.5 h-3.5 mr-1.5" /> Run QC
                               </Button>
                             )}
                             {activeTab === "history" && (
-                              <Button variant="ghost" size="sm" onClick={() => navigate(`/manager/deposits/${op._id}`)}>
-                                <Eye className="w-4 h-4 mr-2" /> Details
+                              <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => navigate(`/manager/deposits/${op._id}`)}>
+                                <Eye className="w-3.5 h-3.5 mr-1.5" /> Details
                               </Button>
                             )}
                           </TableCell>

@@ -145,22 +145,22 @@ const RecordStock = () => {
 
   return (
     <div className="space-y-8 animate-fade-in p-2 pb-10 max-w-6xl mx-auto">
-      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="w-full sm:w-auto">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate("/manager/stock")} 
-            className="mb-2 -ml-2 text-muted-foreground hover:text-foreground"
+            className="mb-1 -ml-2 text-muted-foreground hover:text-foreground h-8 text-xs"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Stock Inventory
+            <ArrowLeft className="h-3.5 w-3.5 mr-1.5" /> Back to Stock
           </Button>
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Record New Stock</h1>
-          <p className="text-muted-foreground font-medium">Log a new commodity deposit into the warehouse facility</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">Record New Stock</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium">Log a new commodity deposit</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-2xl">
-          <Badge className="bg-primary hover:bg-primary/90">Active Session</Badge>
-          <span className="text-xs font-mono text-primary/90 font-bold uppercase tracking-widest">WH-DEPOSIT-2026</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-xl sm:rounded-2xl shrink-0">
+          <Badge className="bg-primary hover:bg-primary/90 text-[10px] sm:text-xs">Active Session</Badge>
+          <span className="text-[10px] sm:text-xs font-mono text-primary/90 font-bold uppercase tracking-widest">WH-DEPOSIT-2026</span>
         </div>
       </header>
 
@@ -170,11 +170,11 @@ const RecordStock = () => {
           
           <Card className="glass-card overflow-hidden border-none shadow-xl">
              <CardHeader className="pb-4">
-                <CardTitle className="text-lg flex items-center gap-2">
-                   <Building2 className="h-5 w-5 text-purple-500" />
+                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                   <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
                    Storage Facility
                 </CardTitle>
-                <CardDescription>Select the warehouse taking the deposit</CardDescription>
+                <CardDescription className="text-xs">Select the warehouse taking the deposit</CardDescription>
              </CardHeader>
              <CardContent>
                 <Select value={selectedWarehouseId} onValueChange={setSelectedWarehouseId} required>
@@ -195,12 +195,12 @@ const RecordStock = () => {
             <Card className="glass-card overflow-hidden border-none shadow-xl">
               <div className="h-1.5 bg-primary" />
 
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Wheat className="h-5 w-5 text-primary" />
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                  <Wheat className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   Select Commodity
                 </CardTitle>
-                <CardDescription>Choose the crop type for this deposit</CardDescription>
+                <CardDescription className="text-xs">Choose the crop type</CardDescription>
                 <div className="relative mt-4">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input 
@@ -253,12 +253,12 @@ const RecordStock = () => {
             {/* User Selection */}
             <Card className="glass-card overflow-hidden border-none shadow-xl">
               <div className="h-1.5 bg-blue-500" />
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <User className="h-5 w-5 text-blue-500" />
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
                   Select Depositor
                 </CardTitle>
-                <CardDescription>Assign the ownership of this stock</CardDescription>
+                <CardDescription className="text-xs">Assign stock ownership</CardDescription>
                 <div className="relative mt-4">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input 
@@ -410,24 +410,24 @@ const RecordStock = () => {
               <CardContent className="space-y-6">
                  {selectedCrop && selectedUser ? (
                     <div className="space-y-4">
-                       <div className="p-4 rounded-2xl bg-muted/30 space-y-3">
-                          <div className="flex justify-between items-center text-xs">
-                             <span className="text-muted-foreground italic">Depositor</span>
-                             <span className="font-bold text-blue-600">{selectedUser.firstName} {selectedUser.lastName}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-xs">
-                             <span className="text-muted-foreground italic">Commodity</span>
-                             <span className="font-bold text-primary/90">{selectedCrop.name}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-xs">
-                             <span className="text-muted-foreground italic">Quantity</span>
-                             <span className="font-bold">{formData.bags || 0} Bags</span>
-                          </div>
-                          <div className="flex justify-between items-center text-xs pt-2 border-t">
-                             <span className="text-muted-foreground font-bold">Total Payload</span>
-                             <span className="font-black text-lg">{formData.weight || 0} kg</span>
-                          </div>
-                       </div>
+                        <div className="p-3 sm:p-4 rounded-2xl bg-muted/30 space-y-3 font-medium">
+                           <div className="flex justify-between items-center text-[10px] sm:text-xs">
+                              <span className="text-muted-foreground italic">Depositor</span>
+                              <span className="font-bold text-blue-600 truncate max-w-[120px]">{selectedUser.firstName} {selectedUser.lastName}</span>
+                           </div>
+                           <div className="flex justify-between items-center text-[10px] sm:text-xs">
+                              <span className="text-muted-foreground italic">Commodity</span>
+                              <span className="font-bold text-primary/90">{selectedCrop.name}</span>
+                           </div>
+                           <div className="flex justify-between items-center text-[10px] sm:text-xs">
+                              <span className="text-muted-foreground italic">Quantity</span>
+                              <span className="font-bold">{formData.bags || 0} Bags</span>
+                           </div>
+                           <div className="flex justify-between items-center text-[10px] sm:text-xs pt-2 border-t">
+                              <span className="text-muted-foreground font-bold">Total Payload</span>
+                              <span className="font-black text-base sm:text-lg">{formData.weight || 0} kg</span>
+                           </div>
+                        </div>
                        
                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 flex gap-3">
                           <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
@@ -439,17 +439,17 @@ const RecordStock = () => {
                        <Button 
                         type="submit" 
                         disabled={isSubmitting} 
-                        className="w-full h-14 bg-primary/90 hover:bg-primary/90 text-foreground font-black text-lg shadow-xl shadow-primary/20 group"
+                        className="w-full h-12 sm:h-14 bg-primary/90 hover:bg-primary/90 text-foreground font-black text-base sm:text-lg shadow-xl shadow-primary/20 group"
                        >
                           {isSubmitting ? (
                             <>
-                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                               Processing...
                             </>
                           ) : (
                             <>
                               Authorize Deposit
-                              <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                              <ChevronRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                             </>
                           )}
                        </Button>

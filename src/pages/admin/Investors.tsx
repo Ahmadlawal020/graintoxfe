@@ -149,71 +149,71 @@ const Investors = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Investor</TableHead>
-                  <TableHead>Portfolio Value</TableHead>
-                  <TableHead>Tokens</TableHead>
-                  <TableHead>Primary Token</TableHead>
-                  <TableHead>ROI</TableHead>
-                  <TableHead>KYC</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredInvestors.map((inv) => (
-                  <TableRow key={inv._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/investors/${inv._id}`)}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary/90">
-                          {inv.name.split(" ").map(n => n[0]).join("")}
-                        </div>
-                        <div>
-                          <div className="font-medium">{inv.name}</div>
-                          <div className="text-xs text-muted-foreground">{inv.email}</div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-semibold">₦{(inv.portfolioValue / 1e6).toFixed(1)}M</TableCell>
-                    <TableCell>{inv.tokens.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary/90">{inv.primaryToken}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="flex items-center text-primary font-medium text-sm">
-                        <ArrowUpRight className="w-3 h-3 mr-0.5" />
-                        {inv.roi}%
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={inv.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}>
-                        {inv.kycStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/investors/${inv._id}`); }}>
-                            <Eye className="mr-2 h-4 w-4" /> View Portfolio
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/kyc`); }}>
-                            <Shield className="mr-2 h-4 w-4" /> KYC Details
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+            <div className="rounded-md border overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Investor</TableHead>
+                    <TableHead>Portfolio Value</TableHead>
+                    <TableHead className="hidden md:table-cell">Tokens</TableHead>
+                    <TableHead className="hidden lg:table-cell">Primary Token</TableHead>
+                    <TableHead className="hidden xl:table-cell">ROI</TableHead>
+                    <TableHead>KYC</TableHead>
+                    <TableHead className="hidden sm:table-cell text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredInvestors.map((inv) => (
+                    <TableRow key={inv._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/investors/${inv._id}`)}>
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-primary/10 flex items-center justify-center text-[10px] sm:text-xs font-semibold text-primary/90 hidden min-[400px]:flex">
+                            {inv.name.split(" ").map(n => n[0]).join("")}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="font-medium text-xs sm:text-sm truncate max-w-[100px] sm:max-w-none">{inv.name}</div>
+                            <div className="text-[10px] text-muted-foreground truncate max-w-[100px] sm:max-w-none">{inv.email}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-semibold text-xs sm:text-sm">₦{(inv.portfolioValue / 1e6).toFixed(1)}M</TableCell>
+                      <TableCell className="hidden md:table-cell">{inv.tokens.toLocaleString()}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary/90">{inv.primaryToken}</Badge>
+                      </TableCell>
+                      <TableCell className="hidden xl:table-cell">
+                        <span className="flex items-center text-primary font-medium text-sm">
+                          <ArrowUpRight className="w-3 h-3 mr-0.5" />
+                          {inv.roi}%
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`text-[9px] px-1.5 py-0 h-4 ${inv.kycStatus === "VERIFIED" ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"}`}>
+                          {inv.kycStatus}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/investors/${inv._id}`); }}>
+                              <Eye className="mr-2 h-4 w-4" /> View Portfolio
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/kyc`); }}>
+                              <Shield className="mr-2 h-4 w-4" /> KYC Details
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
         </CardContent>
       </Card>
     </div>

@@ -52,6 +52,22 @@ export const financeApiSlice = apiSlice.injectEndpoints({
       query: () => "/api/finance/admin/summary",
       providesTags: ["Transactions"],
     }),
+    requestWithdrawal: builder.mutation({
+      query: (data) => ({
+        url: "/api/finance/withdrawal/request",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Transactions", "User"],
+    }),
+    processWithdrawal: builder.mutation({
+      query: (data) => ({
+        url: "/api/finance/admin/withdrawal/process",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Transactions", "User"],
+    }),
   }),
 });
 
@@ -65,4 +81,6 @@ export const {
   useGetAllTransactionsQuery,
   useGetAllTradesQuery,
   useGetFinancialSummaryQuery,
+  useRequestWithdrawalMutation,
+  useProcessWithdrawalMutation,
 } = financeApiSlice;

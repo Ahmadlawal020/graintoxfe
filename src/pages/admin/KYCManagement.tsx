@@ -179,7 +179,7 @@ const KYCManagement = () => {
                   <TableHead className="hidden md:table-cell">Submitted</TableHead>
                   <TableHead className="hidden xl:table-cell">Risk Level</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="hidden sm:table-cell text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -203,11 +203,11 @@ const KYCManagement = () => {
                           <img 
                             src={`https://api.dicebear.com/7.x/notionists/svg?seed=${app.email}`} 
                             alt="avatar" 
-                            className="h-10 w-10 rounded-full border border-primary/20 bg-primary/10" 
+                            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full border border-primary/20 bg-primary/10 hidden min-[400px]:block" 
                           />
-                          <div>
-                            <div className="font-medium text-foreground">{app.title} {app.firstName} {app.lastName}</div>
-                            <div className="text-xs text-muted-foreground">{app.email}</div>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-medium text-foreground truncate">{app.title} {app.firstName} {app.lastName}</div>
+                            <div className="text-[10px] sm:text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]">{app.email}</div>
                           </div>
                         </div>
                       </TableCell>
@@ -224,7 +224,7 @@ const KYCManagement = () => {
                       </TableCell>
                       <TableCell className="hidden xl:table-cell">{riskBadge(getRiskLevel(kycStatus))}</TableCell>
                       <TableCell>{statusBadge(kycStatus)}</TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="hidden sm:table-cell text-right">
                         <Button onClick={(e) => { e.stopPropagation(); navigate(`/kyc/${app._id}`); }} variant="default" size="sm" className="h-8 shadow-sm">
                           Review Details
                         </Button>

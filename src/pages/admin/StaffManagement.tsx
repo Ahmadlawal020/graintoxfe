@@ -80,7 +80,7 @@ const StaffManagement = () => {
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
     
     return matchesSearch && isInternalUser && matchesRole;
-  });
+  }).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const getInitials = (firstName: string, lastName: string) =>
     `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
@@ -185,12 +185,12 @@ const StaffManagement = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Staff & ID</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead className="hidden md:table-cell">Assigned Facility</TableHead>
-                  <TableHead className="hidden lg:table-cell">Contact Info</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden sm:table-cell">Role</TableHead>
+                  <TableHead className="hidden lg:table-cell">Assigned Facility</TableHead>
+                  <TableHead className="hidden xl:table-cell">Contact Info</TableHead>
+                  <TableHead className="hidden md:table-cell">Status</TableHead>
                   <TableHead className="hidden xl:table-cell">Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="hidden sm:table-cell text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -201,14 +201,14 @@ const StaffManagement = () => {
                   let assignment: React.ReactNode = "—";
                   if (role === UserRole.WarehouseManager) {
                     if (assignedWarehouses.length === 0) {
-                      assignment = <span className="text-muted-foreground italic">Unassigned</span>;
+                      assignment = <span className="text-muted-foreground italic text-xs">Unassigned</span>;
                     } else if (assignedWarehouses.length === 1) {
-                      assignment = <Badge variant="outline" className="text-[10px] border-primary/20 bg-primary/10/50 text-primary/90">{assignedWarehouses[0]}</Badge>;
+                      assignment = <Badge variant="outline" className="text-[9px] border-primary/20 bg-primary/10/50 text-primary/90">{assignedWarehouses[0]}</Badge>;
                     } else {
                       assignment = (
                         <div className="flex items-center gap-1">
-                          <Badge variant="outline" className="text-[10px] border-primary/40 bg-primary/10 text-primary/90 font-bold">{assignedWarehouses[0]}</Badge>
-                          <Badge variant="secondary" className="text-[9px] h-4 py-0">+{assignedWarehouses.length - 1}</Badge>
+                          <Badge variant="outline" className="text-[9px] border-primary/40 bg-primary/10 text-primary/90 font-bold truncate max-w-[80px]">{assignedWarehouses[0]}</Badge>
+                          <Badge variant="secondary" className="text-[8px] h-3.5 py-0">+{assignedWarehouses.length - 1}</Badge>
                         </div>
                       );
                     }
@@ -223,23 +223,23 @@ const StaffManagement = () => {
                         <img 
                           src={`https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}`} 
                           alt="avatar" 
-                          className="h-10 w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm"
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary/10 border border-primary/20 shadow-sm hidden min-[400px]:block"
                         />
-                        <div>
-                          <div className="font-medium text-foreground">{user.title} {user.firstName} {user.lastName}</div>
-                          <div className="flex items-center text-xs text-muted-foreground mt-0.5 space-x-2">
-                            <span>{user.email}</span>
-                            <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                            <span className="font-mono text-[10px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-foreground truncate">{user.title} {user.firstName} {user.lastName}</div>
+                          <div className="flex flex-wrap items-center text-[10px] sm:text-xs text-muted-foreground mt-0.5 gap-x-2">
+                            <span className="truncate max-w-[120px] sm:max-w-[200px]">{user.email}</span>
+                            <span className="hidden md:inline w-1 h-1 rounded-full bg-gray-400"></span>
+                            <span className="hidden md:inline-block font-mono text-[9px] uppercase text-primary/90 bg-primary/10 px-1 py-0.5 rounded">{user.userId}</span>
                           </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{roleBadge(role)}</TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden sm:table-cell">{roleBadge(role)}</TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       <div className="text-sm text-muted-foreground">{assignment}</div>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">
+                    <TableCell className="hidden xl:table-cell">
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-muted-foreground text-xs">
                           <Phone className="mr-1.5 h-3 w-3" />
@@ -247,7 +247,7 @@ const StaffManagement = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <Badge variant={user.status === UserStatus.Active ? "default" : "secondary"} className="text-[10px] scale-90 origin-left">
                         {user.status}
                       </Badge>
@@ -255,7 +255,7 @@ const StaffManagement = () => {
                     <TableCell className="hidden xl:table-cell">
                        <span className="text-xs text-muted-foreground">{joinedDate}</span>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="hidden sm:table-cell text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>

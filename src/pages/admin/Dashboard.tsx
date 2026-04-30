@@ -290,7 +290,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{op.message}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(op.time).toLocaleString()}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{new Date(op.time).toLocaleString()}</p>
                   </div>
                   <Badge variant="outline" className={`text-[10px] uppercase tracking-wider ${
                     op.status === 'success' ? 'border-primary/20 text-primary' :

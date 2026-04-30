@@ -77,13 +77,13 @@ const InventoryReports = () => {
 
   return (
     <div className="space-y-6 animate-fade-in p-2">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Inventory Reports</h1>
-          <p className="text-muted-foreground">Generate and download warehouse operational reports</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Inventory Reports</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground">Warehouse operational metrics & analytics</p>
         </div>
-        <Button className="bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" size="sm">
-          <FileText className="mr-2 h-4 w-4" /> Generate Custom Report
+        <Button className="w-full sm:w-auto h-9 text-xs bg-primary/90 hover:bg-primary/90 text-foreground shadow-lg shadow-primary/90/20" size="sm">
+          <FileText className="mr-1.5 h-3.5 w-3.5" /> <span className="sm:inline">Generate Custom Report</span><span className="sm:hidden">Generate Report</span>
         </Button>
       </div>
 
@@ -99,7 +99,7 @@ const InventoryReports = () => {
               <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
               <div className={`p-2 rounded-lg ${stat.bg}`}><stat.icon className={`h-4 w-4 ${stat.color}`} /></div>
             </CardHeader>
-            <CardContent><div className="text-2xl font-bold">{stat.value}</div></CardContent>
+            <CardContent><div className="text-xl sm:text-2xl font-bold">{stat.value}</div></CardContent>
           </Card>
         ))}
       </div>
@@ -132,33 +132,33 @@ const InventoryReports = () => {
           <CardDescription>Download or regenerate warehouse reports</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {reports.map((report) => (
-              <div key={report.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <FileText className="h-5 w-5 text-primary" />
+            <div className="space-y-3">
+              {reports.map((report) => (
+                <div key={report.id} className="flex flex-col xs:flex-row items-start xs:items-center justify-between p-3 sm:p-4 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                      <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium text-xs sm:text-sm truncate">{report.title}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{report.period} · {report.type}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-sm">{report.title}</p>
-                    <p className="text-xs text-muted-foreground">{report.period} · {report.type}</p>
+                  <div className="flex items-center gap-2 sm:gap-3 w-full xs:w-auto justify-between xs:justify-end">
+                    <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 px-1.5">{report.generated}</Badge>
+                    {report.status === "Ready" ? (
+                      <Button variant="outline" size="sm" className="h-8 text-[10px] sm:text-xs px-2 sm:px-3">
+                        <Download className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" /> Download
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" className="h-8 text-[10px] sm:text-xs px-2 sm:px-3" disabled>
+                        Generating...
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="text-[10px]">{report.generated}</Badge>
-                  {report.status === "Ready" ? (
-                    <Button variant="outline" size="sm">
-                      <Download className="mr-1.5 h-3.5 w-3.5" /> Download
-                    </Button>
-                  ) : (
-                    <Button variant="outline" size="sm" disabled>
-                      Generating...
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
         </CardContent>
       </Card>
     </div>

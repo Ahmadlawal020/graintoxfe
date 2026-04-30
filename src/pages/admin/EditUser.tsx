@@ -28,7 +28,7 @@ const EditUser = () => {
     status: "Active",
     kycStatus: "PENDING",
     assignedWarehouse: "",
-    farmLocation: "",
+    address: "",
   });
 
   // Populate form once user data loads
@@ -45,7 +45,7 @@ const EditUser = () => {
         status: user.status || "Active",
         kycStatus: user.kycStatus || "PENDING",
         assignedWarehouse: user.assignedWarehouse || "",
-        farmLocation: user.farmLocation || "",
+        address: user.address || "",
       });
     }
   }, [user]);
@@ -232,8 +232,8 @@ const EditUser = () => {
                 {formData.role === "User" && (
                   <>
                     <div>
-                      <Label htmlFor="farmLocation">Primary Farm Location</Label>
-                      <Input id="farmLocation" name="farmLocation" value={formData.farmLocation} onChange={handleChange} placeholder="e.g. Dawanau, Kano" />
+                      <Label htmlFor="address">User Location / City</Label>
+                      <Input id="address" name="address" value={formData.address} onChange={handleChange} placeholder="e.g. Dawanau, Kano" />
                     </div>
                   </>
                 )}

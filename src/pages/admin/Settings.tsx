@@ -17,15 +17,23 @@ import {
   useGetSettingsQuery,
   useUpdateSettingsMutation,
 } from "@/services/api/settingsApiSlice";
+import { useGetUserByIdQuery, useUpdateUserMutation, useChangePasswordMutation } from "@/services/api/userApiSlice";
+import useAuth from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
+import { User, Lock, Mail, Phone, Loader2, Globe, Eye, EyeOff } from "lucide-react";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { id, firstName, lastName, email } = useAuth();
 
   const { data: settingsData, isLoading, isError } = useGetSettingsQuery(undefined);
   const [updateSettings, { isLoading: isUpdating }] = useUpdateSettingsMutation();
+  const { data: userData } = useGetUserByIdQuery(id || "", { pollingInterval: 30000 });
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
 
+  const [activeMainTab, setActiveMainTab] = useState("platform");
   const [settings, setSettings] = useState({
     tradingFeePercentage: 2.5,
     withdrawalFeePercentage: 1.0,
@@ -34,6 +42,24 @@ const AdminSettings = () => {
     kycRequiredForDeposit: false,
     maintenanceMode: false,
   });
+
+  // Profile States
+  const [profileData, setProfileData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+  });
+
+  // Password States
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -48,7 +74,14 @@ const AdminSettings = () => {
         maintenanceMode: settingsData.maintenanceMode ?? false,
       });
     }
-  }, [settingsData]);
+    if (userData) {
+      setProfileData({
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        phone: userData.phone || "",
+      });
+    }
+  }, [settingsData, userData]);
 
   const saveSettings = async () => {
     try {
@@ -69,36 +102,114 @@ const AdminSettings = () => {
     }
   };
 
+  const handleUpdateProfile = async () => {
+    try {
+      await updateUser({
+        id,
+        email,
+        ...profileData
+      }).unwrap();
+      toast({
+        title: "Profile Updated",
+        description: "Your information has been saved successfully.",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Update Failed",
+        description: err.data?.message || "Failed to update profile",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({
+        title: "Mismatch",
+        description: "New passwords do not match",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await changePassword({
+        id,
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      }).unwrap();
+      
+      toast({
+        title: "Password Changed",
+        description: "Your password has been updated successfully.",
+      });
+      
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.data?.message || "Failed to change password",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) return <div className="p-8 text-center animate-pulse">Loading Platform Configurations...</div>;
   if (isError) return <div className="p-8 text-center text-red-500 font-bold">Failed to load platform settings. DB might be unreachable.</div>;
 
   return (
     <div className="space-y-6 animate-fade-in p-2">
-      <div className="flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
-            <SettingsIcon className="w-8 h-8 text-primary" /> Platform Configuration
+            <SettingsIcon className="w-8 h-8 text-primary" /> Settings
           </h1>
-          <p className="text-muted-foreground mt-1">Manage global parameters, fees, and operational status.</p>
-        </div>
-        <div className="flex gap-2 w-full md:w-auto">
-          {!isEditing ? (
-            <Button onClick={() => setIsEditing(true)} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700">
-              <Edit2 className="w-4 h-4 mr-2" /> Modify Configuration
-            </Button>
-          ) : (
-            <>
-              <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isUpdating}>
-                Cancel
-              </Button>
-              <Button onClick={saveSettings} disabled={isUpdating} className="w-full md:w-auto bg-primary/90 hover:bg-primary/90 shadow-lg shadow-primary/20">
-                <Save className="w-4 h-4 mr-2" />
-                {isUpdating ? "Applying..." : "Save Configuration"}
-              </Button>
-            </>
-          )}
+          <p className="text-muted-foreground mt-1">Manage global parameters and personal account preferences.</p>
         </div>
       </div>
+
+      <div className="flex gap-2 border-b border-border pb-1">
+        <Button 
+          variant={activeMainTab === "platform" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => setActiveMainTab("platform")}
+          className="gap-2"
+        >
+          <Globe className="w-4 h-4" /> Platform Config
+        </Button>
+        <Button 
+          variant={activeMainTab === "personal" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => setActiveMainTab("personal")}
+          className="gap-2"
+        >
+          <User className="w-4 h-4" /> Personal Profile
+        </Button>
+      </div>
+
+      {activeMainTab === "platform" ? (
+        <>
+          <div className="flex justify-end mb-4">
+            {!isEditing ? (
+              <Button onClick={() => setIsEditing(true)} className="bg-blue-600 hover:bg-blue-700">
+                <Edit2 className="w-4 h-4 mr-2" /> Modify Configuration
+              </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isUpdating}>
+                  Cancel
+                </Button>
+                <Button onClick={saveSettings} disabled={isUpdating} className="bg-primary/90 hover:bg-primary/90 shadow-lg shadow-primary/20">
+                  <Save className="w-4 h-4 mr-2" />
+                  {isUpdating ? "Applying..." : "Save Configuration"}
+                </Button>
+              </div>
+            )}
+          </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Financial Settings */}
@@ -204,6 +315,116 @@ const AdminSettings = () => {
           </CardContent>
         </Card>
       </div>
+    </>
+  ) : (
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card className="glass-card shadow-xl border-none">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <User className="w-5 h-5 text-primary" /> Profile Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>First Name</Label>
+                  <Input value={profileData.firstName} onChange={(e) => setProfileData({...profileData, firstName: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Last Name</Label>
+                  <Input value={profileData.lastName} onChange={(e) => setProfileData({...profileData, lastName: e.target.value})} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Email (Read-only)</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input value={email} disabled className="pl-10 bg-muted/30" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Phone Number</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input value={profileData.phone} onChange={(e) => setProfileData({...profileData, phone: e.target.value})} className="pl-10" />
+                </div>
+              </div>
+              <Button onClick={handleUpdateProfile} disabled={isUpdatingUser} className="w-full bg-primary/90 hover:bg-primary !text-foreground font-bold">
+                {isUpdatingUser ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Save Profile
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card shadow-xl border-none">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-red-500" /> Security
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+               <div className="space-y-2">
+                  <Label>Current Password</Label>
+                  <div className="relative">
+                    <Input 
+                      type={showCurrentPassword ? "text" : "password"} 
+                      className="pr-10"
+                      value={passwordData.currentPassword} 
+                      onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})} 
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+               </div>
+               <div className="space-y-2">
+                  <Label>New Password</Label>
+                  <div className="relative">
+                    <Input 
+                      type={showNewPassword ? "text" : "password"} 
+                      className="pr-10"
+                      value={passwordData.newPassword} 
+                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})} 
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                      {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+               </div>
+               <div className="space-y-2">
+                  <Label>Confirm New Password</Label>
+                  <div className="relative">
+                    <Input 
+                      type={showConfirmPassword ? "text" : "password"} 
+                      className="pr-10"
+                      value={passwordData.confirmPassword} 
+                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})} 
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+               </div>
+               <Button onClick={handleChangePassword} disabled={isChangingPassword} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold">
+                  {isChangingPassword ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Update Password
+               </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

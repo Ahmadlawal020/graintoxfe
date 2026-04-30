@@ -16,6 +16,7 @@ import {
   TrendingUp,
   User,
   LogOut,
+  Banknote,
 } from "lucide-react";
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -46,6 +47,7 @@ const adminMenuItems = [
   { title: "Storage Ops", url: "/storage", icon: ClipboardList },
   { title: "Token & Trading", url: "/trading", icon: Coins },
   { title: "Wallet & Finance", url: "/finance", icon: Wallet },
+  { title: "Withdrawals", url: "/withdrawals", icon: Banknote },
   { title: "System Settings", url: "/settings", icon: Settings },
 ];
 
@@ -69,7 +71,7 @@ const userMenuItems = [
 
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -156,6 +158,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <NavLink
                         to={item.url}
+                        onClick={() => setOpenMobile(false)}
                         end={
                           item.url === "/" ||
                           item.url === "/manager" ||

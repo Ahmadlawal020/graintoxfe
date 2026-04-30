@@ -6,3 +6,4 @@ export { default as InventoryReports } from "./InventoryReports";
 export { default as RecordStock } from "./RecordStock";
 export { default as ProcessWithdrawal } from "./ProcessWithdrawal";
 export { default as QCDetails } from "./QCDetails";
+export { default as ManagerSettings } from "./ManagerSettings";

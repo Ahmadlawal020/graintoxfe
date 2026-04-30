@@ -176,7 +176,7 @@ const CropManagement = () => {
                     <TableHead className="uppercase text-[10px] font-bold tracking-widest">Market Price</TableHead>
                     <TableHead className="uppercase text-[10px] font-bold tracking-widest hidden lg:table-cell">Inventory</TableHead>
                     <TableHead className="uppercase text-[10px] font-bold tracking-widest hidden xl:table-cell">Grade</TableHead>
-                    <TableHead className="uppercase text-[10px] font-bold tracking-widest text-right pr-6">Value / Action</TableHead>
+                    <TableHead className="uppercase text-[10px] font-bold tracking-widest text-right pr-6 hidden sm:table-cell">Value / Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -188,14 +188,14 @@ const CropManagement = () => {
                     >
                       <TableCell className="pl-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10 shadow-inner group-hover:bg-primary/20 transition-colors">
-                             <Wheat className="h-5 w-5 text-primary/90" />
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10 shadow-inner group-hover:bg-primary/20 transition-colors hidden min-[400px]:flex">
+                             <Wheat className="h-4 w-4 sm:h-5 sm:w-5 text-primary/90" />
                           </div>
-                          <div>
-                            <div className="font-bold text-base">{crop.name}</div>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold text-sm sm:text-base truncate max-w-[120px] sm:max-w-none">{crop.name}</div>
                             <div className="flex items-center gap-2">
-                               <Badge className="h-4 py-0 text-[9px] bg-primary !text-white border-none">{crop.tokenSymbol}</Badge>
-                               <span className="text-[10px] font-mono text-muted-foreground">{crop.code}</span>
+                               <Badge className="h-3.5 py-0 px-1.5 text-[8px] bg-primary !text-white border-none">{crop.tokenSymbol}</Badge>
+                               <span className="text-[9px] font-mono text-muted-foreground">{crop.code}</span>
                             </div>
                           </div>
                         </div>
@@ -204,9 +204,9 @@ const CropManagement = () => {
                          <Badge variant="outline" className="text-[10px] bg-muted/50 border-none px-2">{crop.category}</Badge>
                       </TableCell>
                       <TableCell>
-                         <div className="font-black text-lg">₦{((crop.pricePerUnit || 0) / 1000).toFixed(0)}K</div>
-                         <div className="flex items-center gap-1 text-[10px] text-primary font-bold">
-                            <TrendingUp className="h-3 w-3" />
+                         <div className="font-black text-sm sm:text-lg">₦{((crop.pricePerUnit || 0) / 1000).toFixed(0)}K</div>
+                         <div className="flex items-center gap-1 text-[9px] sm:text-[10px] text-primary font-bold">
+                            <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                             +2.4%
                          </div>
                       </TableCell>
@@ -225,7 +225,7 @@ const CropManagement = () => {
                              {crop.quality?.split(' ')?.[1] || "A"}
                           </Badge>
                       </TableCell>
-                      <TableCell className="text-right pr-6">
+                      <TableCell className="text-right pr-6 hidden sm:table-cell">
                          <div className="font-bold text-sm">₦{(((crop.totalStock || 0) * (crop.pricePerUnit || 0)) / 1e6).toFixed(1)}M</div>
                          <Button variant="link" size="sm" className="h-auto p-0 text-[10px] text-blue-500">
                             Details

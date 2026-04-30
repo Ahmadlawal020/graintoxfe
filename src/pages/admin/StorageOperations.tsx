@@ -204,25 +204,37 @@ const StorageOperations = () => {
                   <TableHead className="hidden lg:table-cell">Warehouse</TableHead>
                   <TableHead className="hidden xl:table-cell">Investor</TableHead>
                   <TableHead>QC Status</TableHead>
-                  <TableHead className="hidden md:table-cell">Date</TableHead>
+                  <TableHead className="hidden md:table-cell text-right">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredOps.map((op: any) => (
                   <TableRow key={op._id} className="hover:bg-muted/50 transition cursor-pointer" onClick={() => navigate(`/storage/${op._id}`)}>
-                    <TableCell className="font-mono text-xs font-medium text-primary/90">{op.receiptNo}</TableCell>
-                    <TableCell>{typeBadge(op.type)}</TableCell>
+                    <TableCell className="font-mono text-[10px] sm:text-xs font-medium text-primary/90 truncate max-w-[80px] sm:max-w-none">
+                      {op.receiptNo}
+                    </TableCell>
+                    <TableCell>
+                      <div className="scale-90 sm:scale-100 origin-left">
+                        {typeBadge(op.type)}
+                      </div>
+                    </TableCell>
                     <TableCell className="hidden md:table-cell">
                       <div className="flex items-center gap-2">
                         <Wheat className="h-4 w-4 text-primary" />
                         <span className="font-medium">{op.commodity?.name || "Unknown"}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-semibold">{op.quantity} {op.unit}</TableCell>
+                    <TableCell className="font-semibold text-xs sm:text-sm">
+                      {op.quantity} <span className="text-[10px] font-normal text-muted-foreground">{op.unit}</span>
+                    </TableCell>
                     <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate hidden lg:table-cell">{op.warehouse?.name || "N/A"}</TableCell>
                     <TableCell className="text-sm hidden xl:table-cell">{op.investor}</TableCell>
-                    <TableCell>{qcBadge(op.qcStatus)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
+                    <TableCell>
+                      <div className="scale-90 sm:scale-100 origin-left">
+                        {qcBadge(op.qcStatus)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell text-right">
                       {new Date(op.timestamp).toLocaleDateString("en-NG", {
                         day: "numeric", month: "short",
                       })}
