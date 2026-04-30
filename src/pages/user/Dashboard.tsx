@@ -144,14 +144,14 @@ const UserDashboard = () => {
       {/* Stats - scrollable on very small screens */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
         {stats.map((stat, i) => (
-          <Card key={i} className="glass-card overflow-hidden group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-2 sm:p-4">
-              <CardTitle className="text-[9px] sm:text-sm font-medium leading-tight truncate">{stat.title}</CardTitle>
-              <div className={`p-1 sm:p-2 rounded-lg ${stat.bg} shrink-0`}><stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`} /></div>
+          <Card key={i} className="glass-card overflow-hidden group border-none sm:border">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-1.5 sm:p-4">
+              <CardTitle className="text-[8px] sm:text-sm font-medium leading-tight truncate">{stat.title}</CardTitle>
+              <div className={`p-1 sm:p-2 rounded-lg ${stat.bg} shrink-0`}><stat.icon className={`h-2.5 w-2.5 sm:h-4 sm:w-4 ${stat.color}`} /></div>
             </CardHeader>
-            <CardContent className="p-2 sm:p-4 pt-0">
-              <div className="text-sm sm:text-2xl font-bold truncate">{stat.value}</div>
-              <div className="text-[8px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 truncate">{stat.sub}</div>
+            <CardContent className="p-1.5 sm:p-4 pt-0">
+              <div className="text-[12px] sm:text-2xl font-bold truncate">{stat.value}</div>
+              <div className="text-[7px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 truncate">{stat.sub}</div>
             </CardContent>
           </Card>
         ))}

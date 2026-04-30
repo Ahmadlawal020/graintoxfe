@@ -105,7 +105,7 @@ const Wallet = () => {
       type: "Wallet_Topup",
     },
     text: loading ? "Processing..." : "Paystack Deposit",
-    className: "paystack-deposit-btn inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 sm:h-10 px-4 py-2",
+    className: "paystack-deposit-btn w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 sm:h-10 px-4 py-2",
     onSuccess: async (reference: any) => {
       const ref = reference.reference || reference.trxref || reference;
       console.log("[Wallet] Paystack onSuccess. Reference:", ref);
@@ -184,21 +184,21 @@ const Wallet = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="p-1 sm:p-6 space-y-2 sm:space-y-6 max-w-6xl mx-auto overflow-hidden">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Finance & Wallet</h1>
-          <p className="text-muted-foreground">Manage your funds and track your trading history.</p>
+          <h1 className="text-base sm:text-3xl font-bold tracking-tight leading-tight">Finance & Wallet</h1>
+          <p className="text-[8px] sm:text-sm text-muted-foreground leading-tight">Manage your funds and track your trading history.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-6">
         {/* Balance Card */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-2 sm:space-y-6">
           <Card className="bg-primary/5 border-primary/20 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-primary/70 font-medium">Available Balance</CardDescription>
-              <CardTitle className="text-4xl font-bold flex items-center gap-2">
+            <CardHeader className="p-2.5 sm:p-6 pb-1.5">
+              <CardDescription className="text-primary/70 font-medium text-[8px] sm:text-sm uppercase tracking-tighter sm:tracking-normal">Available Balance</CardDescription>
+              <CardTitle className="text-lg sm:text-4xl font-bold flex flex-wrap items-center gap-1 sm:gap-2 break-all sm:break-normal">
                 ₦{userData?.walletBalance?.toLocaleString() || "0.00"}
               </CardTitle>
             </CardHeader>
@@ -217,53 +217,53 @@ const Wallet = () => {
                    Saved Bank Details
                 </CardTitle>
              </CardHeader>
-             <CardContent className="space-y-4">
+              <CardContent className="space-y-3 p-3 sm:p-6">
                 {userData?.bankAccount?.accountNumber ? (
-                  <div className="space-y-2">
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                       <p className="text-[10px] text-muted-foreground uppercase font-black">Bank</p>
-                       <p className="text-sm font-bold">{userData.bankAccount.bankName}</p>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="p-2 bg-muted/30 rounded-lg">
+                       <p className="text-[7px] text-muted-foreground uppercase font-black">Bank</p>
+                       <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.bankName}</p>
                     </div>
-                    <div className="p-3 bg-muted/30 rounded-lg">
-                       <p className="text-[10px] text-muted-foreground uppercase font-black">Account</p>
-                       <p className="text-sm font-bold">{userData.bankAccount.accountNumber}</p>
+                    <div className="p-2 bg-muted/30 rounded-lg">
+                       <p className="text-[7px] text-muted-foreground uppercase font-black">Account</p>
+                       <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.accountNumber}</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-muted-foreground italic">No bank account saved. Fill the withdrawal form to save.</p>
+                  <p className="text-[10px] text-muted-foreground italic">No bank account saved. Fill withdrawal form to save.</p>
                 )}
-             </CardContent>
+              </CardContent>
           </Card>
         </div>
 
         {/* Finance Actions Tabs */}
         <Card className="lg:col-span-2 shadow-xl border-none glass-card">
           <Tabs defaultValue="deposit" className="w-full">
-            <div className="px-6 pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/50 pb-4">
-               <div>
-                  <CardTitle className="text-xl">Financial Actions</CardTitle>
-                  <CardDescription>Deposit funds or request a withdrawal.</CardDescription>
+            <div className="px-2 sm:px-6 pt-2 sm:pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 border-b border-border/50 pb-2 sm:pb-4">
+               <div className="min-w-0 pr-2">
+                  <CardTitle className="text-xs sm:text-xl leading-tight">Financial Actions</CardTitle>
+                  <CardDescription className="text-[8px] sm:text-sm leading-tight">Deposit or withdraw funds.</CardDescription>
                </div>
-               <TabsList className="bg-muted/50 p-1">
-                 <TabsTrigger value="deposit" className="flex items-center gap-2">
-                    <ArrowUpCircle className="w-4 h-4" /> Deposit
+               <TabsList className="bg-muted/50 p-0.5 w-full sm:w-auto h-8 sm:h-10">
+                 <TabsTrigger value="deposit" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                    <ArrowUpCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Deposit
                  </TabsTrigger>
-                 <TabsTrigger value="withdraw" className="flex items-center gap-2">
-                    <ArrowDownCircle className="w-4 h-4" /> Withdraw
+                 <TabsTrigger value="withdraw" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                    <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Withdraw
                  </TabsTrigger>
                </TabsList>
             </div>
 
-            <TabsContent value="deposit" className="p-6 mt-0">
-               <div className="space-y-6">
-                <div className="flex flex-col gap-4">
+            <TabsContent value="deposit" className="p-2 sm:p-6 mt-0">
+               <div className="space-y-3 sm:space-y-6">
+                <div className="flex flex-col gap-2 sm:gap-4">
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₦</span>
                       <Input
                         type="number"
-                        placeholder="Enter amount (min ₦100)"
-                        className="pl-8 h-12 bg-muted/30 border-none font-bold"
+                        placeholder="Min ₦100"
+                        className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-base"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         disabled={loading}
@@ -273,7 +273,7 @@ const Wallet = () => {
                     {isValidAmount ? (
                       <PaystackButton {...paystackProps} />
                     ) : (
-                      <Button disabled className="h-12 px-8">
+                      <Button disabled className="h-10 sm:h-12 px-4 sm:px-8">
                         Paystack Deposit
                       </Button>
                     )}
@@ -285,7 +285,7 @@ const Wallet = () => {
                   </div>
                   <Button
                     variant="outline"
-                    className="w-full h-12 border-dashed border-primary/40 hover:bg-primary/5 text-primary font-bold"
+                    className="w-full h-10 sm:h-12 border-dashed border-primary/40 hover:bg-primary/5 text-primary font-bold text-xs sm:text-sm"
                     onClick={handleInstantDeposit}
                     disabled={loading || !amount}
                   >
@@ -300,9 +300,9 @@ const Wallet = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="withdraw" className="p-6 mt-0">
-               <form onSubmit={handleRequestWithdrawal} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <TabsContent value="withdraw" className="p-2 sm:p-6 mt-0">
+               <form onSubmit={handleRequestWithdrawal} className="space-y-3 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                      <div className="space-y-2 sm:col-span-2">
                         <Label className="text-xs font-black uppercase text-muted-foreground">Withdrawal Amount</Label>
                         <div className="relative">
@@ -310,7 +310,7 @@ const Wallet = () => {
                            <Input
                              type="number"
                              placeholder="0.00"
-                             className="pl-8 h-12 bg-muted/30 border-none font-bold text-lg"
+                             className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-base sm:text-lg"
                              value={withdrawAmount}
                              onChange={(e) => setWithdrawAmount(e.target.value)}
                              disabled={loading}
@@ -322,7 +322,7 @@ const Wallet = () => {
                         <Label className="text-xs font-black uppercase text-muted-foreground">Bank Name</Label>
                         <Input
                           placeholder="e.g. Zenith Bank"
-                          className="h-12 bg-muted/30 border-none font-bold"
+                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.bankName}
                           onChange={(e) => setBankDetails({...bankDetails, bankName: e.target.value})}
                           disabled={loading}
@@ -332,7 +332,7 @@ const Wallet = () => {
                         <Label className="text-xs font-black uppercase text-muted-foreground">Account Number</Label>
                         <Input
                           placeholder="10 Digits"
-                          className="h-12 bg-muted/30 border-none font-bold"
+                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.accountNumber}
                           onChange={(e) => setBankDetails({...bankDetails, accountNumber: e.target.value})}
                           disabled={loading}
@@ -342,7 +342,7 @@ const Wallet = () => {
                         <Label className="text-xs font-black uppercase text-muted-foreground">Account Name</Label>
                         <Input
                           placeholder="Beneficiary Name"
-                          className="h-12 bg-muted/30 border-none font-bold"
+                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.accountName}
                           onChange={(e) => setBankDetails({...bankDetails, accountName: e.target.value})}
                           disabled={loading}
@@ -351,10 +351,10 @@ const Wallet = () => {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-12 font-black uppercase tracking-widest"
+                    className="w-full h-10 sm:h-12 font-black uppercase tracking-widest text-xs sm:text-sm"
                     disabled={loading || !withdrawAmount || parseFloat(withdrawAmount) > (userData?.walletBalance || 0)}
                   >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ArrowDownCircle className="w-4 h-4 mr-2" />}
+                    {loading ? <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-2" /> : <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />}
                     Request Payout
                   </Button>
                </form>
@@ -365,52 +365,43 @@ const Wallet = () => {
 
       {/* Transaction History */}
       <Card>
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <CardHeader className="p-3 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center justify-between w-full sm:w-auto">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <History className="w-5 h-5" />
-                Recent Transactions
+            <div className="min-w-0 pr-2">
+              <CardTitle className="flex items-center gap-2 text-xs sm:text-xl leading-tight">
+                <History className="w-3.5 h-3.5 sm:w-5 sm:h-5 shrink-0" />
+                Transactions
               </CardTitle>
-              <CardDescription>A history of your deposits, trades, and withdrawals.</CardDescription>
+              <CardDescription className="text-[9px] sm:text-sm leading-tight">Activity history.</CardDescription>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="sm:hidden h-8 w-8 text-muted-foreground"
-              onClick={() => txRefetch()}
-              disabled={txLoading}
-            >
-              <RefreshCw className={`w-4 h-4 ${txLoading ? "animate-spin" : ""}`} />
-            </Button>
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1">
+          <div className="flex flex-col gap-1.5 sm:gap-2 w-full sm:w-auto">
              <Button 
                 variant="outline" 
                 size="sm" 
-                className="hidden sm:flex h-8 text-[10px] font-black uppercase tracking-widest px-3 mr-2"
+                className="h-7 sm:h-8 text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2 sm:px-3 w-full sm:w-auto"
                 onClick={() => txRefetch()}
                 disabled={txLoading}
               >
-                <RefreshCw className={`w-3.5 h-3.5 mr-2 ${txLoading ? "animate-spin" : ""}`} />
+                <RefreshCw className={`w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2 ${txLoading ? "animate-spin" : ""}`} />
                 Refresh
              </Button>
-             <div className="flex gap-2">
+             <div className="grid grid-cols-2 sm:flex gap-1 sm:gap-2">
                {["all", "Deposit", "Withdrawal", "Trade"].map((f) => (
                   <Button 
                     key={f}
                     variant={filter === f ? "default" : "outline"}
                     size="sm"
                     onClick={() => setFilter(f)}
-                    className="h-8 text-[10px] font-black uppercase tracking-widest px-4 shrink-0"
+                    className="h-6 sm:h-8 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest px-1.5 sm:px-4"
                   >
-                     {f === "all" ? "All Activity" : f === "Trade" ? "Trades" : f === "Deposit" ? "Deposits" : "Withdrawals"}
+                     {f === "all" ? "All" : f === "Trade" ? "Trades" : f === "Deposit" ? "Deposits" : "Payouts"}
                   </Button>
                ))}
              </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-2 sm:p-6 pt-0">
           {/* Desktop Table View */}
           <div className="hidden md:block">
             <Table>
@@ -504,29 +495,29 @@ const Wallet = () => {
                 if (filter === "Deposit") return t.type === "Wallet_Topup" || t.type === "Deposit";
                 return t.type === filter;
               }).map((tx: any) => (
-                <div key={tx._id} className="p-4 border rounded-xl space-y-3 bg-card/50">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-bold text-sm">{tx.description || tx.type}</p>
-                      <p className="text-xs text-muted-foreground">
+                <div key={tx._id} className="p-1.5 sm:p-3 border rounded-lg space-y-1.5 bg-card/50">
+                  <div className="flex justify-between items-start gap-1">
+                    <div className="min-w-0">
+                      <p className="font-bold text-[10px] sm:text-sm truncate">{tx.description || tx.type}</p>
+                      <p className="text-[8px] sm:text-xs text-muted-foreground">
                         {format(new Date(tx.createdAt), "MMM dd, HH:mm")}
                       </p>
                     </div>
                     <Badge
-                      className={
+                      className={`text-[9px] h-5 px-1.5 shrink-0 ${
                         tx.status === "Completed" ? "bg-green-100 text-green-700 hover:bg-green-100" :
                           tx.status === "Pending" ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100" :
                             "bg-red-100 text-red-700 hover:bg-red-100"
-                      }
+                      }`}
                     >
                       {tx.status}
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center pt-2 border-t border-dashed">
-                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wider h-5">
+                    <Badge variant="secondary" className="text-[8px] uppercase tracking-wider h-4 px-1">
                       {tx.type.replace("_", " ")}
                     </Badge>
-                    <p className={`text-lg font-bold ${
+                    <p className={`text-xs sm:text-base font-bold shrink-0 ${
                       tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell" 
                         ? "text-green-600" 
                         : "text-red-600"

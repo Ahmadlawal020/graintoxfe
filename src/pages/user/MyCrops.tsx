@@ -55,14 +55,14 @@ const MyCrops = () => {
           </h1>
           <p className="text-[10px] sm:text-sm text-muted-foreground font-medium truncate">Portfolio valuation & asset tracking.</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-4 bg-card border border-border/50 p-3 sm:p-4 rounded-xl sm:rounded-[2rem] shadow-xl shadow-black/5 w-full lg:w-auto overflow-hidden">
+        <div className="flex items-center gap-2 sm:gap-4 bg-card border border-border/50 p-2 sm:p-4 rounded-xl sm:rounded-[2rem] shadow-xl shadow-black/5 w-full lg:w-auto overflow-hidden">
           <div className="flex-1 sm:flex-none text-right border-r border-border/50 pr-2 sm:pr-4 min-w-0">
-            <p className="text-[8px] sm:text-[10px] font-black uppercase text-muted-foreground tracking-widest truncate">Total Value</p>
-            <p className="text-sm sm:text-2xl font-black font-mono text-primary truncate">₦{portfolioSummary.totalValue.toLocaleString()}</p>
+            <p className="text-[7px] sm:text-[10px] font-black uppercase text-muted-foreground tracking-widest truncate">Total Value</p>
+            <p className="text-[12px] sm:text-2xl font-black font-mono text-primary truncate">₦{portfolioSummary.totalValue.toLocaleString()}</p>
           </div>
           <div className="flex-1 sm:flex-none text-right min-w-0">
-            <p className="text-[8px] sm:text-[10px] font-black uppercase text-muted-foreground tracking-widest truncate">Net Profit</p>
-            <p className={`text-[10px] sm:text-sm font-black font-mono truncate ${portfolioSummary.totalProfit >= 0 ? 'text-primary' : 'text-red-500'}`}>
+            <p className="text-[7px] sm:text-[10px] font-black uppercase text-muted-foreground tracking-widest truncate">Net Profit</p>
+            <p className={`text-[9px] sm:text-sm font-black font-mono truncate ${portfolioSummary.totalProfit >= 0 ? 'text-primary' : 'text-red-500'}`}>
               {portfolioSummary.totalProfit >= 0 ? '+' : ''}₦{portfolioSummary.totalProfit.toLocaleString()}
             </p>
           </div>
@@ -126,15 +126,15 @@ const MyCrops = () => {
                   </CardTitle>
                 </CardHeader>
                 
-                <CardContent className="p-4 sm:p-6 pt-4 sm:pt-6 space-y-4 sm:space-y-6">
+                <CardContent className="p-3 sm:p-6 pt-3 sm:pt-6 space-y-3 sm:space-y-6">
                   <div className="grid grid-cols-2 gap-2 sm:gap-6">
                     <div className="space-y-0.5 sm:space-y-1 min-w-0">
-                      <span className="text-[8px] sm:text-[10px] uppercase font-black text-muted-foreground tracking-wider truncate block">Asset Valuation</span>
-                      <p className="text-xs sm:text-xl font-black font-mono text-foreground truncate">₦{totalValue.toLocaleString()}</p>
+                      <span className="text-[7px] sm:text-[10px] uppercase font-black text-muted-foreground tracking-wider truncate block">Valuation</span>
+                      <p className="text-[11px] sm:text-xl font-black font-mono text-foreground truncate">₦{totalValue.toLocaleString()}</p>
                     </div>
                     <div className="space-y-0.5 sm:space-y-1 text-right min-w-0">
-                      <span className="text-[8px] sm:text-[10px] uppercase font-black text-muted-foreground tracking-wider truncate block">Market Price</span>
-                      <p className="text-xs sm:text-xl font-black font-mono text-primary truncate">₦{currentPrice.toLocaleString()}</p>
+                      <span className="text-[7px] sm:text-[10px] uppercase font-black text-muted-foreground tracking-wider truncate block">Market Price</span>
+                      <p className="text-[11px] sm:text-xl font-black font-mono text-primary truncate">₦{currentPrice.toLocaleString()}</p>
                     </div>
                   </div>
                   
