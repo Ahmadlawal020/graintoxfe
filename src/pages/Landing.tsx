@@ -16,7 +16,6 @@ import {
   BarChart3,
   LineChart,
   Zap,
-  Lock,
   Globe2,
   Mail
 } from "lucide-react";
@@ -245,14 +244,6 @@ const LandingPage = () => {
             <div className="flex items-center gap-10">
               <a href="#" className="text-muted-foreground hover:text-foreground text-xs font-bold transition-colors">Privacy</a>
               <a href="#" className="text-muted-foreground hover:text-foreground text-xs font-bold transition-colors">Terms</a>
-              <div className="w-[1px] h-4 bg-accent" />
-              {/* Requested Admin Login Link */}
-              <button
-                onClick={() => navigate("/admin/login")}
-                className="text-primary hover:text-primary/80 text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:opacity-70 flex items-center gap-2"
-              >
-                <Lock className="w-3 h-3" /> Admin Login
-              </button>
             </div>
           </div>
         </div>

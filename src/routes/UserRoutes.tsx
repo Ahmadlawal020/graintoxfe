@@ -7,6 +7,8 @@ import Wallet from "@/pages/shared/Wallet";
 import UserSettings from "@/pages/shared/UserSettings";
 import MyCrops from "@/pages/user/MyCrops";
 import CropDetails from "@/pages/user/CropDetails";
+import StorageRequest from "@/pages/user/StorageRequest";
+import StorageDetails from "@/pages/user/StorageDetails";
 
 const userRoutes = (
   <>
@@ -14,6 +16,8 @@ const userRoutes = (
     <Route path="/user/market" element={<Market />} />
     <Route path="/user/portfolio" element={<Portfolio />} />
     <Route path="/user/storage" element={<Storage />} />
+    <Route path="/user/storage/request" element={<StorageRequest />} />
+    <Route path="/user/storage/:id" element={<StorageDetails />} />
     <Route path="/user/wallet" element={<Wallet />} />
     <Route path="/user/settings" element={<UserSettings />} />
     <Route path="/user/crops" element={<MyCrops />} />

@@ -9,14 +9,7 @@ export const financeApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    instantDeposit: builder.mutation({
-      query: (data) => ({
-        url: "/api/finance/deposit/instant",
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["Transactions", "User"],
-    }),
+
     executeTrade: builder.mutation({
       query: (data) => ({
         url: "/api/finance/trade",
@@ -73,7 +66,6 @@ export const financeApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useInitializeDepositMutation,
-  useInstantDepositMutation,
   useExecuteTradeMutation,
   useVerifyDepositMutation,
   useGetUserTransactionsQuery,

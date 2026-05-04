@@ -7,7 +7,6 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { 
   useInitializeDepositMutation, 
-  useInstantDepositMutation, 
   useGetUserTransactionsQuery, 
   useVerifyDepositMutation,
   useRequestWithdrawalMutation 
@@ -17,17 +16,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Button } from "../../components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { Badge } from "../../components/ui/badge";
-import { Wallet as WalletIcon, ArrowUpCircle, ArrowDownCircle, History, Loader2, Building2, RefreshCw } from "lucide-react";
+import { Wallet as WalletIcon, ArrowUpCircle, ArrowDownCircle, History, Loader2, Building2, RefreshCw, ShieldAlert } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 
 const Wallet = () => {
   const user = useSelector(selectCurrentUser);
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(user?.id || "");
   const { data: transactions, isLoading: txLoading, refetch: txRefetch } = useGetUserTransactionsQuery(undefined);
-  const [instantDeposit] = useInstantDepositMutation();
   const [verifyDeposit] = useVerifyDepositMutation();
   const [requestWithdrawal] = useRequestWithdrawalMutation();
 
@@ -41,6 +40,7 @@ const Wallet = () => {
   const [loading, setLoading] = useState(false);
   const [verifyingRef, setVerifyingRef] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("all");
+  const isKycVerified = userData?.kycStatus === "VERIFIED";
 
   // Sync bank details when userData loads
   useEffect(() => {
@@ -161,27 +161,7 @@ const Wallet = () => {
     }
   };
 
-  const handleInstantDeposit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!amount || parseFloat(amount) <= 0) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
 
-    setLoading(true);
-    try {
-      console.log("[Wallet] Initiating instant deposit for amount:", amount);
-      const result = await instantDeposit({ amount: parseFloat(amount) }).unwrap();
-      console.log("[Wallet] Instant deposit result:", result);
-      toast.success("Instant deposit successful!");
-      setAmount("");
-    } catch (error: any) {
-      console.error("[Wallet] Instant deposit error:", error);
-      toast.error(error.data?.message || "Failed to process instant deposit");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="p-1 sm:p-6 space-y-2 sm:space-y-6 max-w-6xl mx-auto overflow-hidden">
@@ -256,21 +236,32 @@ const Wallet = () => {
 
             <TabsContent value="deposit" className="p-2 sm:p-6 mt-0">
                <div className="space-y-3 sm:space-y-6">
+                {!isKycVerified && !userLoading && (
+                  <Alert variant="destructive" className="bg-destructive/5 border-destructive/20 mb-4">
+                    <ShieldAlert className="h-4 w-4" />
+                    <AlertTitle className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">KYC Verification Required</AlertTitle>
+                    <AlertDescription className="text-[10px] sm:text-sm">
+                      You must complete your KYC verification to enable deposits and withdrawals. 
+                      Please visit your profile to submit your documents.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
                 <div className="flex flex-col gap-2 sm:gap-4">
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₦</span>
                       <Input
                         type="number"
-                        placeholder="Min ₦100"
+                        placeholder={isKycVerified ? "Min ₦100" : "Verification Required"}
                         className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-base"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        disabled={loading}
+                        disabled={loading || !isKycVerified}
                         min="100"
                       />
                     </div>
-                    {isValidAmount ? (
+                    {isValidAmount && isKycVerified ? (
                       <PaystackButton {...paystackProps} />
                     ) : (
                       <Button disabled className="h-10 sm:h-12 px-4 sm:px-8">
@@ -278,21 +269,6 @@ const Wallet = () => {
                       </Button>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 py-2">
-                    <div className="h-[1px] flex-1 bg-border"></div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Sandbox Mode</span>
-                    <div className="h-[1px] flex-1 bg-border"></div>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="w-full h-10 sm:h-12 border-dashed border-primary/40 hover:bg-primary/5 text-primary font-bold text-xs sm:text-sm"
-                    onClick={handleInstantDeposit}
-                    disabled={loading || !amount}
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    <ArrowUpCircle className="w-4 h-4 mr-2" />
-                    Instant Demo Deposit
-                  </Button>
                 </div>
                 <p className="text-[10px] text-muted-foreground italic text-center">
                   Payments are secure and processed instantly via Paystack.
@@ -301,6 +277,16 @@ const Wallet = () => {
             </TabsContent>
 
             <TabsContent value="withdraw" className="p-2 sm:p-6 mt-0">
+               {!isKycVerified && !userLoading && (
+                  <Alert variant="destructive" className="bg-destructive/5 border-destructive/20 mb-6">
+                    <ShieldAlert className="h-4 w-4" />
+                    <AlertTitle className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">KYC Verification Required</AlertTitle>
+                    <AlertDescription className="text-[10px] sm:text-sm">
+                      You must complete your KYC verification to enable withdrawals. 
+                      Please visit your profile to submit your documents.
+                    </AlertDescription>
+                  </Alert>
+                )}
                <form onSubmit={handleRequestWithdrawal} className="space-y-3 sm:space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                      <div className="space-y-2 sm:col-span-2">
@@ -313,7 +299,7 @@ const Wallet = () => {
                              className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-base sm:text-lg"
                              value={withdrawAmount}
                              onChange={(e) => setWithdrawAmount(e.target.value)}
-                             disabled={loading}
+                             disabled={loading || !isKycVerified}
                            />
                         </div>
                         <p className="text-[10px] text-muted-foreground font-medium">Max: ₦{userData?.walletBalance?.toLocaleString()}</p>
@@ -325,7 +311,7 @@ const Wallet = () => {
                           className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.bankName}
                           onChange={(e) => setBankDetails({...bankDetails, bankName: e.target.value})}
-                          disabled={loading}
+                          disabled={loading || !isKycVerified}
                         />
                      </div>
                      <div className="space-y-2">
@@ -335,7 +321,7 @@ const Wallet = () => {
                           className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.accountNumber}
                           onChange={(e) => setBankDetails({...bankDetails, accountNumber: e.target.value})}
-                          disabled={loading}
+                          disabled={loading || !isKycVerified}
                         />
                      </div>
                      <div className="space-y-2 sm:col-span-2">
@@ -345,14 +331,14 @@ const Wallet = () => {
                           className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
                           value={bankDetails.accountName}
                           onChange={(e) => setBankDetails({...bankDetails, accountName: e.target.value})}
-                          disabled={loading}
+                          disabled={loading || !isKycVerified}
                         />
                      </div>
                   </div>
                   <Button
                     type="submit"
                     className="w-full h-10 sm:h-12 font-black uppercase tracking-widest text-xs sm:text-sm"
-                    disabled={loading || !withdrawAmount || parseFloat(withdrawAmount) > (userData?.walletBalance || 0)}
+                    disabled={loading || !isKycVerified || !withdrawAmount || parseFloat(withdrawAmount) > (userData?.walletBalance || 0)}
                   >
                     {loading ? <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-2" /> : <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />}
                     Request Payout

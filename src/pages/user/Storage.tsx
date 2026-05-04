@@ -3,62 +3,20 @@ import { Wheat, Plus, ArrowLeft, History, Building2, ShieldCheck, Clock, Package
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
-import { useGetStorageOperationsQuery, useCreateStorageOperationMutation } from "@/services/api/storageApiSlice";
+import { useGetStorageOperationsQuery } from "@/services/api/storageApiSlice";
 import { useGetCropsQuery } from "@/services/api/cropApiSlice";
 import { useGetWarehousesQuery } from "@/services/api/warehouseApiSlice";
+import { useGetUserByIdQuery } from "@/services/api/userApiSlice";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import useAuth from "@/hooks/useAuth";
 
 const Storage = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { firstName, lastName } = useAuth();
-  const [isRequesting, setIsRequesting] = useState(false);
-
+  const { id, firstName, lastName } = useAuth();
   const { data: crops = [] } = useGetCropsQuery(undefined, { pollingInterval: 60000 });
   const { data: warehouses = [] } = useGetWarehousesQuery(undefined, { pollingInterval: 60000 });
+  const { data: userData } = useGetUserByIdQuery(id || "");
   const { data: operations = [], isLoading: isOpsLoading } = useGetStorageOperationsQuery(undefined, { pollingInterval: 15000 });
-  const [createRequest, { isLoading: isSubmitting }] = useCreateStorageOperationMutation();
-
-  const [formData, setFormData] = useState({
-    type: "DEPOSIT",
-    commodity: "",
-    quantity: "",
-    warehouse: "",
-    deliveryMethod: "DROP_OFF",
-    receiptNo: `RQ-${Math.floor(1000 + Math.random() * 9000)}`,
-    notes: ""
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.commodity || !formData.warehouse || !formData.quantity) {
-      toast({ title: "Error", description: "Please fill all required fields", variant: "destructive" });
-      return;
-    }
-
-    try {
-      await createRequest({
-        ...formData,
-        quantity: Number(formData.quantity)
-      }).unwrap();
-      toast({ title: "Request Submitted", description: "Your storage request has been sent for review." });
-      setIsRequesting(false);
-    } catch (error: any) {
-      toast({ title: "Error", description: error?.data?.message || "Failed to submit request", variant: "destructive" });
-    }
-  };
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-fade-in p-1 sm:p-2">
@@ -76,111 +34,13 @@ const Storage = () => {
           </p>
         </div>
         <Button 
-          onClick={() => setIsRequesting(true)} 
+          onClick={() => navigate("/user/storage/request")} 
           className="bg-primary/90 hover:bg-primary/90 !text-white shadow-lg shadow-primary/90/20 w-full sm:w-auto"
           size="sm"
         >
           <Plus className="w-3.5 h-3.5 mr-1.5" /> New Deposit
         </Button>
       </header>
-
-      {/* New Request Dialog */}
-      <Dialog open={isRequesting} onOpenChange={setIsRequesting}>
-        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-none shadow-2xl">
-          <DialogHeader className="p-6 bg-primary/90 text-white space-y-1">
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <Package className="w-5 h-5" /> Request Storage Space
-            </DialogTitle>
-            <DialogDescription className="text-white/80 text-xs">
-              Fill in the details of the commodities you wish to deposit.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-background">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Commodity Type</Label>
-                <Select onValueChange={(v) => setFormData({...formData, commodity: v})}>
-                  <SelectTrigger className="h-11 border-primary/20 focus:ring-primary/30">
-                    <SelectValue placeholder="Select crop" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {crops.map((crop: any) => (
-                      <SelectItem key={crop._id} value={crop._id}>{crop.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Quantity (kg)</Label>
-                <Input 
-                  type="number" 
-                  placeholder="e.g. 50" 
-                  value={formData.quantity} 
-                  onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-                  className="h-11 border-primary/20 focus:ring-primary/30"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Target Warehouse</Label>
-                <Select onValueChange={(v) => setFormData({...formData, warehouse: v})}>
-                  <SelectTrigger className="h-11 border-primary/20 focus:ring-primary/30">
-                    <SelectValue placeholder="Select facility" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {warehouses.map((wh: any) => (
-                      <SelectItem key={wh._id} value={wh._id}>{wh.name} ({wh.location})</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Delivery Method</Label>
-                <Select onValueChange={(v) => setFormData({...formData, deliveryMethod: v})}>
-                  <SelectTrigger className="h-11 border-primary/20 focus:ring-primary/30">
-                    <SelectValue placeholder="Select method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DROP_OFF">Drop-off (I'll bring it)</SelectItem>
-                    <SelectItem value="PICK_UP">Request Pickup</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Additional Notes (Optional)</Label>
-              <Input 
-                placeholder="e.g. Crop variety, moisture level..." 
-                value={formData.notes} 
-                onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                className="h-11 border-primary/20 focus:ring-primary/30"
-              />
-            </div>
-
-            <div className="flex gap-3 pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => setIsRequesting(false)} 
-                className="flex-1 h-11 border-primary/20 text-primary hover:bg-primary/5"
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit" 
-                disabled={isSubmitting} 
-                className="flex-1 h-11 bg-primary/90 hover:bg-primary !text-white shadow-lg shadow-primary/20"
-              >
-                {isSubmitting ? "Submitting..." : "Submit Request"}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       <div className="space-y-4 sm:space-y-6">
         {/* Active Holdings */}
@@ -239,7 +99,11 @@ const Storage = () => {
                 <tbody className="divide-y divide-muted">
                   {operations.length > 0 ? (
                     operations.slice(0, 5).map((op: any) => (
-                      <tr key={op._id} className="hover:bg-muted/50 transition-colors">
+                      <tr 
+                      key={op._id} 
+                      className="hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => navigate(`/user/storage/${op._id}`)}
+                    >
                         <td className="px-4 lg:px-6 py-3 font-medium">{op.commodity?.name}</td>
                         <td className="px-4 lg:px-6 py-3">{op.warehouse?.name}</td>
                         <td className="px-4 lg:px-6 py-3">{op.quantity} kg</td>
@@ -278,7 +142,11 @@ const Storage = () => {
           <CardContent className="p-2 sm:p-4 lg:p-6 pt-0">
             <div className="space-y-2 sm:space-y-3">
               {operations.map((op: any) => (
-                <div key={op._id} className="flex flex-col p-3 sm:p-4 rounded-xl border border-muted hover:bg-muted/10 transition-all gap-3">
+                <div 
+                  key={op._id} 
+                  className="flex flex-col p-3 sm:p-4 rounded-xl border border-muted hover:bg-muted/10 transition-all gap-3 cursor-pointer"
+                  onClick={() => navigate(`/user/storage/${op._id}`)}
+                >
                   <div className="flex items-center justify-between w-full gap-3">
                     <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
                       <div className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${op.type === 'DEPOSIT' ? 'bg-primary/20 text-primary/90' : 'bg-blue-100 text-blue-700'}`}>
@@ -298,21 +166,20 @@ const Storage = () => {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-[9px] sm:text-[10px] ${
-                          op.status === 'REJECTED' ? 'bg-red-500/10 text-red-600' :
-                          op.status === 'PENDING' ? 'bg-amber-500/10 text-amber-600' :
-                          op.status === 'APPROVED' ? 'bg-blue-500/10 text-blue-600' :
-                          op.qcStatus === 'PASSED' ? 'bg-primary/10 text-primary/90' :
-                          op.qcStatus === 'FAILED' ? 'bg-red-500/10 text-red-600' :
-                          'bg-purple-500/10 text-purple-600'
-                        }`}
+                        className={`text-[9px] sm:text-[10px] ${op.status === 'REJECTED' ? 'bg-red-500/10 text-red-600' :
+                            op.status === 'PENDING' ? 'bg-amber-500/10 text-amber-600' :
+                              op.status === 'APPROVED' ? 'bg-blue-500/10 text-blue-600' :
+                                op.qcStatus === 'PASSED' ? 'bg-primary/10 text-primary/90' :
+                                  op.qcStatus === 'FAILED' ? 'bg-red-500/10 text-red-600' :
+                                    'bg-purple-500/10 text-purple-600'
+                          }`}
                       >
                         {op.status === 'REJECTED' ? 'REJECTED' :
-                         op.status === 'PENDING' ? 'AWAITING APPROVAL' :
-                         op.status === 'APPROVED' ? 'APPROVED / DELIVER NOW' :
-                         op.qcStatus === 'PASSED' ? 'DEPOSITED / QC PASSED' :
-                         op.qcStatus === 'FAILED' ? 'DEPOSITED / QC FAILED' :
-                         'DEPOSITED / QC PENDING'}
+                          op.status === 'PENDING' ? 'AWAITING APPROVAL' :
+                            op.status === 'APPROVED' ? 'APPROVED / DELIVER NOW' :
+                              op.qcStatus === 'PASSED' ? 'DEPOSITED / QC PASSED' :
+                                op.qcStatus === 'FAILED' ? 'DEPOSITED / QC FAILED' :
+                                  'DEPOSITED / QC PENDING'}
                       </Badge>
                     </div>
                   </div>
