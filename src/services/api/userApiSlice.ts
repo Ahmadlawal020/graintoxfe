@@ -75,7 +75,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { kycStatus },
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (_result, _error, { id }) => [
+        "User",
+        { type: "User", id },
+      ],
     }),
 
     // SUBMIT KYC
@@ -85,7 +88,21 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (_result, _error, { id }) => [
+        "User",
+        { type: "User", id },
+      ],
+    }),
+    // CANCEL KYC
+    cancelKyc: builder.mutation({
+      query: (id: string) => ({
+        url: `/api/users/kyc/cancel/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        "User",
+        { type: "User", id },
+      ],
     }),
     // CHANGE PASSWORD
     changePassword: builder.mutation({
@@ -111,5 +128,6 @@ export const {
   useDeleteUserMutation,
   useUpdateKycStatusMutation,
   useSubmitKycMutation,
+  useCancelKycMutation,
   useChangePasswordMutation,
 } = userApiSlice;

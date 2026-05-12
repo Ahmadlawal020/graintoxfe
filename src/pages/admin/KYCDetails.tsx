@@ -107,9 +107,9 @@ const KYCDetails = () => {
 
   const docType = user.kycDocType || "Government Issued ID";
   // Simulated images - in production these would come from user.kycDocuments
-  const idFrontImg = user.kycDocumentUrl || `https://api.dicebear.com/7.x/identicon/svg?seed=${user._id}&backgroundColor=f1f1f1`;
+  const idFrontImg = user.kycDocumentUrl;
   const idBackImg = user.kycDocumentBackUrl;
-  const selfieImg = user.kycLivePhotoUrl || `https://api.dicebear.com/7.x/notionists/svg?seed=${user.email}&backgroundColor=f1f1f1`;
+  const selfieImg = user.kycLivePhotoUrl;
 
   return (
     <div className="space-y-6 animate-fade-in p-2 max-w-7xl mx-auto">
@@ -170,6 +170,19 @@ const KYCDetails = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Doc Type</p>
+                  <p className="text-sm">{user.kycDocType || "Not submitted"}</p>
+                </div>
+                {user.kycSubmittedAt && (
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">KYC Submitted</p>
+                    <p className="text-sm">{new Date(user.kycSubmittedAt).toLocaleDateString()}</p>
+                  </div>
+                )}
+              </div>
+
               <Separator />
 
               <div className="space-y-3">
@@ -195,11 +208,18 @@ const KYCDetails = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="aspect-square rounded-xl border-4 border-white shadow-xl bg-muted overflow-hidden relative group">
-                  <img 
-                    src={selfieImg} 
-                    alt="Live Liveness Capture" 
-                    className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" 
-                  />
+                  {selfieImg ? (
+                    <img 
+                      src={selfieImg} 
+                      alt="Live Liveness Capture" 
+                      className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" 
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-muted/50 text-muted-foreground gap-2">
+                      <Camera className="h-8 w-8 opacity-20" />
+                      <span className="text-[10px] uppercase font-bold">No selfie captured</span>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-blue-500/10 pointer-events-none" />
                   <div className="absolute bottom-2 left-2 right-2 flex justify-center">
                      <Badge variant="secondary" className="bg-accent backdrop-blur-sm text-blue-600 border-none text-[10px]">
@@ -267,34 +287,45 @@ const KYCDetails = () => {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={`grid grid-cols-1 ${docType !== "International Passport" ? "md:grid-cols-2" : ""} gap-6`}>
                 <div className="space-y-3">
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Front Side</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    {docType === "International Passport" ? "Passport Bio Data Page" : "Front Side"}
+                  </p>
                   <div className="relative aspect-[1.6/1] rounded-xl border-2 border-dashed border-border bg-muted/20 flex items-center justify-center p-3 hover:border-blue-500/50 transition-colors group cursor-zoom-in">
-                    <img 
-                      src={idFrontImg} 
-                      alt="ID Front" 
-                      className="rounded-lg w-full h-full shadow-sm object-contain" 
-                    />
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Back / Verification Side</p>
-                  <div className="relative aspect-[1.6/1] rounded-xl border-2 border-dashed border-border bg-muted/20 flex items-center justify-center p-3 hover:border-blue-500/50 transition-colors group cursor-zoom-in">
-                    {idBackImg ? (
+                    {idFrontImg ? (
                       <img 
-                        src={idBackImg} 
-                        alt="ID Back" 
+                        src={idFrontImg} 
+                        alt="ID Front" 
                         className="rounded-lg w-full h-full shadow-sm object-contain" 
                       />
                     ) : (
                       <div className="text-center">
-                         <FileText className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
-                         <span className="text-[10px] text-muted-foreground font-medium uppercase">Back side not provided</span>
+                         <ShieldAlert className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
+                         <span className="text-[10px] text-muted-foreground font-medium uppercase">Front document missing</span>
                       </div>
                     )}
                   </div>
                 </div>
+                {docType !== "International Passport" && (
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Back / Verification Side</p>
+                    <div className="relative aspect-[1.6/1] rounded-xl border-2 border-dashed border-border bg-muted/20 flex items-center justify-center p-3 hover:border-blue-500/50 transition-colors group cursor-zoom-in">
+                      {idBackImg ? (
+                        <img 
+                          src={idBackImg} 
+                          alt="ID Back" 
+                          className="rounded-lg w-full h-full shadow-sm object-contain" 
+                        />
+                      ) : (
+                        <div className="text-center">
+                           <FileText className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
+                           <span className="text-[10px] text-muted-foreground font-medium uppercase">Back side not provided</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

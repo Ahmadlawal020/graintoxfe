@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { User, ShieldCheck, Mail, Phone, MapPin, ArrowLeft, Camera, Upload, AlertCircle, CheckCircle2, X, Loader2, RefreshCw, Lock } from "lucide-react";
 import Webcam from "react-webcam";
 import { uploadToCloudinary } from "@/lib/cloudinary";
-import { useSubmitKycMutation, useGetUserByIdQuery } from "@/services/api/userApiSlice";
+import { useSubmitKycMutation, useGetUserByIdQuery, useCancelKycMutation } from "@/services/api/userApiSlice";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ const UserSettings = () => {
   const { id, firstName, lastName, email, status: roleStatus } = useAuth();
   const { data: userData, isLoading: userLoading } = useGetUserByIdQuery(id || "", { pollingInterval: 30000 });
   const [submitKyc, { isLoading: isSubmitting }] = useSubmitKycMutation();
+  const [cancelKyc, { isLoading: isCancellingKyc }] = useCancelKycMutation();
   const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
   const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
   
@@ -59,7 +60,7 @@ const UserSettings = () => {
 
   // KYC States
   const [docType, setDocType] = useState("");
-  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [documentFrontFile, setDocumentFrontFile] = useState<File | null>(null);
   const [documentPreview, setDocumentPreview] = useState<string | null>(null);
   const [documentBackFile, setDocumentBackFile] = useState<File | null>(null);
   const [documentBackPreview, setDocumentBackPreview] = useState<string | null>(null);
@@ -77,7 +78,7 @@ const UserSettings = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (side === "front") {
-          setDocumentFile(file);
+          setDocumentFrontFile(file);
           setDocumentPreview(reader.result as string);
         } else {
           setDocumentBackFile(file);
@@ -93,10 +94,10 @@ const UserSettings = () => {
     if (imageSrc) {
       if (cameraType === "front") {
         setDocumentPreview(imageSrc);
-        // Convert base64 to file-like object for cloudinary util if needed, 
-        // but my cloudinary util handles strings too.
+        setDocumentFrontFile(null); // Clear file since camera produces base64
       } else if (cameraType === "back") {
         setDocumentBackPreview(imageSrc);
+        setDocumentBackFile(null); // Clear file since camera produces base64
       } else {
         setLivePhoto(imageSrc);
       }
@@ -162,24 +163,36 @@ const UserSettings = () => {
 
   const handleSubmitKyc = async () => {
     try {
+      if (!docType) {
+        toast({ title: "Incomplete", description: "Please select a document type", variant: "destructive" });
+        return;
+      }
       if (!documentPreview || !livePhoto) {
         toast({ title: "Incomplete", description: "All photos are required", variant: "destructive" });
         return;
       }
+      if (docType !== "International Passport" && !documentBackPreview) {
+        toast({ title: "Incomplete", description: "Back side of document is required", variant: "destructive" });
+        return;
+      }
       
-      // Upload images to Cloudinary
-      const frontUrl = await uploadToCloudinary(documentPreview);
-      const backUrl = documentBackPreview ? await uploadToCloudinary(documentBackPreview) : null;
+      // Upload images to Cloudinary — prefer File object when available (more efficient than base64)
+      const frontUrl = await uploadToCloudinary(documentFrontFile || documentPreview);
+      const backUrl = documentBackPreview 
+        ? await uploadToCloudinary(documentBackFile || documentBackPreview) 
+        : null;
       const selfieUrl = await uploadToCloudinary(livePhoto);
+
+      const submissionData = {
+        kycDocType: docType,
+        kycDocumentUrl: frontUrl,
+        kycDocumentBackUrl: backUrl,
+        kycLivePhotoUrl: selfieUrl
+      };
 
       await submitKyc({
         id: id,
-        data: {
-          idType: docType,
-          idFrontUrl: frontUrl,
-          idBackUrl: backUrl,
-          selfieUrl: selfieUrl
-        }
+        data: submissionData
       }).unwrap();
 
       toast({
@@ -189,15 +202,36 @@ const UserSettings = () => {
       
       // Reset state
       setKycStep(1);
+      setDocumentFrontFile(null);
+      setDocumentBackFile(null);
       setDocumentPreview(null);
       setDocumentBackPreview(null);
       setLivePhoto(null);
+      setDocType("");
     } catch (err: any) {
       toast({
         title: "Submission Failed",
         description: err.data?.message || "An error occurred while uploading your documents.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleCancelKyc = async () => {
+    if (window.confirm("Are you sure you want to cancel your KYC submission? This will clear all submitted data.")) {
+      try {
+        await cancelKyc(id).unwrap();
+        toast({
+          title: "Submission Cancelled",
+          description: "Your KYC submission has been cancelled and reset.",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description: error?.data?.message || "Failed to cancel submission",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -455,14 +489,73 @@ const UserSettings = () => {
                       </p>
                     </div>
                   ) : kycStatus === "UNDER_REVIEW" ? (
-                    <div className="p-6 sm:p-8 text-center bg-amber-50 rounded-2xl border border-amber-100 flex flex-col items-center">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mb-3 sm:mb-4 animate-pulse">
-                         <RefreshCw className="w-8 h-8 sm:w-10 sm:h-10" />
+                    <div className="space-y-6 animate-fade-in">
+                      <div className="p-6 sm:p-8 text-center bg-amber-50 rounded-2xl border border-amber-100 flex flex-col items-center">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mb-3 sm:mb-4 animate-pulse">
+                           <RefreshCw className="w-8 h-8 sm:w-10 sm:h-10" />
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold text-amber-900">Verification in Progress</h3>
+                        <p className="text-xs sm:text-sm text-amber-700 mt-2 max-w-sm">
+                          Your KYC documents are currently being reviewed by our compliance team. This usually takes 24-48 hours.
+                        </p>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-amber-900">Verification in Progress</h3>
-                      <p className="text-xs sm:text-sm text-amber-700 mt-2 max-w-sm">
-                        Your KYC documents are currently being reviewed by our compliance team. This usually takes 24-48 hours.
-                      </p>
+
+                      <div className="bg-muted/30 rounded-xl p-4 border border-border/50">
+                        <div className="flex items-center justify-between mb-4">
+                           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Submitted Documents</h4>
+                           <Badge variant="outline" className="text-[10px] bg-background">
+                             {userData?.kycDocType || "ID Document"}
+                           </Badge>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] uppercase text-muted-foreground font-bold">ID Front</Label>
+                          <div className="aspect-[1.6/1] rounded-xl overflow-hidden border border-border bg-muted/10">
+                            {userData?.kycDocumentUrl ? (
+                              <img src={userData.kycDocumentUrl} className="w-full h-full object-cover" alt="ID Front" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px]">No image</div>
+                            )}
+                          </div>
+                        </div>
+                        {userData?.kycDocType !== "International Passport" && (
+                          <div className="space-y-2">
+                            <Label className="text-[10px] uppercase text-muted-foreground font-bold">ID Back</Label>
+                            <div className="aspect-[1.6/1] rounded-xl overflow-hidden border border-border bg-muted/10">
+                              {userData?.kycDocumentBackUrl ? (
+                                <img src={userData.kycDocumentBackUrl} className="w-full h-full object-cover" alt="ID Back" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px]">No image</div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <Label className="text-[10px] uppercase text-muted-foreground font-bold">Live Photo</Label>
+                          <div className="aspect-[1.6/1] rounded-xl overflow-hidden border border-border bg-muted/10">
+                            {userData?.kycLivePhotoUrl ? (
+                              <img src={userData.kycLivePhotoUrl} className="w-full h-full object-cover" alt="Selfie" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px]">No image</div>
+                            )}
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center pt-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="text-red-600 border-red-100 hover:bg-red-50 text-[10px] h-8"
+                          onClick={handleCancelKyc}
+                          disabled={isCancellingKyc}
+                        >
+                          {isCancellingKyc ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <X className="w-3 h-3 mr-2" />}
+                          Cancel Submission
+                        </Button>
+                      </div>
                     </div>
                   ) : kycStatus === "REJECTED" && !retryKyc ? (
                     <div className="p-6 sm:p-8 text-center bg-red-50 rounded-2xl border border-red-100 flex flex-col items-center">
@@ -479,7 +572,7 @@ const UserSettings = () => {
                         onClick={() => {
                           setRetryKyc(true);
                           setKycStep(1);
-                          setDocumentFile(null);
+                          setDocumentFrontFile(null);
                           setDocumentPreview(null);
                           setDocumentBackFile(null);
                           setDocumentBackPreview(null);
