@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { Wheat, Plus, ArrowLeft, History, Building2, ShieldCheck, Clock, Package, X, MessageSquare, ChevronRight } from "lucide-react";
+import { Wheat, Plus, ArrowLeft, History, Building2, ShieldCheck, Clock, Package, RefreshCw, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useGetStorageOperationsQuery } from "@/services/api/storageApiSlice";
+import { useGetStorageBalancesQuery, useTransferTradingCropsMutation } from "@/services/api/storageApiSlice";
 import { useGetCropsQuery } from "@/services/api/cropApiSlice";
 import { useGetWarehousesQuery } from "@/services/api/warehouseApiSlice";
 import { useGetUserByIdQuery } from "@/services/api/userApiSlice";
 import { Badge } from "@/components/ui/badge";
 import useAuth from "@/hooks/useAuth";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const Storage = () => {
   const navigate = useNavigate();
@@ -17,6 +21,55 @@ const Storage = () => {
   const { data: warehouses = [] } = useGetWarehousesQuery(undefined, { pollingInterval: 60000 });
   const { data: userData } = useGetUserByIdQuery(id || "");
   const { data: operations = [], isLoading: isOpsLoading } = useGetStorageOperationsQuery(undefined, { pollingInterval: 15000 });
+  const { data: storageBalances = [] } = useGetStorageBalancesQuery(undefined, { pollingInterval: 15000 });
+  const [transferTradingCrops, { isLoading: isTransferring }] = useTransferTradingCropsMutation();
+  const [cropTransferDirection, setCropTransferDirection] = useState<"storage_to_trading" | "trading_to_storage">("storage_to_trading");
+  const [selectedStoredBalance, setSelectedStoredBalance] = useState("");
+  const [selectedTradingCrop, setSelectedTradingCrop] = useState("");
+  const [selectedWarehouse, setSelectedWarehouse] = useState("");
+  const [cropTransferQuantity, setCropTransferQuantity] = useState("");
+
+  const selectedBalance = storageBalances.find((balance: any) => {
+    const key = `${balance.commodity?._id}-${balance.warehouse?._id}`;
+    return key === selectedStoredBalance;
+  });
+
+  const selectedHolding = userData?.holdings?.find((holding: any) => holding.crop === selectedTradingCrop || holding.tokenSymbol === selectedTradingCrop);
+
+  const handleCropTransfer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const quantity = parseFloat(cropTransferQuantity);
+
+    if (!quantity || quantity <= 0) {
+      toast.error("Please enter a valid quantity");
+      return;
+    }
+
+    const commodity = cropTransferDirection === "storage_to_trading"
+      ? selectedBalance?.commodity?._id
+      : selectedTradingCrop;
+    const warehouse = cropTransferDirection === "storage_to_trading"
+      ? selectedBalance?.warehouse?._id
+      : selectedWarehouse;
+
+    if (!commodity || !warehouse) {
+      toast.error("Please select crop and warehouse");
+      return;
+    }
+
+    try {
+      await transferTradingCrops({
+        direction: cropTransferDirection,
+        commodity,
+        warehouse,
+        quantity,
+      }).unwrap();
+      toast.success("Crop balance moved successfully");
+      setCropTransferQuantity("");
+    } catch (error: any) {
+      toast.error(error.data?.message || "Crop transfer failed");
+    }
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-fade-in p-1 sm:p-2">
@@ -43,6 +96,104 @@ const Storage = () => {
       </header>
 
       <div className="space-y-4 sm:space-y-6">
+        <Card className="border-none shadow-md overflow-hidden">
+          <CardHeader className="p-3 sm:p-4">
+            <CardTitle className="text-sm sm:text-lg flex items-center gap-2">
+              <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> Move Crops For Trading
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              Move warehouse crops into trading, or move trading crops back to storage.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <form onSubmit={handleCropTransfer} className="grid grid-cols-1 lg:grid-cols-5 gap-3 items-end">
+              <div className="lg:col-span-1 space-y-2">
+                <Label className="text-xs font-black uppercase text-muted-foreground">Direction</Label>
+                <select
+                  className="w-full h-10 rounded-md bg-muted/40 px-3 text-sm outline-none"
+                  value={cropTransferDirection}
+                  onChange={(e) => {
+                    setCropTransferDirection(e.target.value as "storage_to_trading" | "trading_to_storage");
+                    setCropTransferQuantity("");
+                  }}
+                >
+                  <option value="storage_to_trading">Storage to Trading</option>
+                  <option value="trading_to_storage">Trading to Storage</option>
+                </select>
+              </div>
+
+              {cropTransferDirection === "storage_to_trading" ? (
+                <div className="lg:col-span-2 space-y-2">
+                  <Label className="text-xs font-black uppercase text-muted-foreground">Stored Crop</Label>
+                  <select
+                    className="w-full h-10 rounded-md bg-muted/40 px-3 text-sm outline-none"
+                    value={selectedStoredBalance}
+                    onChange={(e) => setSelectedStoredBalance(e.target.value)}
+                  >
+                    <option value="">Select stored crop</option>
+                    {storageBalances.map((balance: any) => (
+                      <option key={`${balance.commodity?._id}-${balance.warehouse?._id}`} value={`${balance.commodity?._id}-${balance.warehouse?._id}`}>
+                        {balance.commodity?.name} - {balance.warehouse?.name} ({balance.quantity} kg)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <>
+                  <div className="lg:col-span-1 space-y-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Trading Crop</Label>
+                    <select
+                      className="w-full h-10 rounded-md bg-muted/40 px-3 text-sm outline-none"
+                      value={selectedTradingCrop}
+                      onChange={(e) => setSelectedTradingCrop(e.target.value)}
+                    >
+                      <option value="">Select crop</option>
+                      {userData?.holdings?.map((holding: any) => (
+                        <option key={holding._id} value={holding.crop || holding.tokenSymbol}>
+                          {holding.tokenSymbol} ({holding.amount} kg)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="lg:col-span-1 space-y-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Warehouse</Label>
+                    <select
+                      className="w-full h-10 rounded-md bg-muted/40 px-3 text-sm outline-none"
+                      value={selectedWarehouse}
+                      onChange={(e) => setSelectedWarehouse(e.target.value)}
+                    >
+                      <option value="">Select warehouse</option>
+                      {warehouses.map((warehouse: any) => (
+                        <option key={warehouse._id} value={warehouse._id}>{warehouse.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-2">
+                <Label className="text-xs font-black uppercase text-muted-foreground">Quantity</Label>
+                <Input
+                  type="number"
+                  placeholder="0.00"
+                  value={cropTransferQuantity}
+                  onChange={(e) => setCropTransferQuantity(e.target.value)}
+                  className="h-10 bg-muted/40 border-none"
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Available: {cropTransferDirection === "storage_to_trading"
+                    ? selectedBalance?.quantity || 0
+                    : selectedHolding?.amount || 0} kg
+                </p>
+              </div>
+
+              <Button type="submit" disabled={isTransferring} className="h-10 !text-white">
+                {isTransferring ? "Moving..." : "Move Crop"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
         {/* Active Holdings */}
         <Card className="border-none shadow-md overflow-hidden">
           <CardHeader className="bg-primary/90 !text-white p-3 sm:p-4">

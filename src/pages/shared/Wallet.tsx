@@ -9,7 +9,8 @@ import {
   useInitializeDepositMutation, 
   useGetUserTransactionsQuery, 
   useVerifyDepositMutation,
-  useRequestWithdrawalMutation 
+  useRequestWithdrawalMutation,
+  useTransferTradingFundsMutation
 } from "../../services/api/financeApiSlice";
 import { PaystackButton } from "react-paystack";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
@@ -29,9 +30,12 @@ const Wallet = () => {
   const { data: transactions, isLoading: txLoading, refetch: txRefetch } = useGetUserTransactionsQuery(undefined);
   const [verifyDeposit] = useVerifyDepositMutation();
   const [requestWithdrawal] = useRequestWithdrawalMutation();
+  const [transferTradingFunds] = useTransferTradingFundsMutation();
 
   const [amount, setAmount] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [transferAmount, setTransferAmount] = useState<string>("");
+  const [transferDirection, setTransferDirection] = useState<"wallet_to_trading" | "trading_to_wallet">("wallet_to_trading");
   const [bankDetails, setBankDetails] = useState({
     bankName: "",
     accountNumber: "",
@@ -161,6 +165,36 @@ const Wallet = () => {
     }
   };
 
+  const handleTradingTransfer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = parseFloat(transferAmount);
+
+    if (!transferAmount || parsed <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+
+    const available = transferDirection === "wallet_to_trading"
+      ? userData?.walletBalance || 0
+      : userData?.tradingBalance || 0;
+
+    if (parsed > available) {
+      toast.error("Insufficient balance for this transfer");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await transferTradingFunds({ amount: parsed, direction: transferDirection }).unwrap();
+      toast.success("Trading balance updated");
+      setTransferAmount("");
+    } catch (error: any) {
+      toast.error(error.data?.message || "Transfer failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
 
   return (
@@ -186,6 +220,21 @@ const Wallet = () => {
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <WalletIcon className="w-4 h-4 text-primary/60" />
                 <span>Personal Wallet</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-muted/30 border-border shadow-sm">
+            <CardHeader className="p-2.5 sm:p-6 pb-1.5">
+              <CardDescription className="text-muted-foreground font-medium text-[8px] sm:text-sm uppercase tracking-tighter sm:tracking-normal">Trading Balance</CardDescription>
+              <CardTitle className="text-lg sm:text-3xl font-bold flex flex-wrap items-center gap-1 sm:gap-2 break-all sm:break-normal">
+                ₦{userData?.tradingBalance?.toLocaleString() || "0.00"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <RefreshCw className="w-4 h-4 text-primary/60" />
+                <span>Funds available for crop trades</span>
               </div>
             </CardContent>
           </Card>
@@ -222,7 +271,7 @@ const Wallet = () => {
             <div className="px-2 sm:px-6 pt-2 sm:pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 border-b border-border/50 pb-2 sm:pb-4">
                <div className="min-w-0 pr-2">
                   <CardTitle className="text-xs sm:text-xl leading-tight">Financial Actions</CardTitle>
-                  <CardDescription className="text-[8px] sm:text-sm leading-tight">Deposit or withdraw funds.</CardDescription>
+                  <CardDescription className="text-[8px] sm:text-sm leading-tight">Deposit, withdraw, or move funds into trading.</CardDescription>
                </div>
                <TabsList className="bg-muted/50 p-0.5 w-full sm:w-auto h-8 sm:h-10">
                  <TabsTrigger value="deposit" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
@@ -230,6 +279,9 @@ const Wallet = () => {
                  </TabsTrigger>
                  <TabsTrigger value="withdraw" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
                     <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Withdraw
+                 </TabsTrigger>
+                 <TabsTrigger value="transfer" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" /> Trading
                  </TabsTrigger>
                </TabsList>
             </div>
@@ -344,6 +396,54 @@ const Wallet = () => {
                     Request Payout
                   </Button>
                </form>
+            </TabsContent>
+
+            <TabsContent value="transfer" className="p-2 sm:p-6 mt-0">
+              <form onSubmit={handleTradingTransfer} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant={transferDirection === "wallet_to_trading" ? "default" : "outline"}
+                    onClick={() => setTransferDirection("wallet_to_trading")}
+                    className="h-11"
+                  >
+                    Wallet to Trading
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={transferDirection === "trading_to_wallet" ? "default" : "outline"}
+                    onClick={() => setTransferDirection("trading_to_wallet")}
+                    className="h-11"
+                  >
+                    Trading to Wallet
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-black uppercase text-muted-foreground">Amount</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">₦</span>
+                    <Input
+                      type="number"
+                      placeholder="0.00"
+                      className="pl-8 h-12 bg-muted/30 border-none font-bold"
+                      value={transferAmount}
+                      onChange={(e) => setTransferAmount(e.target.value)}
+                      disabled={loading || !isKycVerified}
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    Available: ₦{(transferDirection === "wallet_to_trading" ? userData?.walletBalance || 0 : userData?.tradingBalance || 0).toLocaleString()}
+                  </p>
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-12 font-black uppercase tracking-widest"
+                  disabled={loading || !isKycVerified || !transferAmount}
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+                  Move Funds
+                </Button>
+              </form>
             </TabsContent>
           </Tabs>
         </Card>

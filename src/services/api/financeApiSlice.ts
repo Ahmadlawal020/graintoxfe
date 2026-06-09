@@ -18,6 +18,14 @@ export const financeApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Transactions", "User", "Trades", "PriceHistory", "Crop"],
     }),
+    transferTradingFunds: builder.mutation({
+      query: (data) => ({
+        url: "/api/finance/trading/transfer",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Transactions", "User"],
+    }),
     verifyDeposit: builder.mutation({
       query: (reference) => ({
         url: `/api/finance/deposit/verify/${reference}`,
@@ -67,6 +75,7 @@ export const financeApiSlice = apiSlice.injectEndpoints({
 export const {
   useInitializeDepositMutation,
   useExecuteTradeMutation,
+  useTransferTradingFundsMutation,
   useVerifyDepositMutation,
   useGetUserTransactionsQuery,
   useGetUserTradesQuery,

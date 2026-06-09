@@ -44,7 +44,7 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
     setLastTradeResult(null);
   }, [currentPrice, symbol]);
 
-  const walletBalance = userData?.walletBalance || 0;
+  const tradingBalance = userData?.tradingBalance || 0;
   const assetHolding = userData?.holdings?.find((h: any) => h.tokenSymbol === symbol);
   const assetBalance = assetHolding?.amount || 0;
   const avgPrice = assetHolding?.averagePrice || 0;
@@ -59,7 +59,7 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
   const buyPayable = total + fee;
   const sellReceivable = total - fee;
 
-  const canBuy = numAmount > 0 && numPrice > 0 && walletBalance >= buyPayable;
+  const canBuy = numAmount > 0 && numPrice > 0 && tradingBalance >= buyPayable;
   const canSell = numAmount > 0 && numPrice > 0 && assetBalance >= numAmount;
 
   const handleSliderChange = useCallback((value: number[], type: 'buy' | 'sell') => {
@@ -69,17 +69,17 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
     if (type === 'buy') {
       // Account for fees in max calculation
       const effectivePrice = numPrice * 1.001; // price + 0.1% fee
-      const maxAmount = Math.floor((walletBalance / (effectivePrice || 1)) * 100) / 100;
+      const maxAmount = Math.floor((tradingBalance / (effectivePrice || 1)) * 100) / 100;
       setAmount(maxAmount > 0 ? (maxAmount * pct).toFixed(2) : "0");
     } else {
       setAmount(assetBalance > 0 ? (assetBalance * pct).toFixed(2) : "0");
     }
-  }, [walletBalance, assetBalance, numPrice]);
+  }, [tradingBalance, assetBalance, numPrice]);
 
   const handleMaxAmount = (type: 'buy' | 'sell') => {
     if (type === 'buy') {
       const effectivePrice = numPrice * 1.001;
-      const maxAmount = Math.floor((walletBalance / (effectivePrice || 1)) * 100) / 100;
+      const maxAmount = Math.floor((tradingBalance / (effectivePrice || 1)) * 100) / 100;
       setAmount(maxAmount > 0 ? maxAmount.toString() : "0");
       setSliderValue([100]);
     } else {
@@ -99,8 +99,8 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
     }
 
     // Extra client-side validation
-    if (type === 'buy' && walletBalance < buyPayable) {
-      toast.error(`Insufficient balance. You need ₦${buyPayable.toLocaleString()} but have ₦${walletBalance.toLocaleString()}`);
+    if (type === 'buy' && tradingBalance < buyPayable) {
+      toast.error(`Insufficient trading balance. You need ₦${buyPayable.toLocaleString()} but have ₦${tradingBalance.toLocaleString()}`);
       return;
     }
     if (type === 'sell' && assetBalance < numAmount) {
@@ -145,16 +145,16 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
   const renderTradeForm = (type: 'buy' | 'sell') => {
     const isBuy = type === 'buy';
     const accentColor = isBuy ? 'primary' : 'red-500';
-    const balance = isBuy ? walletBalance : assetBalance;
-    const balanceLabel = isBuy ? 'Available Balance' : `Available ${symbol}`;
+    const balance = isBuy ? tradingBalance : assetBalance;
+    const balanceLabel = isBuy ? 'Trading Balance' : `Available ${symbol}`;
     const balanceDisplay = isBuy
-      ? `₦${walletBalance.toLocaleString()}`
+      ? `₦${tradingBalance.toLocaleString()}`
       : `${assetBalance.toLocaleString()} kg`;
     const canExecute = isBuy ? canBuy : canSell;
 
     return (
       <div className="space-y-3.5">
-        {/* Available Balance */}
+        {/* Trading Balance */}
         <div className="flex justify-between items-center text-[11px] bg-muted/40 p-2.5 rounded-lg border border-border/30">
           <span className="text-muted-foreground font-bold uppercase tracking-tighter flex items-center gap-1.5">
             <Wallet className="w-3 h-3" />
@@ -213,7 +213,7 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
                 const newAmt = Number(e.target.value) || 0;
                 if (isBuy) {
                   const effectivePrice = numPrice * 1.001;
-                  const maxAmount = walletBalance / (effectivePrice || 1);
+                  const maxAmount = tradingBalance / (effectivePrice || 1);
                   setSliderValue([maxAmount > 0 ? Math.min(100, (newAmt / maxAmount) * 100) : 0]);
                 } else {
                   setSliderValue([assetBalance > 0 ? Math.min(100, (newAmt / assetBalance) * 100) : 0]);
@@ -289,13 +289,13 @@ const TradePanel = ({ symbol, name, currentPrice, defaultTab = 'buy' }: TradePan
           </div>
         )}
 
-        {/* Insufficient balance warning */}
+        {/* Insufficient trading balance warning */}
         {numAmount > 0 && !canExecute && (
           <div className="flex items-center gap-2 text-[10px] text-amber-500 bg-amber-500/10 rounded-lg p-2.5 border border-amber-500/20">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span className="font-bold">
               {isBuy
-                ? `Insufficient balance. Need ₦${buyPayable.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+                ? `Insufficient trading balance. Need ₦${buyPayable.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
                 : `Insufficient ${symbol}. You have ${assetBalance} kg`
               }
             </span>

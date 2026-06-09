@@ -6,6 +6,18 @@ export const storageApiSlice = apiSlice.injectEndpoints({
       query: () => "/api/storage",
       providesTags: ["Storage"],
     }),
+    getStorageBalances: builder.query({
+      query: () => "/api/storage/balances",
+      providesTags: ["Storage", "User"],
+    }),
+    transferTradingCrops: builder.mutation({
+      query: (data) => ({
+        url: "/api/storage/trading-transfer",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Storage", "User", "Trades"],
+    }),
     createStorageOperation: builder.mutation({
       query: (opData) => ({
         url: "/api/storage",
@@ -27,6 +39,8 @@ export const storageApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetStorageOperationsQuery,
+  useGetStorageBalancesQuery,
+  useTransferTradingCropsMutation,
   useCreateStorageOperationMutation,
   useUpdateStorageOperationMutation,
 } = storageApiSlice;

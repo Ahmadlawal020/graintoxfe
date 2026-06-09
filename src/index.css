@@ -2,121 +2,207 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* GrainTox design system. All colors are HSL tokens consumed by Tailwind. */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 125 55% 10%;
+    /* Pure Neutral Grayscale Base */
+    --background: 0 0% 98%; /* Pure clean off-white */
+    --foreground: 0 0% 13%; /* General Text: #222222 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 125 55% 10%;
+    --card: 0 0% 100%; /* Brand White: #FFFFFF */
+    --card-foreground: 0 0% 13%; /* General Text: #222222 */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 125 55% 10%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 122 46% 34%;
-    --primary-foreground: 0 0% 100%;
+    /* Brand Green Core */
+    --primary: 132 46% 34%; /* Main Green: #2E7D32 */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --secondary: 123 39% 74%;
-    --secondary-foreground: 125 55% 24%;
+    --secondary: 123 40% 74%; /* Light Mint: #A5D6A7 */
+    --secondary-foreground: 124 55% 24%; /* Text Only Green: #1B5E20 */
 
-    --muted: 129 38% 94%;
-    --muted-foreground: 122 46% 34%;
+    /* Pure Grayscale UI Accents */
+    --muted: 0 0% 93%; /* Pure soft gray */
+    --muted-foreground: 0 0% 40%; /* Pure mid gray */
 
-    --accent: 123 39% 74%;
-    --accent-foreground: 125 55% 24%;
+    --accent: 123 40% 74%; /* Matches Brand Light Mint */
+    --accent-foreground: 124 55% 24%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 40%; /* Pure Red (0° Hue) */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 122 20% 90%;
-    --input: 122 20% 90%;
-    --ring: 122 46% 34%;
+    --border: 0 0% 88%; /* Pure light gray border */
+    --input: 0 0% 88%;
+    --ring: 132 46% 34%; /* Focus ring matches brand green */
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 125 55% 24%;
+    /* Sidebar - Deepest Brand Green Base */
+    --sidebar-background: 124 55% 12%; /* Darkened version of #1B5E20 */
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 122 46% 34%;
+    --sidebar-primary: 132 46% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 125 55% 28%;
+    --sidebar-accent: 124 55% 16%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 125 55% 30%;
-    --sidebar-ring: 122 46% 34%;
+    --sidebar-border: 124 55% 18%;
+    --sidebar-ring: 132 46% 34%;
 
-    --success: 142 76% 36%;
-    --success-foreground: 355 100% 97%;
-    --warning: 43 89% 38%;
-    --warning-foreground: 355 100% 97%;
-    --info: 217 91% 60%;
-    --info-foreground: 0 0% 98%;
+    /* System States restricted to Grayscale / Brand Green */
+    --success: 132 46% 34%; /* Brand Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 0 0% 20%; /* Dark Gray for neutral warning callout */
+    --warning-foreground: 0 0% 100%;
+    --info: 0 0% 40%; /* Mid Gray for neutral info callout */
+    --info-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 125 55% 4%;
-    --foreground: 0 0% 100%;
+    /* Pure Charcoal Dark Mode */
+    --background: 0 0% 7%; /* Pure off-black */
+    --foreground: 0 0% 100%; /* White text */
 
-    --card: 125 55% 6%;
+    --card: 0 0% 12%; /* Pure dark gray surface */
     --card-foreground: 0 0% 100%;
 
-    --popover: 125 55% 6%;
+    --popover: 0 0% 12%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 122 46% 34%;
+    --primary: 132 46% 38%; /* Balanced Brand Green for dark contrast */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 125 55% 15%;
-    --secondary-foreground: 123 39% 74%;
+    --secondary: 124 55% 24%; /* Inverted dark mint-green base */
+    --secondary-foreground: 123 40% 74%;
 
-    --muted: 125 55% 12%;
-    --muted-foreground: 123 39% 60%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 125 55% 15%;
-    --accent-foreground: 123 39% 74%;
+    --accent: 132 46% 34%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 35%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 125 55% 15%;
-    --input: 125 55% 15%;
-    --ring: 122 46% 34%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 132 46% 38%;
 
-    --sidebar-background: 125 55% 4%;
+    --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 122 46% 34%;
+    --sidebar-primary: 132 46% 38%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 125 55% 10%;
+    --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 125 55% 12%;
-    --sidebar-ring: 122 46% 34%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 132 46% 38%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 355 100% 97%;
-    --warning: 43 96% 56%;
-    --warning-foreground: 355 100% 97%;
-    --info: 217 91% 60%;
-    --info-foreground: 0 0% 98%;
+    --success: 132 46% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 0 0% 65%;
+    --warning-foreground: 0 0% 0%;
+    --info: 0 0% 65%;
+    --info-foreground: 0 0% 0%;
   }
 }
-
 @layer base {
   * {
     @apply border-border;
   }
 
+  html {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground font-montserrat;
+    @apply bg-background text-foreground;
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+
+  #root {
+    min-height: 100dvh;
   }
 
   .font-montserrat {
-    font-family: 'Montserrat', sans-serif;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   }
 }
 
 @layer components {
+  .app-shell {
+    @apply h-[100dvh] flex w-full overflow-hidden bg-background;
+  }
+
+  .app-main {
+    @apply flex-1 relative overflow-y-auto bg-background;
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--muted) / 0.52),
+      hsl(var(--background)) 260px
+    );
+  }
+
+  .app-page {
+    @apply mx-auto w-full max-w-[1440px] p-3 sm:p-5 lg:p-6;
+  }
+
+  .page-header {
+    @apply mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .page-title {
+    @apply text-xl font-semibold tracking-normal text-foreground sm:text-2xl lg:text-3xl;
+  }
+
+  .page-subtitle {
+    @apply mt-1 text-xs leading-5 text-muted-foreground sm:text-sm;
+  }
+
+  .surface-card {
+    @apply rounded-lg border border-border/80 bg-card text-card-foreground shadow-sm;
+    box-shadow:
+      0 1px 2px hsl(0 0% 13% / 0.05),
+      0 10px 26px hsl(0 0% 13% / 0.04);
+  }
+
+  .surface-card-muted {
+    @apply rounded-lg border border-border/70 bg-muted/40;
+  }
+
+  .section-heading {
+    @apply text-sm font-semibold tracking-normal text-foreground sm:text-base;
+  }
+
+  .field-label {
+    @apply text-xs font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  .data-table {
+    @apply w-full border-collapse text-left text-sm;
+  }
+
+  .data-table thead {
+    @apply bg-muted/70 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  .data-table th,
+  .data-table td {
+    @apply px-4 py-3;
+  }
+
+  .data-table tbody tr {
+    @apply border-b border-border/70 transition-colors hover:bg-muted/45;
+  }
+
   .gradient-primary {
     background: hsl(var(--primary));
   }
@@ -130,15 +216,15 @@ All colors MUST be HSL.
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-200 hover:border-primary/30 hover:shadow-md;
   }
 
   .stats-card {
-    @apply bg-card rounded-xl shadow-sm border card-hover;
+    @apply surface-card card-hover;
   }
 
   .sidebar-nav-item {
-    @apply flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-sidebar-accent;
+    @apply flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-sidebar-accent;
   }
 
   .sidebar-nav-item.active {
@@ -169,7 +255,7 @@ All colors MUST be HSL.
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground));
+  background: hsl(var(--muted-foreground) / 0.45);
   border-radius: 3px;
 }
 

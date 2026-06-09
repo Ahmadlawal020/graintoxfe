@@ -31,7 +31,7 @@ interface CustomQueryResult {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL,
+  baseUrl: import.meta.env.VITE_API_URL || "",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as { auth: { accessToken: string } }).auth
@@ -124,6 +124,16 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Transactions", "User", "Trades", "PriceHistory", "Dashboard", "Crop"],
+  tagTypes: [
+    "Transactions",
+    "User",
+    "Trades",
+    "PriceHistory",
+    "Dashboard",
+    "Crop",
+    "Storage",
+    "Warehouse",
+    "Settings",
+  ],
   endpoints: () => ({}),
 });
