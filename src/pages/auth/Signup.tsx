@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   ArrowLeft,
   Wheat,
@@ -37,6 +38,7 @@ const Signup = () => {
   });
   const [otpCode, setOtpCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -256,7 +258,27 @@ const Signup = () => {
                   </div>
                 </div>
 
-                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading}>
+                <div className="flex items-start space-x-3 px-1 my-4">
+                  <Checkbox 
+                    id="terms" 
+                    checked={agreeToTerms} 
+                    onCheckedChange={(checked) => setAgreeToTerms(!!checked)}
+                    className="border-gray-700 mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
+                    required
+                  />
+                  <label htmlFor="terms" className="text-sm text-muted-foreground font-medium cursor-pointer leading-tight">
+                    I agree to the{" "}
+                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">
+                      Privacy Policy
+                    </a>
+                  </label>
+                </div>
+
+                <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-[0.98] border-none" disabled={isLoading || !agreeToTerms}>
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </Button>
               </form>

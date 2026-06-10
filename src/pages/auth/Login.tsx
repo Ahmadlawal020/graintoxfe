@@ -181,6 +181,16 @@ const Login = () => {
                   "Log In"
                 )}
               </Button>
+              <p className="text-center text-xs text-muted-foreground mt-2 px-2">
+                By signing in, you agree to our{" "}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">
+                  Privacy Policy
+                </a>.
+              </p>
             </form>
 
             <div className="mt-8 pt-8 border-t border-border text-center">

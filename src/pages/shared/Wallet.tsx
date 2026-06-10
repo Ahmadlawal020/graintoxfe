@@ -5,9 +5,9 @@ import { selectCurrentUser } from "../../services/authSlice";
 import { useGetUserByIdQuery } from "../../services/api/userApiSlice";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { 
-  useInitializeDepositMutation, 
-  useGetUserTransactionsQuery, 
+import {
+  useInitializeDepositMutation,
+  useGetUserTransactionsQuery,
   useVerifyDepositMutation,
   useRequestWithdrawalMutation,
   useTransferTradingFundsMutation
@@ -89,7 +89,7 @@ const Wallet = () => {
 
   const parsedAmount = parseFloat(amount) || 0;
   const amountInKobo = Math.round(parsedAmount * 100);
-  const isValidAmount = parsedAmount >= 100;
+  const isValidAmount = parsedAmount >= 1000;
 
   // PaystackButton componentProps — always fresh on each render
   const paystackProps = {
@@ -134,9 +134,9 @@ const Wallet = () => {
   const handleRequestWithdrawal = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = parseFloat(withdrawAmount);
-    
-    if (!withdrawAmount || parsed <= 0) {
-      toast.error("Please enter a valid amount");
+
+    if (!withdrawAmount || parsed < 1000) {
+      toast.error("Minimum withdrawal amount is ₦1,000");
       return;
     }
 
@@ -240,28 +240,28 @@ const Wallet = () => {
           </Card>
 
           <Card className="shadow-sm">
-             <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
-                   <Building2 className="w-4 h-4 text-primary" />
-                   Saved Bank Details
-                </CardTitle>
-             </CardHeader>
-              <CardContent className="space-y-3 p-3 sm:p-6">
-                {userData?.bankAccount?.accountNumber ? (
-                  <div className="space-y-1.5 sm:space-y-2">
-                    <div className="p-2 bg-muted/30 rounded-lg">
-                       <p className="text-[7px] text-muted-foreground uppercase font-black">Bank</p>
-                       <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.bankName}</p>
-                    </div>
-                    <div className="p-2 bg-muted/30 rounded-lg">
-                       <p className="text-[7px] text-muted-foreground uppercase font-black">Account</p>
-                       <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.accountNumber}</p>
-                    </div>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-primary" />
+                Saved Bank Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 p-3 sm:p-6">
+              {userData?.bankAccount?.accountNumber ? (
+                <div className="space-y-1.5 sm:space-y-2">
+                  <div className="p-2 bg-muted/30 rounded-lg">
+                    <p className="text-[7px] text-muted-foreground uppercase font-black">Bank</p>
+                    <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.bankName}</p>
                   </div>
-                ) : (
-                  <p className="text-[10px] text-muted-foreground italic">No bank account saved. Fill withdrawal form to save.</p>
-                )}
-              </CardContent>
+                  <div className="p-2 bg-muted/30 rounded-lg">
+                    <p className="text-[7px] text-muted-foreground uppercase font-black">Account</p>
+                    <p className="text-[10px] sm:text-xs font-bold truncate">{userData.bankAccount.accountNumber}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-[10px] text-muted-foreground italic">No bank account saved. Fill withdrawal form to save.</p>
+              )}
+            </CardContent>
           </Card>
         </div>
 
@@ -269,48 +269,48 @@ const Wallet = () => {
         <Card className="lg:col-span-2 shadow-xl border-none glass-card">
           <Tabs defaultValue="deposit" className="w-full">
             <div className="px-2 sm:px-6 pt-2 sm:pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 border-b border-border/50 pb-2 sm:pb-4">
-               <div className="min-w-0 pr-2">
-                  <CardTitle className="text-xs sm:text-xl leading-tight">Financial Actions</CardTitle>
-                  <CardDescription className="text-[8px] sm:text-sm leading-tight">Deposit, withdraw, or move funds into trading.</CardDescription>
-               </div>
-               <TabsList className="bg-muted/50 p-0.5 w-full sm:w-auto h-8 sm:h-10">
-                 <TabsTrigger value="deposit" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
-                    <ArrowUpCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Deposit
-                 </TabsTrigger>
-                 <TabsTrigger value="withdraw" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
-                    <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Withdraw
-                 </TabsTrigger>
-                 <TabsTrigger value="transfer" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
-                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" /> Trading
-                 </TabsTrigger>
-               </TabsList>
+              <div className="min-w-0 pr-2">
+                <CardTitle className="text-xs sm:text-xl leading-tight">Financial Actions</CardTitle>
+                <CardDescription className="text-[8px] sm:text-sm leading-tight">Deposit, withdraw, or move funds into trading.</CardDescription>
+              </div>
+              <TabsList className="bg-muted/50 p-0.5 w-full sm:w-auto h-8 sm:h-10">
+                <TabsTrigger value="deposit" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                  <ArrowUpCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Deposit
+                </TabsTrigger>
+                <TabsTrigger value="withdraw" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                  <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4" /> Withdraw
+                </TabsTrigger>
+                <TabsTrigger value="transfer" className="flex-1 sm:flex-none flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm px-1 sm:px-4">
+                  <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" /> Transfer
+                </TabsTrigger>
+              </TabsList>
             </div>
 
             <TabsContent value="deposit" className="p-2 sm:p-6 mt-0">
-               <div className="space-y-3 sm:space-y-6">
+              <div className="space-y-3 sm:space-y-6">
                 {!isKycVerified && !userLoading && (
                   <Alert variant="destructive" className="bg-destructive/5 border-destructive/20 mb-4">
                     <ShieldAlert className="h-4 w-4" />
                     <AlertTitle className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">KYC Verification Required</AlertTitle>
                     <AlertDescription className="text-[10px] sm:text-sm">
-                      You must complete your KYC verification to enable deposits and withdrawals. 
+                      You must complete your KYC verification to enable deposits and withdrawals.
                       Please visit your profile to submit your documents.
                     </AlertDescription>
                   </Alert>
                 )}
-                
+
                 <div className="flex flex-col gap-2 sm:gap-4">
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₦</span>
                       <Input
                         type="number"
-                        placeholder={isKycVerified ? "Min ₦100" : "Verification Required"}
+                        placeholder={isKycVerified ? "Min ₦1,000" : "Verification Required"}
                         className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-base"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         disabled={loading || !isKycVerified}
-                        min="100"
+                        min="1000"
                       />
                     </div>
                     {isValidAmount && isKycVerified ? (
@@ -329,73 +329,73 @@ const Wallet = () => {
             </TabsContent>
 
             <TabsContent value="withdraw" className="p-2 sm:p-6 mt-0">
-               {!isKycVerified && !userLoading && (
-                  <Alert variant="destructive" className="bg-destructive/5 border-destructive/20 mb-6">
-                    <ShieldAlert className="h-4 w-4" />
-                    <AlertTitle className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">KYC Verification Required</AlertTitle>
-                    <AlertDescription className="text-[10px] sm:text-sm">
-                      You must complete your KYC verification to enable withdrawals. 
-                      Please visit your profile to submit your documents.
-                    </AlertDescription>
-                  </Alert>
-                )}
-               <form onSubmit={handleRequestWithdrawal} className="space-y-3 sm:space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
-                     <div className="space-y-2 sm:col-span-2">
-                        <Label className="text-xs font-black uppercase text-muted-foreground">Withdrawal Amount</Label>
-                        <div className="relative">
-                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">₦</span>
-                           <Input
-                             type="number"
-                             placeholder="0.00"
-                             className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-base sm:text-lg"
-                             value={withdrawAmount}
-                             onChange={(e) => setWithdrawAmount(e.target.value)}
-                             disabled={loading || !isKycVerified}
-                           />
-                        </div>
-                        <p className="text-[10px] text-muted-foreground font-medium">Max: ₦{userData?.walletBalance?.toLocaleString()}</p>
-                     </div>
-                     <div className="space-y-2">
-                        <Label className="text-xs font-black uppercase text-muted-foreground">Bank Name</Label>
-                        <Input
-                          placeholder="e.g. Zenith Bank"
-                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
-                          value={bankDetails.bankName}
-                          onChange={(e) => setBankDetails({...bankDetails, bankName: e.target.value})}
-                          disabled={loading || !isKycVerified}
-                        />
-                     </div>
-                     <div className="space-y-2">
-                        <Label className="text-xs font-black uppercase text-muted-foreground">Account Number</Label>
-                        <Input
-                          placeholder="10 Digits"
-                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
-                          value={bankDetails.accountNumber}
-                          onChange={(e) => setBankDetails({...bankDetails, accountNumber: e.target.value})}
-                          disabled={loading || !isKycVerified}
-                        />
-                     </div>
-                     <div className="space-y-2 sm:col-span-2">
-                        <Label className="text-xs font-black uppercase text-muted-foreground">Account Name</Label>
-                        <Input
-                          placeholder="Beneficiary Name"
-                          className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
-                          value={bankDetails.accountName}
-                          onChange={(e) => setBankDetails({...bankDetails, accountName: e.target.value})}
-                          disabled={loading || !isKycVerified}
-                        />
-                     </div>
+              {!isKycVerified && !userLoading && (
+                <Alert variant="destructive" className="bg-destructive/5 border-destructive/20 mb-6">
+                  <ShieldAlert className="h-4 w-4" />
+                  <AlertTitle className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">KYC Verification Required</AlertTitle>
+                  <AlertDescription className="text-[10px] sm:text-sm">
+                    You must complete your KYC verification to enable withdrawals.
+                    Please visit your profile to submit your documents.
+                  </AlertDescription>
+                </Alert>
+              )}
+              <form onSubmit={handleRequestWithdrawal} className="space-y-3 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Withdrawal Amount</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">₦</span>
+                      <Input
+                        type="number"
+                        placeholder="Min ₦1,000"
+                        className="pl-8 h-10 sm:h-12 bg-muted/30 border-none font-bold text-base sm:text-lg"
+                        value={withdrawAmount}
+                        onChange={(e) => setWithdrawAmount(e.target.value)}
+                        disabled={loading || !isKycVerified}
+                      />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground font-medium">Max: ₦{userData?.walletBalance?.toLocaleString()}</p>
                   </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-10 sm:h-12 font-black uppercase tracking-widest text-xs sm:text-sm"
-                    disabled={loading || !isKycVerified || !withdrawAmount || parseFloat(withdrawAmount) > (userData?.walletBalance || 0)}
-                  >
-                    {loading ? <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-2" /> : <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />}
-                    Request Payout
-                  </Button>
-               </form>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Bank Name</Label>
+                    <Input
+                      placeholder="e.g. Zenith Bank"
+                      className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
+                      value={bankDetails.bankName}
+                      onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
+                      disabled={loading || !isKycVerified}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Account Number</Label>
+                    <Input
+                      placeholder="10 Digits"
+                      className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
+                      value={bankDetails.accountNumber}
+                      onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })}
+                      disabled={loading || !isKycVerified}
+                    />
+                  </div>
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label className="text-xs font-black uppercase text-muted-foreground">Account Name</Label>
+                    <Input
+                      placeholder="Beneficiary Name"
+                      className="h-10 sm:h-12 bg-muted/30 border-none font-bold text-xs sm:text-sm"
+                      value={bankDetails.accountName}
+                      onChange={(e) => setBankDetails({ ...bankDetails, accountName: e.target.value })}
+                      disabled={loading || !isKycVerified}
+                    />
+                  </div>
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-10 sm:h-12 font-black uppercase tracking-widest text-xs sm:text-sm"
+                  disabled={loading || !isKycVerified || !withdrawAmount || parseFloat(withdrawAmount) > (userData?.walletBalance || 0)}
+                >
+                  {loading ? <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-2" /> : <ArrowDownCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />}
+                  Request Payout
+                </Button>
+              </form>
             </TabsContent>
 
             <TabsContent value="transfer" className="p-2 sm:p-6 mt-0">
@@ -462,29 +462,29 @@ const Wallet = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1.5 sm:gap-2 w-full sm:w-auto">
-             <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-7 sm:h-8 text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2 sm:px-3 w-full sm:w-auto"
-                onClick={() => txRefetch()}
-                disabled={txLoading}
-              >
-                <RefreshCw className={`w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2 ${txLoading ? "animate-spin" : ""}`} />
-                Refresh
-             </Button>
-             <div className="grid grid-cols-2 sm:flex gap-1 sm:gap-2">
-               {["all", "Deposit", "Withdrawal", "Trade"].map((f) => (
-                  <Button 
-                    key={f}
-                    variant={filter === f ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setFilter(f)}
-                    className="h-6 sm:h-8 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest px-1.5 sm:px-4"
-                  >
-                     {f === "all" ? "All" : f === "Trade" ? "Trades" : f === "Deposit" ? "Deposits" : "Payouts"}
-                  </Button>
-               ))}
-             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 sm:h-8 text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2 sm:px-3 w-full sm:w-auto"
+              onClick={() => txRefetch()}
+              disabled={txLoading}
+            >
+              <RefreshCw className={`w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2 ${txLoading ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
+            <div className="grid grid-cols-2 sm:flex gap-1 sm:gap-2">
+              {["all", "Deposit", "Withdrawal", "Trade"].map((f) => (
+                <Button
+                  key={f}
+                  variant={filter === f ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilter(f)}
+                  className="h-6 sm:h-8 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-widest px-1.5 sm:px-4"
+                >
+                  {f === "all" ? "All" : f === "Trade" ? "Trades" : f === "Deposit" ? "Deposits" : "Payouts"}
+                </Button>
+              ))}
+            </div>
           </div>
         </CardHeader>
         <CardContent className="p-2 sm:p-6 pt-0">
@@ -508,11 +508,11 @@ const Wallet = () => {
                     </TableCell>
                   </TableRow>
                 ) : transactions?.filter((t: any) => {
-                    if (filter === "all") return true;
-                    if (filter === "Trade") return t.type.includes("Trade");
-                    if (filter === "Deposit") return t.type === "Wallet_Topup" || t.type === "Deposit";
-                    return t.type === filter;
-                  }).length === 0 ? (
+                  if (filter === "all") return true;
+                  if (filter === "Trade") return t.type.includes("Trade");
+                  if (filter === "Deposit") return t.type === "Wallet_Topup" || t.type === "Deposit";
+                  return t.type === filter;
+                }).length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
                       No {filter} records found.
@@ -534,8 +534,8 @@ const Wallet = () => {
                         <Badge variant="outline">{tx.type.replace("_", " ")}</Badge>
                       </TableCell>
                       <TableCell className={
-                        tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell" 
-                          ? "text-green-600 font-bold" 
+                        tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell"
+                          ? "text-green-600 font-bold"
                           : "text-red-600 font-bold"
                       }>
                         {tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell" ? "+" : "-"}
@@ -566,11 +566,11 @@ const Wallet = () => {
                 <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
               </div>
             ) : transactions?.filter((t: any) => {
-                if (filter === "all") return true;
-                if (filter === "Trade") return t.type.includes("Trade");
-                if (filter === "Deposit") return t.type === "Wallet_Topup" || t.type === "Deposit";
-                return t.type === filter;
-              }).length === 0 ? (
+              if (filter === "all") return true;
+              if (filter === "Trade") return t.type.includes("Trade");
+              if (filter === "Deposit") return t.type === "Wallet_Topup" || t.type === "Deposit";
+              return t.type === filter;
+            }).length === 0 ? (
               <div className="text-center py-10 text-muted-foreground text-sm border rounded-lg border-dashed">
                 No {filter} records found.
               </div>
@@ -590,11 +590,10 @@ const Wallet = () => {
                       </p>
                     </div>
                     <Badge
-                      className={`text-[9px] h-5 px-1.5 shrink-0 ${
-                        tx.status === "Completed" ? "bg-green-100 text-green-700 hover:bg-green-100" :
+                      className={`text-[9px] h-5 px-1.5 shrink-0 ${tx.status === "Completed" ? "bg-green-100 text-green-700 hover:bg-green-100" :
                           tx.status === "Pending" ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100" :
                             "bg-red-100 text-red-700 hover:bg-red-100"
-                      }`}
+                        }`}
                     >
                       {tx.status}
                     </Badge>
@@ -603,11 +602,10 @@ const Wallet = () => {
                     <Badge variant="secondary" className="text-[8px] uppercase tracking-wider h-4 px-1">
                       {tx.type.replace("_", " ")}
                     </Badge>
-                    <p className={`text-xs sm:text-base font-bold shrink-0 ${
-                      tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell" 
-                        ? "text-green-600" 
+                    <p className={`text-xs sm:text-base font-bold shrink-0 ${tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell"
+                        ? "text-green-600"
                         : "text-red-600"
-                    }`}>
+                      }`}>
                       {tx.type === "Wallet_Topup" || tx.type === "Deposit" || tx.type === "Trade_Sell" ? "+" : "-"}
                       ₦{tx.amount?.toLocaleString()}
                     </p>

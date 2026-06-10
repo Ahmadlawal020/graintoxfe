@@ -14,6 +14,7 @@ import {
   XCircle,
   ExternalLink,
   Banknote,
+  Building2,
 } from "lucide-react";
 import { 
   Dialog, 
